@@ -349,7 +349,7 @@
             transform: translateX(5px);
         }
     </style>
-    @stack('styles')
+
 </head>
 <body>
     <!-- Overlay para móvil -->
@@ -477,7 +477,7 @@
 
             <!-- Content -->
             <div class="content-area">
-              <div class="welcome-card">
+               <div class="welcome-card">
     <h2 class="text-primary mb-3">¡Bienvenido a tu Portal Estudiantil!</h2>
     <p class="lead text-muted">Accede a todas las herramientas y recursos que necesitas para tu éxito académico.</p>
     

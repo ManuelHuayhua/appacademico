@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'dni',
         'password',
+        'usuario', 'admin', 'profesor',
     ];
 
     /**
@@ -32,7 +33,23 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        
     ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password'   => 'hashed',
+
+        // que realmente se interpreten como bool
+        'usuario'  => 'boolean',
+        'admin'    => 'boolean',
+        'profesor' => 'boolean',
+    ];
+
+    // Usaremos DNI para identificar al usuario
+    public function username() { return 'dni'; }
+    
+
 
     /**
      * Get the attributes that should be cast.
@@ -46,4 +63,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function defaultRoute(): string
+{
+    if ($this->admin)    return route('admin.dashboard');
+    if ($this->profesor) return route('profesor.dashboard');
+    return route('home');                 // alumno
+}
+
 }

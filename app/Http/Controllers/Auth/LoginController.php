@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Http\Request; 
 class LoginController extends Controller
 {
     /*
@@ -24,13 +24,47 @@ class LoginController extends Controller
     {
         return 'dni';
     }
-    
+
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+  
+
+     /**
+     * Sobrecarga de credentials(): inyecta el rol que el usuario marcó.
+     *
+     * Auth::attempt() validará:
+     *   - dni
+     *   - password
+     *   - y que la columna (admin|usuario|profesor) sea true (1)
+     */
+    protected function credentials(Request $request): array
+    {
+        $roleColumn = $request->input('role');      // admin | usuario | profesor
+
+        return [
+            'dni'      => $request->input('dni'),
+            'password' => $request->input('password'),
+            $roleColumn => true,                    // exige rol = 1
+        ];
+    }
+
+    /* ---------- Redirige según el rol real ---------- */
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->admin) {
+            return redirect('/admin');           // resources/views/admin/admin.blade.php
+        }
+
+        if ($user->profesor) {
+            return redirect('/profesor');        // resources/views/profesor/profesor.blade.php
+        }
+
+        // Alumno / usuario normal
+        return redirect('/home');                // resources/views/home.blade.php
+    }
 
     /**
      * Create a new controller instance.
