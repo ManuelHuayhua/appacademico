@@ -20,18 +20,20 @@
         }
 
         .app-container {
-            display: flex;
             min-height: 100vh;
             width: 100%;
+            position: relative;
         }
 
-        /* Sidebar Styles */
+        /* Sidebar Styles - Azul menos intenso */
         .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             min-height: 100vh;
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
             z-index: 1000;
         }
 
@@ -48,8 +50,9 @@
         .sidebar-header {
             padding: 20px;
             text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
             position: relative;
+            background: rgba(255,255,255,0.05);
         }
 
         .sidebar-header h4 {
@@ -57,10 +60,35 @@
             margin: 0;
             font-weight: 600;
             transition: opacity 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-collapsed .sidebar-header {
+            padding: 20px 10px;
         }
 
         .sidebar-collapsed .sidebar-header h4 {
             opacity: 0;
+            font-size: 0;
+        }
+
+        /* Icono cuando está colapsado */
+        .sidebar-header::after {
+            content: '\f19c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: white;
+            font-size: 24px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .sidebar-collapsed .sidebar-header::after {
+            opacity: 1;
         }
 
         /* Botón de cerrar para móvil */
@@ -95,8 +123,8 @@
         }
 
         .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 12px 20px;
+            color: rgba(255,255,255,0.85);
+            padding: 15px 20px;
             display: flex;
             align-items: center;
             text-decoration: none;
@@ -107,15 +135,17 @@
         }
 
         .nav-link:hover {
-            background-color: rgba(255,255,255,0.1);
+            background-color: rgba(255,255,255,0.15);
             color: white;
             transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .nav-link.active {
-            background-color: rgba(255,255,255,0.2);
+            background-color: rgba(255,255,255,0.25);
             color: white;
             font-weight: 600;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
         }
 
         .nav-link i {
@@ -123,33 +153,45 @@
             width: 20px;
             text-align: center;
             margin-right: 15px;
+            transition: all 0.3s ease;
         }
 
         .nav-text {
-            transition: opacity 0.3s ease;
+            transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .sidebar-collapsed .nav-text {
             opacity: 0;
             width: 0;
+            margin: 0;
         }
 
         .sidebar-collapsed .nav-link {
             justify-content: center;
-            padding: 12px 10px;
+            padding: 15px 10px;
+            margin-right: 5px;
         }
 
         .sidebar-collapsed .nav-link i {
             margin-right: 0;
+            font-size: 20px;
         }
 
         /* Main Content */
         .main-content {
-            flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            width: 100%;
+            margin-left: 70px;
+            width: calc(100% - 70px);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .sidebar-expanded ~ .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
         }
 
         .top-navbar {
@@ -158,20 +200,41 @@
             padding: 15px 20px;
             flex-shrink: 0;
             width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         .content-area {
             flex: 1;
             padding: 20px;
             width: 100%;
+            max-width: 100%;
             overflow-y: auto;
+            overflow-x: hidden;
         }
+
+        /* nuevo css para el control de overflow */
+        .container-fluid {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .col-12, .col-md-8, .col-md-4 {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        /* fin de nuevo css para el control de overflow */
 
         .toggle-btn {
             background: none;
             border: none;
             font-size: 18px;
-            color: #667eea;
+            color: #4a90e2;
             cursor: pointer;
             transition: all 0.3s ease;
             padding: 8px;
@@ -179,21 +242,23 @@
         }
 
         .toggle-btn:hover {
-            color: #764ba2;
-            background-color: rgba(102, 126, 234, 0.1);
+            color: #357abd;
+            background-color: rgba(74, 144, 226, 0.1);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
-        }
+       .user-info {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    position: relative;
+    z-index: 9999 !important; /* SÚPER ALTO */
+}
 
         .user-avatar {
             width: 35px;
             height: 35px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -202,27 +267,39 @@
             margin-right: 10px;
         }
 
-        /* Tooltip para menú colapsado */
+        /* Tooltip para menú colapsado - Mejorado */
         .tooltip-custom {
             position: absolute;
-            left: 70px;
+            left: 75px;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             color: white;
             padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
+            border-radius: 6px;
+            font-size: 13px;
             white-space: nowrap;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
             z-index: 1001;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .tooltip-custom::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-right-color: rgba(0,0,0,0.85);
         }
 
         .sidebar-collapsed .nav-link:hover .tooltip-custom {
             opacity: 1;
             visibility: visible;
+            left: 80px;
         }
 
         .sidebar-overlay {
@@ -246,24 +323,159 @@
         /* Cards y componentes */
         .welcome-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             text-align: center;
             width: 100%;
             max-width: 100%;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
 
-        .stat-card {
+        .news-card {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            border-left: 4px solid #28a745;
+        }
+
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .student-image {
+            max-width: 200px;
+            height: auto;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .badge-custom {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0 5px;
+        }
+
+        .news-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .news-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .news-excerpt {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Mejoras en dropdown - MEJORADO */
+       .dropdown {
+    position: relative;
+    z-index: 9999 !important; /* SÚPER ALTO */
+}
+
+        .dropdown-menu {
+    position: fixed !important; /* FIXED en lugar de absolute */
+    z-index: 99999 !important; /* EL MÁS ALTO POSIBLE */
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    min-width: 220px;
+    padding: 10px 0;
+    margin: 0;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.1);
+    top: auto !important;
+    left: auto !important;
+    right: 20px !important; /* Posición fija desde la derecha */
+    transform: none !important;
+}
+
+      .dropdown-menu.show {
+    display: block !important;
+    z-index: 99999 !important;
+    position: fixed !important;
+    opacity: 1;
+    visibility: visible;
+}
+
+        .dropdown-toggle {
+    position: relative;
+    z-index: 9999 !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+        .dropdown-toggle:hover {
+            color: #4a90e2 !important;
+        }
+
+        .dropdown-toggle::after {
+            margin-left: 8px;
             transition: transform 0.3s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
+        .dropdown-toggle[aria-expanded="true"]::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            color: #333;
+            display: flex;
+            align-items: center;
+            border-radius: 6px;
+            margin: 2px 8px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #4a90e2;
+            transform: translateX(5px);
+        }
+
+        .dropdown-item i {
+            width: 18px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .dropdown-divider {
+            margin: 8px 0;
+            border-color: #e9ecef;
+        }
+
+        /* Indicador de expansión */
+        .expand-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-collapsed .expand-indicator {
+            opacity: 1;
         }
 
         /* Responsive */
@@ -271,6 +483,9 @@
             .app-container {
                 position: relative;
             }
+            .dropdown-toggle {
+        z-index: 999 !important; /* MENOR que el sidebar (1001) */
+    }
 
             .sidebar {
                 position: fixed;
@@ -282,17 +497,61 @@
                 z-index: 1001;
             }
 
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+
             .sidebar.mobile-open {
                 transform: translateX(0);
             }
 
-            .sidebar-close-btn {
-                display: flex !important;
+            /* Forzar que el header muestre el texto en móvil */
+            .sidebar .sidebar-header {
+                padding: 20px !important;
             }
 
-            .main-content {
-                width: 100% !important;
-                flex: 1 !important;
+            .sidebar .sidebar-header h4 {
+                opacity: 1 !important;
+                font-size: 1.1rem !important;
+            }
+
+            .sidebar .sidebar-header::after {
+                opacity: 0 !important;
+            }
+
+            /* Forzar que los textos del menú se muestren en móvil */
+            .sidebar .nav-text {
+                opacity: 1 !important;
+                width: auto !important;
+                margin: 0 !important;
+            }
+
+            .sidebar .nav-link {
+                justify-content: flex-start !important;
+                padding: 15px 20px !important;
+                margin-right: 10px !important;
+            }
+
+            .sidebar .nav-link i {
+                margin-right: 15px !important;
+                font-size: 18px !important;
+            }
+
+            /* Ocultar tooltips en móvil */
+            .sidebar .tooltip-custom {
+                display: none !important;
+            }
+
+            /* Ocultar indicador de expansión en móvil */
+            .sidebar .expand-indicator {
+                display: none !important;
+            }
+
+            .sidebar-close-btn {
+                display: flex !important;
             }
 
             .content-area {
@@ -306,6 +565,35 @@
             .top-navbar {
                 padding: 12px 15px;
             }
+
+            .student-image {
+                max-width: 150px;
+            }
+
+            /* Dropdown en móvil */
+            .dropdown-menu {
+        position: fixed !important;
+        z-index: 999 !important; /* MENOR que el sidebar (1001) */
+        right: 10px !important;
+        left: auto !important;
+        top: 60px !important; /* Debajo del navbar */
+        min-width: 200px;
+    }
+    .dropdown-menu.show {
+        z-index: 999 !important; /* MENOR que el sidebar (1001) */
+    }
+    /* Cuando el sidebar está abierto en móvil, ocultar el dropdown */
+    .sidebar.mobile-open ~ .main-content .dropdown-menu.show {
+        display: none !important;
+    }
+            
+            .user-info {
+        z-index: 999 !important; /* MENOR que el sidebar (1001) */
+    }
+            
+           .dropdown {
+        z-index: 999 !important; /* MENOR que el sidebar (1001) */
+    }
         }
 
         @media (max-width: 480px) {
@@ -320,6 +608,10 @@
             .welcome-card {
                 padding: 15px;
             }
+
+            .student-image {
+                max-width: 120px;
+            }
         }
 
         /* Animaciones mejoradas */
@@ -331,33 +623,15 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Mejoras en dropdown */
-        .dropdown-menu {
-            border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-
-        .dropdown-item {
-            padding: 10px 15px;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-            transform: translateX(5px);
-        }
     </style>
-    @stack('styles')
 </head>
 <body>
     <!-- Overlay para móvil -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     
     <div class="app-container">
-        <!-- Sidebar -->
-        <div class="sidebar sidebar-expanded" id="sidebar">
+        <!-- Sidebar - Inicia colapsado -->
+        <div class="sidebar sidebar-collapsed" id="sidebar">
             <div class="sidebar-header">
                 <h4>Portal Estudiante</h4>
                 <button class="sidebar-close-btn" id="sidebarClose">
@@ -368,14 +642,15 @@
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="" data-page="general">
+                        <a class="nav-link active" href="{{ route('home') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">General</span>
                             <div class="tooltip-custom">General</div>
                         </a>
                     </li>
+                    
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="perfil">
+                        <a class="nav-link" href="{{ route('alumno.perfil') }}" data-page="perfil">
                             <i class="fas fa-user"></i>
                             <span class="nav-text">Perfil</span>
                             <div class="tooltip-custom">Perfil</div>
@@ -432,8 +707,12 @@
                     </li>
                 </ul>
             </nav>
+            
+            <div class="expand-indicator">
+                <i class="fas fa-chevron-right"></i>
+            </div>
         </div>
-
+        
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
             <!-- Top Navbar -->
@@ -446,201 +725,128 @@
                     <div class="user-info">
                         <div class="user-avatar">
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                        </div>  
+                        </div>
                         <div class="dropdown">
-                            <a class="dropdown-toggle text-decoration-none text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a id="navbarDropdown" class="dropdown-toggle text-decoration-none text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 Bienvenido, {{ Auth::user()->name }}
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="">
-                                        <i class="fas fa-user me-2"></i>Mi Perfil
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="">
-                                        <i class="fas fa-cog me-2"></i>Configuración
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('logout') }}" 
-                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
-                                    </a>
-                                </li>
-                            </ul>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="">
+                                    <i class="fas fa-user me-2"></i>Mi Perfil
+                                </a>
+                                <a class="dropdown-item" href="">
+                                    <i class="fas fa-cog me-2"></i>Configuración
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </nav>
-
+            
             <!-- Content -->
+              <!-- Content -->
             <div class="content-area">
-              <div class="welcome-card">
-    <h2 class="text-primary mb-3">¡Bienvenido a tu Portal Estudiantil!</h2>
-    <p class="lead text-muted">Accede a todas las herramientas y recursos que necesitas para tu éxito académico.</p>
+                <div class="container-fluid">
+                    <!-- Welcome Section -->
+                    <div class="welcome-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h2 class="mb-3">¡Bienvenido a tu Portal Estudiantil!</h2>
+                                <p class="mb-3">Explora todas las herramientas disponibles para potenciar tu aprendizaje</p>
+                                <div class="d-flex flex-wrap justify-content-center">
+                                    <span class="badge-custom"><i class="fas fa-book me-1"></i>Cursos Activos</span>
+                                    <span class="badge-custom"><i class="fas fa-calendar me-1"></i>Calendario</span>
+                                    <span class="badge-custom"><i class="fas fa-chart-line me-1"></i>Progreso</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/estudiante-estudiando-en-una-computadora-portatil-mientras-esta-sentado-en-un-puf-5711047-4779535.png?f=webp" 
+                                     alt="Estudiante estudiando" class="student-image">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- News and Announcements -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="mb-4"><i class="fas fa-newspaper me-2"></i>Noticias y Anuncios</h3>
+                            
+                            <div class="news-card">
+                                <div class="news-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>15 de Enero, 2024
+                                </div>
+                                <h5 class="news-title">Nueva Plataforma de Aprendizaje Virtual</h5>
+                                <p class="news-excerpt">
+                                    Nos complace anunciar el lanzamiento de nuestra nueva plataforma de aprendizaje virtual con herramientas interactivas, 
+                                    videos en alta definición y sistema de evaluación en tiempo real para mejorar tu experiencia educativa.
+                                </p>
+                                <a href="#" class="btn btn-outline-primary btn-sm">Leer más</a>
+                            </div>
+
+                            <div class="news-card">
+                                <div class="news-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>12 de Enero, 2024
+                                </div>
+                                <h5 class="news-title">Inscripciones Abiertas para Cursos de Verano</h5>
+                                <p class="news-excerpt">
+                                    Ya están disponibles las inscripciones para los cursos intensivos de verano. Aprovecha esta oportunidad 
+                                    para adelantar materias o reforzar conocimientos en áreas específicas.
+                                </p>
+                                <a href="#" class="btn btn-outline-primary btn-sm">Ver cursos</a>
+                            </div>
+
+                            <div class="news-card">
+                                <div class="news-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>10 de Enero, 2024
+                                </div>
+                                <h5 class="news-title">Biblioteca Digital Ampliada</h5>
+                                <p class="news-excerpt">
+                                    Hemos añadido más de 500 nuevos libros digitales y recursos académicos a nuestra biblioteca virtual. 
+                                    Accede desde cualquier dispositivo las 24 horas del día.
+                                </p>
+                                <a href="#" class="btn btn-outline-primary btn-sm">Explorar biblioteca</a>
+                            </div>
+
+                            <div class="news-card">
+                                <div class="news-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>8 de Enero, 2024
+                                </div>
+                                <h5 class="news-title">Nuevo Sistema de Calificaciones Online</h5>
+                                <p class="news-excerpt">
+                                    Implementamos un nuevo sistema de consulta de calificaciones en tiempo real. Ahora podrás ver tus notas 
+                                    y comentarios de los profesores inmediatamente después de cada evaluación.
+                                </p>
+                                <a href="#" class="btn btn-outline-primary btn-sm">Ver calificaciones</a>
+                            </div>
+
+                            <div class="news-card">
+                                <div class="news-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>5 de Enero, 2024
+                                </div>
+                                <h5 class="news-title">Talleres de Habilidades Digitales</h5>
+                                <p class="news-excerpt">
+                                    Se han programado talleres gratuitos para desarrollar habilidades digitales esenciales. Incluye cursos de 
+                                    Microsoft Office, herramientas de presentación y técnicas de investigación online.
+                                </p>
+                                <a href="#" class="btn btn-outline-primary btn-sm">Inscribirse</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     
-    <div class="row mt-4">
-        <div class="col-md-4 mb-3">
-            <div class="text-center p-3">
-                <i class="fas fa-graduation-cap fa-3x text-primary mb-2"></i>
-                <h5>Cursos Activos</h5>
-                <p class="text-muted">Gestiona tus materias</p>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="text-center p-3">
-                <i class="fas fa-trophy fa-3x text-success mb-2"></i>
-                <h5>Calificaciones</h5>
-                <p class="text-muted">Revisa tu progreso</p>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="text-center p-3">
-                <i class="fas fa-calendar-check fa-3x text-info mb-2"></i>
-                <h5>Calendario</h5>
-                <p class="text-muted">Organiza tu tiempo</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Estadísticas Académicas -->
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="stat-card">
-            <div class="card-header bg-transparent border-0">
-                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Estadísticas Académicas</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <div class="bg-primary text-white rounded p-3 text-center">
-                            <h3 class="mb-1">8</h3>
-                            <p class="mb-0 small">Cursos Activos</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="bg-success text-white rounded p-3 text-center">
-                            <h3 class="mb-1">92%</h3>
-                            <p class="mb-0 small">Promedio General</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="bg-info text-white rounded p-3 text-center">
-                            <h3 class="mb-1">15</h3>
-                            <p class="mb-0 small">Tareas Pendientes</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="bg-warning text-white rounded p-3 text-center">
-                            <h3 class="mb-1">3</h3>
-                            <p class="mb-0 small">Próximos Exámenes</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Actividad Reciente -->
-<div class="row mt-4">
-    <div class="col-md-8">
-        <div class="stat-card">
-            <div class="card-header bg-transparent border-0">
-                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Actividad Reciente</h5>
-            </div>
-            <div class="card-body">
-                <div class="list-group list-group-flush">
-                    <div class="list-group-item border-0 px-0">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-primary rounded-circle p-2 me-3">
-                                <i class="fas fa-book text-white"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1">Nueva tarea asignada</h6>
-                                <p class="mb-0 text-muted small">Matemáticas Avanzadas - Hace 2 horas</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item border-0 px-0">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-success rounded-circle p-2 me-3">
-                                <i class="fas fa-check text-white"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1">Calificación publicada</h6>
-                                <p class="mb-0 text-muted small">Historia Universal - Hace 1 día</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item border-0 px-0">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-info rounded-circle p-2 me-3">
-                                <i class="fas fa-calendar text-white"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1">Recordatorio de examen</h6>
-                                <p class="mb-0 text-muted small">Física Cuántica - Mañana 10:00 AM</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     
-    <div class="col-md-4">
-        <div class="stat-card">
-            <div class="card-header bg-transparent border-0">
-                <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Próximos Eventos</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="bg-danger text-white rounded p-2 me-3">
-                        <small>15</small><br>
-                        <small>ENE</small>
-                    </div>
-                    <div>
-                        <h6 class="mb-0">Examen Final</h6>
-                        <small class="text-muted">Cálculo Diferencial</small>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="bg-warning text-white rounded p-2 me-3">
-                        <small>18</small><br>
-                        <small>ENE</small>
-                    </div>
-                    <div>
-                        <h6 class="mb-0">Entrega de Proyecto</h6>
-                        <small class="text-muted">Programación Web</small>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="bg-info text-white rounded p-2 me-3">
-                        <small>22</small><br>
-                        <small>ENE</small>
-                    </div>
-                    <div>
-                        <h6 class="mb-0">Presentación</h6>
-                        <small class="text-muted">Metodología</small>
-                    </div>
-                </div>
-            </div>
+   
+               
+            
+   
         </div>
     </div>
-</div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Formulario de logout -->
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-        @csrf
-    </form>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -651,7 +857,7 @@
             const sidebarClose = document.getElementById('sidebarClose');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
             const navLinks = document.querySelectorAll('.nav-link');
-
+            
             // Toggle sidebar
             function toggleSidebar() {
                 if (window.innerWidth <= 768) {
@@ -665,19 +871,19 @@
                     sidebar.classList.toggle('sidebar-expanded');
                 }
             }
-
+            
             // Close sidebar
             function closeSidebar() {
                 sidebar.classList.remove('mobile-open');
                 sidebarOverlay.classList.remove('active');
                 document.body.style.overflow = '';
             }
-
+            
             // Event listeners
             sidebarToggle.addEventListener('click', toggleSidebar);
             sidebarClose.addEventListener('click', closeSidebar);
             sidebarOverlay.addEventListener('click', closeSidebar);
-
+            
             // Handle navigation
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -685,30 +891,29 @@
                     if (this.href && !this.href.includes('#')) {
                         return; // Let the browser handle the navigation
                     }
-
                     e.preventDefault();
                     
                     // Update active state
                     navLinks.forEach(l => l.classList.remove('active'));
                     this.classList.add('active');
-
+                    
                     // Close mobile sidebar
                     if (window.innerWidth <= 768) {
                         closeSidebar();
                     }
-
+                    
                     const page = this.getAttribute('data-page');
                     console.log('Navigating to:', page);
                 });
             });
-
+            
             // Handle window resize
             window.addEventListener('resize', function() {
                 if (window.innerWidth > 768) {
                     closeSidebar();
                 }
             });
-
+            
             // Keyboard shortcuts
             document.addEventListener('keydown', function(e) {
                 // ESC key to close sidebar on mobile
@@ -722,14 +927,40 @@
                     toggleSidebar();
                 }
             });
-
+            
             // Add fade-in animation to content
             const contentArea = document.querySelector('.content-area');
             if (contentArea) {
                 contentArea.classList.add('fade-in');
             }
+
+            // Mejorar comportamiento del dropdown
+            const dropdown = document.querySelector('.dropdown-toggle');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            
+            if (dropdown && dropdownMenu) {
+                dropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+                
+                // Cerrar dropdown al hacer clic fuera
+                document.addEventListener('click', function(e) {
+                    if (!dropdown.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        const bsDropdown = bootstrap.Dropdown.getInstance(dropdown);
+                        if (bsDropdown) {
+                            bsDropdown.hide();
+                        }
+                    }
+                });
+            }
         });
     </script>
-    @stack('scripts')
+    
+    <!-- Formulario de logout (mantener al final del body) -->
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
 </body>
 </html>
+                

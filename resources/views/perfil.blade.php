@@ -748,9 +748,180 @@
                 </div>
             </nav>
             
+
+
+
+           
+            <style>
+    .profile-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    
+    .profile-header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        text-align: center;
+        color: white;
+    }
+    
+    .profile-avatar {
+        width: 140px;
+        height: 140px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+    
+    .profile-avatar:hover {
+        transform: scale(1.05);
+    }
+    
+    .profile-name {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 1rem 0 0.5rem 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .profile-dni {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        display: inline-block;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+    
+    .profile-body {
+        background: white;
+        padding: 0;
+    }
+    
+    .info-item {
+        border: none;
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.3s ease;
+    }
+    
+    .info-item:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 1rem;
+        font-size: 1rem;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.2rem;
+    }
+    
+    .info-value {
+        color: #6c757d;
+        margin: 0;
+    }
+    
+    .gender-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+</style>
             <!-- Content -->
             <div class="content-area">
+             <div class="container py-5">
+    <div class="card profile-card mx-auto shadow-lg" style="max-width: 500px;">
+        {{-- Header con gradiente --}}
+        <div class="profile-header">
+            {{-- Imagen según género con URLs predefinidas --}}
+            <img src="{{ $user->genero == 'femenino' ? 'https://st2.depositphotos.com/47577860/49069/v/450/depositphotos_490690402-stock-illustration-avatar-business-girl-icon.jpg' : 'https://thumbs.dreamstime.com/b/avatar-an%C3%B3nimo-del-hombre-de-negocios-hombre-en-traje-con-el-lazo-azul-85824471.jpg' }}"
+                alt="Foto de perfil"
+                class="rounded-circle profile-avatar mb-3"
+            >
             
+            {{-- Nombre completo --}}
+            <h4 class="profile-name">{{ $user->name }} {{ $user->apellido_p }} {{ $user->apellido_m }}</h4>
+            
+            {{-- DNI con diseño especial --}}
+            <div class="profile-dni">
+                <i class="fa-solid fa-id-card me-2"></i>{{ $user->dni }}
+            </div>
+        </div>
+
+        {{-- Cuerpo de la tarjeta --}}
+        <div class="card-body profile-body">
+            <div class="list-group list-group-flush">
+                {{-- Fecha de Nacimiento --}}
+                <div class="list-group-item info-item d-flex align-items-center">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="info-label">Fecha de Nacimiento</div>
+                        <p class="info-value">{{ \Carbon\Carbon::parse($user->fecha_nacimiento)->format('d/m/Y') }}</p>
+                    </div>
+                </div>
+
+                {{-- Género --}}
+                <div class="list-group-item info-item d-flex align-items-center">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-{{ $user->genero == 'femenino' ? 'venus' : 'mars' }}"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="info-label">Género</div>
+                        <span class="gender-badge">
+                            {{ $user->genero == 'femenino' ? 'Femenino' : 'Masculino' }}
+                        </span>
+                    </div>
+                </div>
+
+                {{-- Teléfono --}}
+                <div class="list-group-item info-item d-flex align-items-center">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="info-label">Teléfono</div>
+                        <p class="info-value">{{ $user->telefono }}</p>
+                    </div>
+                </div>
+
+                {{-- Email --}}
+                <div class="list-group-item info-item d-flex align-items-center">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="info-label">Correo Electrónico</div>
+                        <p class="info-value">{{ $user->email }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
 </div>
 
 

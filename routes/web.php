@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Alumnos\PerfilController;
 use Illuminate\Support\Facades\Auth;  
 
 Route::get('/', function () {
@@ -35,6 +36,11 @@ Route::middleware('auth')->group(function () {
    
     Route::get('/home', [HomeController::class, 'index'])
           ->name('home')
+          ->middleware('usuarioonly');
+
+          // 👉 Ruta al perfil del alumno
+    Route::get('/alumno/perfil', [PerfilController::class, 'show'])
+          ->name('alumno.perfil')
           ->middleware('usuarioonly');
 
   
