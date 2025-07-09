@@ -27,7 +27,7 @@
 
         /* Sidebar Styles - Azul menos intenso */
         .sidebar {
-            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             min-height: 100vh;
@@ -234,7 +234,7 @@
             background: none;
             border: none;
             font-size: 18px;
-            color: #4a90e2;
+            color: #003bb1;
             cursor: pointer;
             transition: all 0.3s ease;
             padding: 8px;
@@ -242,7 +242,7 @@
         }
 
         .toggle-btn:hover {
-            color: #357abd;
+            color: #003bb1;
             background-color: rgba(74, 144, 226, 0.1);
         }
 
@@ -258,7 +258,7 @@
             width: 35px;
             height: 35px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -330,7 +330,7 @@
             width: 100%;
             max-width: 100%;
             margin-bottom: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             color: white;
         }
 
@@ -754,7 +754,7 @@
            
             <style>
     .profile-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
         border: none;
         border-radius: 20px;
         overflow: hidden;
@@ -819,7 +819,7 @@
     .info-icon {
         width: 40px;
         height: 40px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
         border-radius: 50%;
         display: inline-flex;
         align-items: center;
@@ -841,7 +841,7 @@
     }
     
     .gender-badge {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
         color: white;
         padding: 0.3rem 0.8rem;
         border-radius: 15px;

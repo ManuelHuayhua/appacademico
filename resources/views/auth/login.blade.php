@@ -20,7 +20,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -32,7 +32,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             z-index: -1;
         }
 
@@ -63,7 +63,7 @@
 
         /* Sección de ilustración */
         .illustration-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -174,7 +174,7 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #667eea;
+            color: #003bb1 ;
             z-index: 10;
             font-size: 1.1rem;
         }
@@ -237,12 +237,12 @@
         .role-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15);
-            border-color: #667eea;
+            border-color: #003bb1;
         }
 
         .role-option input[type="radio"]:checked + .role-card {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: #003bb1;
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
@@ -260,7 +260,7 @@
         }
 
         .btn-login {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             border: none;
             border-radius: 12px;
             padding: 1rem;
@@ -567,20 +567,21 @@
                                     <div class="role-name">Usuario</div>
                                 </label>
                             </div>
-                            <div class="role-option">
-                                <input type="radio" name="role" value="admin" id="role-admin"
-                                       {{ old('role') == 'admin' ? 'checked' : '' }}>
-                                <label for="role-admin" class="role-card">
-                                    <i class="fas fa-user-shield role-icon"></i>
-                                    <div class="role-name">Admin</div>
-                                </label>
-                            </div>
+                            
                             <div class="role-option">
                                 <input type="radio" name="role" value="profesor" id="role-profesor"
                                        {{ old('role') == 'profesor' ? 'checked' : '' }}>
                                 <label for="role-profesor" class="role-card">
                                     <i class="fas fa-chalkboard-teacher role-icon"></i>
                                     <div class="role-name">Profesor</div>
+                                </label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" name="role" value="admin" id="role-admin"
+                                       {{ old('role') == 'admin' ? 'checked' : '' }}>
+                                <label for="role-admin" class="role-card">
+                                    <i class="fas fa-user-shield role-icon"></i>
+                                    <div class="role-name">Admin</div>
                                 </label>
                             </div>
                         </div>
