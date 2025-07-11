@@ -13,12 +13,14 @@ class Curso extends Model
         return $this->belongsTo(Carrera::class);
     }
 
-    public function horarios()
-    {
-        return $this->hasMany(Horario::class);
-    }
+  
     public function periodo()
 {
     return $this->belongsTo(Periodo::class);
+}
+
+public function cursoPeriodos()
+{
+    return $this->hasMany(CursoPeriodo::class);
 }
 }

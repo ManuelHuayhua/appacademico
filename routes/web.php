@@ -60,7 +60,9 @@ Route::get('/admin/usuarios/crear', [UserController::class, 'create'])->name('ad
 // ruta para crear cursos y asignar horarios y profesores
 Route::get('/admin/cursos/crear', [CursoController::class, 'create'])->name('admin.cursos.create'); // GET
 Route::post('/admin/cursos', [CursoController::class, 'store'])->name('admin.cursos.store'); // POST
-Route::get('/admin/cursos', [CursoController::class, 'index'])->name('admin.cursos.index');
+Route::get('/admin/cursos', function () {
+    return redirect()->route('admin.cursos.create');
+});
 Route::delete('/admin/cursos/{curso}', [CursoController::class, 'destroy'])->name('admin.cursos.destroy');
 Route::get('/admin/carreras-por-nombre-facultad/{nombre}', function ($nombre) {
     $facultad = \App\Models\Facultad::where('nombre', $nombre)->first();
@@ -70,7 +72,21 @@ Route::get('/admin/carreras-por-nombre-facultad/{nombre}', function ($nombre) {
     $carreras = \App\Models\Carrera::where('facultad_id', $facultad->id)->get();
 
     return response()->json($carreras);
+    
 });
+
+Route::get('/admin/cursos-por-nombre-carrera/{nombre}', function ($nombre) {
+    $carrera = \App\Models\Carrera::where('nombre', $nombre)->first();
+
+    if (!$carrera) return response()->json([]);
+
+    $cursos = \App\Models\Curso::where('carrera_id', $carrera->id)->get();
+
+    return response()->json($cursos);
+});
+
+
+
 
 
 

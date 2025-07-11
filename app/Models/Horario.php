@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Horario extends Model
 {
-     protected $fillable = [
-        'curso_id', 'profesor_id',
-        'dia_semana', 'hora_inicio', 'hora_fin',
-        'periodo_id' // 👈 ESTE FALTABA
-    ];
+    protected $fillable = [
+    'curso_periodo_id', // ✅ Este es el correcto
+    'profesor_id',
+    'dia_semana',
+    'hora_inicio',
+    'hora_fin',
+];
 
     public function curso()
     {
@@ -25,5 +27,10 @@ class Horario extends Model
 public function periodo()
 {
     return $this->belongsTo(Periodo::class);
+}
+
+public function cursoPeriodo()
+{
+    return $this->belongsTo(CursoPeriodo::class);
 }
 }
