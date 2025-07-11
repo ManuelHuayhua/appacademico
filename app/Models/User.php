@@ -79,4 +79,6 @@ class User extends Authenticatable
     return route('home');                 // alumno
 }
 
+
+
 }
