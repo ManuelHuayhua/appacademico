@@ -7,6 +7,8 @@ use App\Http\Controllers\Alumnos\PerfilController;
 use Illuminate\Support\Facades\Auth; 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CursoController;
+use App\Http\Controllers\Alumnos\CursosController;
+use App\Http\Controllers\Admin\MatriculaController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -44,9 +46,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/alumno/perfil', [PerfilController::class, 'show'])
           ->name('alumno.perfil')
           ->middleware('usuarioonly');
+//ruta vista  cursos_alumno
+Route::get('/alumno/cursos', [CursosController::class, 'index'])
+    ->name('alumno.cursos')
+    ->middleware('usuarioonly');
+//ruta vista  horarios_alumno
+
+Route::get('/alumno/calendario', [CursosController::class, 'horario'])
+    ->name('alumno.calendario')
+    ->middleware('usuarioonly');
 
 
-          
+
+
+
+
+
+
 // ruta para admin
            Route::view('/admin', 'admin.admin')
           ->name('admin.dashboard')
@@ -57,7 +73,8 @@ Route::get('/admin/usuarios/crear', [UserController::class, 'create'])->name('ad
     Route::post('/admin/usuarios', [UserController::class, 'store'])->name('admin.usuarios.store')
      ->middleware('adminonly');
 
-// ruta para crear cursos y asignar horarios y profesores
+// ruta para crear cursos y asignar horarios y profesores // condicional de periodo que sea del año actual
+
 Route::get('/admin/cursos/crear', [CursoController::class, 'create'])->name('admin.cursos.create'); // GET
 Route::post('/admin/cursos', [CursoController::class, 'store'])->name('admin.cursos.store'); // POST
 Route::get('/admin/cursos', function () {
@@ -74,7 +91,6 @@ Route::get('/admin/carreras-por-nombre-facultad/{nombre}', function ($nombre) {
     return response()->json($carreras);
     
 });
-
 Route::get('/admin/cursos-por-nombre-carrera/{nombre}', function ($nombre) {
     $carrera = \App\Models\Carrera::where('nombre', $nombre)->first();
 
@@ -85,10 +101,20 @@ Route::get('/admin/cursos-por-nombre-carrera/{nombre}', function ($nombre) {
     return response()->json($cursos);
 });
 
+//matricula
+Route::get('/admin/matricula', [MatriculaController::class, 'create'])
+    ->name('admin.matricula.create')
+    ->middleware('adminonly');
+
+Route::post('/admin/matricula', [MatriculaController::class, 'store'])
+    ->name('admin.matricula.store')
+    ->middleware('adminonly');
 
 
-
-
+//eliminar matricula
+Route::delete('/admin/matricula/{id}', [MatriculaController::class, 'destroy'])
+    ->name('admin.matricula.destroy')
+    ->middleware('adminonly');
 
 
 
@@ -99,3 +125,4 @@ Route::get('/admin/cursos-por-nombre-carrera/{nombre}', function ($nombre) {
           ->name('profesor.dashboard')
           ->middleware('profesoronly');
 });
+
