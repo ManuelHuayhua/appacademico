@@ -25,7 +25,8 @@ class CursosController extends Controller
                 'periodos.nombre as periodo',
                 'curso_periodo.seccion',
                 'matriculas.fecha_matricula',
-                'matriculas.estado'
+                'matriculas.estado',
+        'curso_periodo.id as curso_periodo_id'
             )
             ->orderBy('periodos.fecha_inicio', 'desc')
             ->get();
@@ -33,6 +34,8 @@ class CursosController extends Controller
         return view('cursos_alumno', compact('cursos'));
     }
 
+
+    // vista calendario del alumno
 public function horario()
 {
     $userId = auth()->id();

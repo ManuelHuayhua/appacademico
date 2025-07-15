@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CursoController;
 use App\Http\Controllers\Alumnos\CursosController;
 use App\Http\Controllers\Admin\MatriculaController;
+use App\Http\Controllers\Profesor\CursoController as ProfesorCursoController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -30,6 +31,8 @@ Route::get('/', function () {
     // Por descarte es “usuario” normal
     return redirect('/home');
 });
+
+
 
 
 
@@ -55,6 +58,8 @@ Route::get('/alumno/cursos', [CursosController::class, 'index'])
 Route::get('/alumno/calendario', [CursosController::class, 'horario'])
     ->name('alumno.calendario')
     ->middleware('usuarioonly');
+
+
 
 
 
@@ -119,10 +124,26 @@ Route::delete('/admin/matricula/{id}', [MatriculaController::class, 'destroy'])
 
 
 
+
+
+
+
  // ruta para profesor
 
-    Route::view('/profesor', 'profesor.profesor')
-          ->name('profesor.dashboard')
-          ->middleware('profesoronly');
+    Route::middleware(['auth', 'profesoronly'])
+    ->prefix('profesor')
+    ->name('profesor.')
+    ->group(function () {
+        
+        // Vista principal del profesor
+        Route::view('/', 'profesor.profesor')->name('dashboard');
+
+        // Ver cursos asignados
+        Route::get('/cursos', [ProfesorCursoController::class, 'index'])->name('cursos');
+
+        // Guardar asistencia
+        Route::post('/asistencia/guardar', [ProfesorCursoController::class, 'guardarAsistencia'])->name('asistencia.guardar');
+    });
+
 });
 

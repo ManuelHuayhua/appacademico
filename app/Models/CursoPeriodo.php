@@ -32,5 +32,11 @@ class CursoPeriodo extends Model
     {
         return $this->hasMany(Horario::class);
     }
+
+    public function asistencias()
+{
+    return $this->hasMany(Asistencia::class);
+}
+
     
 }
