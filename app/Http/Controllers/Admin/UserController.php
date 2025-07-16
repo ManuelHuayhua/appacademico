@@ -9,11 +9,29 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function create()
-    {
-        return view('admin.crearusers');
+
+    //mostrar listrado de los usuarios creados
+
+
+    public function create(Request $request)
+{
+    $filtro = $request->input('filtro');
+
+    $query = User::query();
+
+    if ($filtro === 'admin') {
+        $query->where('admin', true);
+    } elseif ($filtro === 'profesor') {
+        $query->where('profesor', true);
+    } elseif ($filtro === 'usuario') {
+        $query->where('usuario', true);
     }
 
+    $usuarios = $query->get();
+
+    return view('admin.crearusers', compact('usuarios', 'filtro'));
+}
+    //forlmualrio de crear alumno-profesor-admin
     public function store(Request $request)
     {
         $request->validate([

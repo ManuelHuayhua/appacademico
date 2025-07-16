@@ -664,7 +664,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="calificaciones">
+                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}" data-page="calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
@@ -751,11 +751,23 @@
             <!-- Content -->
             <div class="content-area">
 
-            <div class="container mt-4">
+          <div class="container mt-4">
     <h2>📘 Mis cursos matriculados</h2>
 
+    {{-- Filtro por periodo --}}
+    <form method="GET" class="mb-3">
+        <label for="periodo_id" class="form-label">Filtrar por periodo:</label>
+        <select name="periodo_id" id="periodo_id" class="form-select" onchange="this.form.submit()">
+            @foreach($periodos as $periodo)
+                <option value="{{ $periodo->id }}" {{ $periodo->id == $periodoSeleccionadoId ? 'selected' : '' }}>
+                    {{ $periodo->nombre }} ({{ \Carbon\Carbon::parse($periodo->fecha_inicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($periodo->fecha_fin)->format('d/m/Y') }})
+                </option>
+            @endforeach
+        </select>
+    </form>
+
     @if($cursos->isEmpty())
-        <p>No estás matriculado en ningún curso actualmente.</p>
+        <p>No estás matriculado en ningún curso para este periodo.</p>
     @else
         <table class="table table-bordered">
             <thead>

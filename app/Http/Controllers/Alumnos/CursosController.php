@@ -10,29 +10,52 @@ class CursosController extends Controller
 {
 
     //vista cursos del alumno
-    public function index()
-    {
-        $user = Auth::user(); // alumno autenticado
+  public function index()
+{
+    $user = Auth::user(); // Alumno autenticado
+    $hoy = now();
 
-        $cursos = DB::table('matriculas')
-            ->join('curso_periodo', 'matriculas.curso_periodo_id', '=', 'curso_periodo.id')
-            ->join('cursos', 'curso_periodo.curso_id', '=', 'cursos.id')
-            ->join('periodos', 'curso_periodo.periodo_id', '=', 'periodos.id')
-            ->where('matriculas.user_id', $user->id)
-            ->select(
-                'cursos.nombre as curso',
-                'cursos.descripcion',
-                'periodos.nombre as periodo',
-                'curso_periodo.seccion',
-                'matriculas.fecha_matricula',
-                'matriculas.estado',
-        'curso_periodo.id as curso_periodo_id'
-            )
-            ->orderBy('periodos.fecha_inicio', 'desc')
-            ->get();
+    // 1. Traer solo los periodos donde el alumno tiene cursos matriculados
+    $periodos = DB::table('periodos')
+        ->join('curso_periodo', 'periodos.id', '=', 'curso_periodo.periodo_id')
+        ->join('matriculas', 'curso_periodo.id', '=', 'matriculas.curso_periodo_id')
+        ->where('matriculas.user_id', $user->id)
+        ->select('periodos.id', 'periodos.nombre', 'periodos.fecha_inicio', 'periodos.fecha_fin')
+        ->distinct()
+        ->orderBy('periodos.fecha_inicio', 'desc')
+        ->get();
 
-        return view('cursos_alumno', compact('cursos'));
-    }
+    // 2. Detectar periodo actual (entre fecha_inicio y fecha_fin)
+    $periodoActual = $periodos->first(function ($periodo) use ($hoy) {
+        return $periodo->fecha_inicio <= $hoy && $periodo->fecha_fin >= $hoy;
+    });
+
+    // 3. Usar el periodo actual si no se ha seleccionado otro desde el filtro
+    $periodoSeleccionadoId = request('periodo_id') ?? ($periodoActual->id ?? null);
+
+    // 4. Traer los cursos del alumno filtrados por el periodo seleccionado
+    $cursos = DB::table('matriculas')
+        ->join('curso_periodo', 'matriculas.curso_periodo_id', '=', 'curso_periodo.id')
+        ->join('cursos', 'curso_periodo.curso_id', '=', 'cursos.id')
+        ->join('periodos', 'curso_periodo.periodo_id', '=', 'periodos.id')
+        ->where('matriculas.user_id', $user->id)
+        ->when($periodoSeleccionadoId, function ($query, $periodoId) {
+            return $query->where('curso_periodo.periodo_id', $periodoId);
+        })
+        ->select(
+            'cursos.nombre as curso',
+            'cursos.descripcion',
+            'periodos.nombre as periodo',
+            'curso_periodo.seccion',
+            'matriculas.fecha_matricula',
+            'matriculas.estado',
+            'curso_periodo.id as curso_periodo_id'
+        )
+        ->orderBy('periodos.fecha_inicio', 'desc')
+        ->get();
+
+    return view('cursos_alumno', compact('cursos', 'periodos', 'periodoSeleccionadoId'));
+}
 
 
     // vista calendario del alumno

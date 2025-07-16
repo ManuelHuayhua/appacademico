@@ -133,7 +133,7 @@ public function destroy(Curso $curso)
     // Finalmente, elimina el curso
     $curso->delete();
 
-    return redirect()->route('admin.cursos.create')->with('success', 'Curso eliminado correctamente.');
+    return redirect()->route('admin.cursos.create')->with('success', ['Curso eliminado correctamente.']);
 }
 }
 

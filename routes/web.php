@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\CursoController;
 use App\Http\Controllers\Alumnos\CursosController;
 use App\Http\Controllers\Admin\MatriculaController;
 use App\Http\Controllers\Profesor\CursoController as ProfesorCursoController;
+use App\Http\Controllers\Alumnos\CalificacionalumnoController;
+use App\Http\Controllers\Admin\CalificacionesController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -49,6 +51,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/alumno/perfil', [PerfilController::class, 'show'])
           ->name('alumno.perfil')
           ->middleware('usuarioonly');
+
+//editar perfil
+    Route::put('/perfil/actualizar', [PerfilController::class, 'update'])->name('perfil.update');
+
+
 //ruta vista  cursos_alumno
 Route::get('/alumno/cursos', [CursosController::class, 'index'])
     ->name('alumno.cursos')
@@ -59,7 +66,9 @@ Route::get('/alumno/calendario', [CursosController::class, 'horario'])
     ->name('alumno.calendario')
     ->middleware('usuarioonly');
 
+//calificaciones
 
+ Route::get('/mis-calificaciones', [CalificacionalumnoController::class, 'index'])->name('alumno.calificaciones.index');
 
 
 
@@ -106,6 +115,8 @@ Route::get('/admin/cursos-por-nombre-carrera/{nombre}', function ($nombre) {
     return response()->json($cursos);
 });
 
+
+
 //matricula
 Route::get('/admin/matricula', [MatriculaController::class, 'create'])
     ->name('admin.matricula.create')
@@ -121,7 +132,8 @@ Route::delete('/admin/matricula/{id}', [MatriculaController::class, 'destroy'])
     ->name('admin.matricula.destroy')
     ->middleware('adminonly');
 
-
+//calificaciones:
+Route::get('/admin/calificaciones', [CalificacionesController::class, 'index'])->name('admin.calificaciones.index') ->middleware('adminonly');
 
 
 

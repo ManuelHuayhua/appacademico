@@ -38,27 +38,66 @@ class MatriculaController extends Controller
 
 
 
-   public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
-        'user_id' => 'required|exists:users,id',
+        'user_ids' => 'required|array',
+        'user_ids.*' => 'exists:users,id',
         'curso_periodo_id' => 'required|exists:curso_periodo,id',
     ]);
 
-    // Verificar si ya existe la matrícula
-    $existe = DB::table('matriculas')
-        ->where('user_id', $request->user_id)
-        ->where('curso_periodo_id', $request->curso_periodo_id)
-        ->exists();
+    // Obtener información del curso_periodo, incluyendo vacantes
+    $cursoPeriodo = DB::table('curso_periodo')->where('id', $request->curso_periodo_id)->first();
 
-    if ($existe) {
-        return back()->with('error', 'Este alumno ya está matriculado en este curso.');
+    // Contar cuántos alumnos ya están matriculados en ese curso
+    $matriculadosActuales = DB::table('matriculas')
+        ->where('curso_periodo_id', $request->curso_periodo_id)
+        ->count();
+
+    // Calcular cuántas vacantes quedan
+    $vacantesDisponibles = $cursoPeriodo->vacantes - $matriculadosActuales;
+
+    // Filtrar alumnos que aún no están matriculados
+    $alumnosParaMatricular = collect($request->user_ids)->reject(function ($user_id) use ($request) {
+        return DB::table('matriculas')
+            ->where('user_id', $user_id)
+            ->where('curso_periodo_id', $request->curso_periodo_id)
+            ->exists();
+    });
+
+    // Verificar si hay vacantes suficientes
+    if ($alumnosParaMatricular->count() > $vacantesDisponibles) {
+        return back()->with('error', 'No hay suficientes vacantes para matricular a todos los alumnos seleccionados. Quedan solo ' . $vacantesDisponibles . ' vacante(s).');
     }
 
-    try {
-        // Insertar la matrícula y obtener su ID
-        $matricula_id = DB::table('matriculas')->insertGetId([
-            'user_id' => $request->user_id,
+    // Obtener días de clase
+    $diasClase = DB::table('horarios')
+        ->where('curso_periodo_id', $request->curso_periodo_id)
+        ->pluck('dia_semana')
+        ->toArray();
+
+    // Fechas de clases
+    $fechaInicio = \Carbon\Carbon::parse($cursoPeriodo->fecha_inicio_clases);
+    $fechaFin = \Carbon\Carbon::parse($cursoPeriodo->fecha_fin_clases);
+    $fechasClase = [];
+
+    for ($fecha = $fechaInicio->copy(); $fecha <= $fechaFin; $fecha->addDay()) {
+        if (in_array($fecha->dayOfWeekIso, $diasClase)) {
+            $fechasClase[] = $fecha->toDateString();
+        }
+    }
+
+    // Obtener profesor del curso
+    $profesorId = DB::table('horarios')
+        ->where('curso_periodo_id', $request->curso_periodo_id)
+        ->value('profesor_id');
+
+    // Matricular alumnos
+    $contador = 0;
+    foreach ($alumnosParaMatricular as $user_id) {
+
+        DB::table('matriculas')->insert([
+            'user_id' => $user_id,
             'curso_periodo_id' => $request->curso_periodo_id,
             'fecha_matricula' => now(),
             'estado' => 'activo',
@@ -66,41 +105,46 @@ class MatriculaController extends Controller
             'updated_at' => now(),
         ]);
 
-        // Obtener fechas de clase del curso_periodo
-        $cursoPeriodo = DB::table('curso_periodo')->where('id', $request->curso_periodo_id)->first();
-
-        // Obtener los días de la semana en que hay clase
-        $diasClase = DB::table('horarios')
-            ->where('curso_periodo_id', $request->curso_periodo_id)
-            ->pluck('dia_semana')
-            ->toArray(); // Ej: [1, 3, 5] => lunes, miércoles, viernes
-
-        // Generar fechas entre inicio y fin de clases que coincidan con los días de clase
-        $fechaInicio = \Carbon\Carbon::parse($cursoPeriodo->fecha_inicio_clases);
-        $fechaFin = \Carbon\Carbon::parse($cursoPeriodo->fecha_fin_clases);
-        $fechasClase = [];
-
-        for ($fecha = $fechaInicio->copy(); $fecha <= $fechaFin; $fecha->addDay()) {
-            if (in_array($fecha->dayOfWeekIso, $diasClase)) {
-                $fechasClase[] = $fecha->toDateString();
-            }
-        }
-
-        // Insertar asistencias vacías por cada fecha
         foreach ($fechasClase as $fecha) {
             DB::table('asistencias')->insert([
-                'user_id' => $request->user_id,
+                'user_id' => $user_id,
                 'curso_periodo_id' => $request->curso_periodo_id,
                 'fecha' => $fecha,
-                'asistio' => null, // Aún no tomada
+                'asistio' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
 
-        return back()->with('success', 'Alumno matriculado correctamente y asistencias generadas.');
-    } catch (\Exception $e) {
-        return back()->with('error', 'Error al matricular: ' . $e->getMessage());
+        DB::table('calificaciones')->insert([
+            'user_id' => $user_id,
+            'curso_periodo_id' => $request->curso_periodo_id,
+            'profesor_id' => $profesorId,
+            'carrera_id' => $cursoPeriodo->carrera_id ?? null,
+            'primer_avance' => null,
+            'segundo_avance' => null,
+            'presentacion_final' => null,
+            'promedio_avance' => null,
+            'oral_1' => null,
+            'oral_2' => null,
+            'oral_3' => null,
+            'oral_4' => null,
+            'oral_5' => null,
+            'promedio' => null,
+            'promedio_evaluacion_permanente' => null,
+            'examen_final' => null,
+            'promedio_final' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $contador++;
+    }
+
+    if ($contador > 0) {
+        return back()->with('success', "$contador alumno(s) matriculado(s) correctamente.");
+    } else {
+        return back()->with('error', 'Ningún alumno fue matriculado (posiblemente ya estaban inscritos).');
     }
 }
 
@@ -112,16 +156,22 @@ public function destroy($id)
     $matricula = DB::table('matriculas')->where('id', $id)->first();
 
     if ($matricula) {
-        // Eliminar las asistencias relacionadas
+        // Eliminar asistencias relacionadas
         DB::table('asistencias')
             ->where('user_id', $matricula->user_id)
             ->where('curso_periodo_id', $matricula->curso_periodo_id)
             ->delete();
 
-        // Luego eliminar la matrícula
+        // Eliminar calificación relacionada
+        DB::table('calificaciones')
+            ->where('user_id', $matricula->user_id)
+            ->where('curso_periodo_id', $matricula->curso_periodo_id)
+            ->delete();
+
+        // Eliminar matrícula
         DB::table('matriculas')->where('id', $id)->delete();
 
-        return back()->with('success', 'Matrícula y asistencias eliminadas correctamente.');
+        return back()->with('success', 'Matrícula, asistencias y calificación eliminadas correctamente.');
     }
 
     return back()->with('error', 'La matrícula no fue encontrada.');

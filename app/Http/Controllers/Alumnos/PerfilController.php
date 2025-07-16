@@ -21,4 +21,23 @@ class PerfilController extends Controller
 
         abort(403, 'Acceso no autorizado.');
     }
+
+
+public function update(Request $request)
+{
+    $request->validate([
+        'telefono' => 'required|string|max:20',
+        'email' => 'required|email|max:255',
+    ]);
+
+    $user = Auth::user();
+
+    // Solo se actualizan estos campos
+    $user->telefono = $request->telefono;
+    $user->email = $request->email;
+
+    $user->save();
+
+    return redirect()->back()->with('success', 'Datos de contacto actualizados correctamente.');
+}
 }

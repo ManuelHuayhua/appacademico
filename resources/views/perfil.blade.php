@@ -664,7 +664,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="calificaciones">
+                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}" data-page="calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
@@ -851,6 +851,19 @@
 </style>
             <!-- Content -->
             <div class="content-area">
+                @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+@endif
              <div class="container py-5">
     <div class="card profile-card mx-auto shadow-lg" style="max-width: 500px;">
         {{-- Header con gradiente --}}
@@ -921,8 +934,70 @@
             </div>
         </div>
         
+        <div class="text-center mt-3">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+        <i class="fa-solid fa-pen-to-square"></i> Editar Perfil
+    </button>
+</div>
+
     </div>
 </div>
+
+<!-- Modal de edición -->
+<!-- Modal de edición -->
+<div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ route('perfil.update') }}">
+      @csrf
+      @method('PUT')
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editarPerfilModalLabel">Editar Contacto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+
+            {{-- Nombre (solo lectura) --}}
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" value="{{ $user->name }}" readonly>
+            </div>
+
+            {{-- DNI (solo lectura) --}}
+            <div class="mb-3">
+                <label class="form-label">DNI</label>
+                <input type="text" class="form-control" value="{{ $user->dni }}" readonly>
+            </div>
+
+            {{-- Fecha de Nacimiento (solo lectura) --}}
+            <div class="mb-3">
+                <label class="form-label">Fecha de Nacimiento</label>
+                <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($user->fecha_nacimiento)->format('d/m/Y') }}" readonly>
+            </div>
+
+            {{-- Teléfono (editable) --}}
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" name="telefono" value="{{ $user->telefono }}" required>
+            </div>
+
+            {{-- Correo (editable) --}}
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo</label>
+                <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Guardar cambios</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

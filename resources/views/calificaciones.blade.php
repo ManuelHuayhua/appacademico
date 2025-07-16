@@ -6,7 +6,7 @@
     <title>@yield('title', 'Panel de Estudiante')</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-   <style>
+     <style>
         * {
             margin: 0;
             padding: 0;
@@ -650,28 +650,28 @@
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('alumno.perfil') }}" data-page="perfil">
+                        <a class="nav-link" href="{{ route('alumno.perfil') }}" data-page="perfil">
                             <i class="fas fa-user"></i>
                             <span class="nav-text">Perfil</span>
                             <div class="tooltip-custom">Perfil</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="cursos">
+                        <a class="nav-link" href="{{ route('alumno.cursos') }}"  data-page="cursos">
                             <i class="fas fa-book"></i>
                             <span class="nav-text">Cursos</span>
                             <div class="tooltip-custom">Cursos</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}" data-page="calificaciones">
+                        <a class="nav-link active" href="{{ route('alumno.calificaciones.index') }}"  data-page="calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="" data-page="calendario">
+                        <a class="nav-link" href="{{ route('alumno.calendario') }}" data-page="calendario">
                             <i class="fas fa-calendar-alt"></i>
                             <span class="nav-text">Calendario</span>
                             <div class="tooltip-custom">Calendario</div>
@@ -747,214 +747,90 @@
                     </div>
                 </div>
             </nav>
+            
+            <!-- Content -->
+            <div class="content-area">
 
+            <div class="container">
+    <h2 class="mb-4">📊 Mis Calificaciones</h2>
 
+    {{-- Formulario para seleccionar el periodo --}}
+    @if($periodos->isNotEmpty())
+        <form method="GET" action="{{ route('alumno.calificaciones.index') }}" class="mb-4">
+            <label for="periodo_id">📆 Ver calificaciones del periodo:</label>
+            <select name="periodo_id" id="periodo_id" class="form-control w-auto d-inline" onchange="this.form.submit()">
+                @foreach($periodos as $p)
+                    <option value="{{ $p->id }}" {{ isset($periodoSeleccionado) && $periodoSeleccionado->id == $p->id ? 'selected' : '' }}>
+                        {{ $p->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </form>
+    @endif
 
-              <!-- calendario-->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
-    
-
-<!-- Content Area for Calendar -->
-<div class="content-area">
-    <h2 class="calendar-title">🗓️ Mi Horario Académico</h2>
-    <div id="calendar" class="academic-calendar"></div>
-
-    <!-- Modal para detalles del evento -->
-    <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="eventDetailModalLabel">Detalles de la Clase</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="modal-detail"><strong>📘 Curso:</strong> <span id="modalCourse"></span></p>
-                    <p class="modal-detail"><strong>👨‍🏫 Profesor:</strong> <span id="modalProfessor"></span></p>
-                    <p class="modal-detail"><strong>📆 Fecha:</strong> <span id="modalDate"></span></p>
-                    <p class="modal-detail"><strong>🕐 Hora:</strong> <span id="modalTime"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
+    {{-- Mostrar mensaje si no hay calificaciones --}}
+    @if($calificaciones->isEmpty())
+        <div class="alert alert-info">
+            No tienes calificaciones registradas en este periodo.
         </div>
-    </div>
+    @else
+        <div class="accordion" id="accordionNotas">
+            @foreach($calificaciones as $index => $cal)
+                <div class="accordion-item mb-2">
+                    <h2 class="accordion-header" id="heading{{ $index }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $index }}" aria-expanded="false" aria-controls="collapse{{ $index }}">
+                            📘 {{ $cal->curso }} — 👨‍🏫 {{ $cal->profesor ?? 'Sin asignar' }} — 🏫 Sección: {{ $cal->seccion }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ $index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $index }}" data-bs-parent="#accordionNotas">
+                        <div class="accordion-body">
+                            <table class="table table-sm table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>1er Avance</th>
+                                        <th>2do Avance</th>
+                                        <th>Pres. Final</th>
+                                        <th>Prom. Avance</th>
+                                        <th>Orales</th>
+                                        <th>Prom. Orales</th>
+                                        <th>Eval. Perm.</th>
+                                        <th>Ex. Final</th>
+                                        <th><strong>Prom. Final</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ $cal->primer_avance ?? '-' }}</td>
+                                        <td>{{ $cal->segundo_avance ?? '-' }}</td>
+                                        <td>{{ $cal->presentacion_final ?? '-' }}</td>
+                                        <td>{{ $cal->promedio_avance ?? '-' }}</td>
+                                        <td>
+                                            {{ $cal->oral_1 ?? '-' }} |
+                                            {{ $cal->oral_2 ?? '-' }} |
+                                            {{ $cal->oral_3 ?? '-' }} |
+                                            {{ $cal->oral_4 ?? '-' }} |
+                                            {{ $cal->oral_5 ?? '-' }}
+                                        </td>
+                                        <td>
+                                            @php
+                                                $orales = collect([$cal->oral_1, $cal->oral_2, $cal->oral_3, $cal->oral_4, $cal->oral_5])->filter();
+                                                $promOrales = $orales->isNotEmpty() ? number_format($orales->avg(), 2) : '-';
+                                            @endphp
+                                            {{ $promOrales }}
+                                        </td>
+                                        <td>{{ $cal->promedio_evaluacion_permanente ?? '-' }}</td>
+                                        <td>{{ $cal->examen_final ?? '-' }}</td>
+                                        <td><strong>{{ $cal->promedio_final ?? '-' }}</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
 </div>
-
-<!-- Custom CSS for Calendar and Modal -->
-<style>
-    body {
-        background: linear-gradient(to right, #e0f2fe, #f0f9ff);
-        font-family: 'Inter', sans-serif;
-    }
-
-    .academic-calendar {
-        background: white;
-        border-radius: 24px;
-        padding: 35px;
-        max-width: 1200px;
-        margin: 50px auto;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
-
-    .calendar-title {
-        text-align: center;
-        font-size: 2.8rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 30px;
-    }
-
-    .fc .fc-toolbar {
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding-bottom: 20px;
-    }
-
-    .fc .fc-toolbar-title {
-        font-size: 1.6rem;
-        color: #1e293b;
-        font-weight: 600;
-    }
-
-    .fc .fc-button-primary {
-        background-color: #2563eb;
-        border: none;
-        border-radius: 12px;
-        padding: 8px 16px;
-        font-size: 1rem;
-        font-weight: 500;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        transition: 0.3s ease;
-    }
-
-    .fc .fc-button-primary:hover {
-        background-color: #1d4ed8;
-        transform: scale(1.05);
-    }
-
-    .fc .fc-col-header-cell-cushion {
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        color: #334155;
-        padding: 12px;
-    }
-
-    .fc-event {
-        background: linear-gradient(145deg, #6366f1, #818cf8);
-        border-left: 6px solid #4f46e5;
-        color: white;
-        border-radius: 12px;
-        padding: 6px 8px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        box-shadow: 0 6px 12px rgba(99, 102, 241, 0.25);
-        transition: all 0.2s ease-in-out;
-    }
-
-    .fc-event:hover {
-        transform: scale(1.03);
-        background: #4f46e5;
-    }
-
-    .fc-day-today {
-        background-color: #f0f9ff !important;
-    }
-
-    .fc-timegrid-slot {
-        height: 50px;
-        border-color: #e2e8f0;
-    }
-
-    /* Modal personalizado */
-    .modal-content {
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        padding: 15px;
-    }
-
-    .modal-header {
-        border-bottom: none;
-        text-align: center;
-    }
-
-    .modal-title {
-        font-weight: 700;
-        color: #334155;
-    }
-
-    .modal-body {
-        font-size: 1rem;
-        color: #1e293b;
-    }
-
-    .modal-detail {
-        margin-bottom: 10px;
-    }
-
-    @media (max-width: 768px) {
-        .academic-calendar {
-            padding: 20px;
-            margin: 20px;
-        }
-
-        .calendar-title {
-            font-size: 2rem;
-        }
-
-        .fc .fc-toolbar-title {
-            font-size: 1.3rem;
-        }
-
-        .fc-event {
-            font-size: 0.75rem;
-        }
-    }
-</style>
-
-
-<!-- FullCalendar JS and Custom Script -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const calendarEl = document.getElementById('calendar');
-        const eventDetailModal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
-
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
-            locale: 'es',
-            allDaySlot: false,
-            slotMinTime: "07:00:00",
-            slotMaxTime: "22:00:00",
-            slotEventOverlap: false,
-            eventOverlap: false,
-            height: 'auto',
-            nowIndicator: true,
-            headerToolbar: {
-    left: 'prev,next today',
-    center: 'title',
-    right: 'timeGridWeek,timeGridDay'
-},
-            events: {!! $eventosJson !!},
-            eventClick: function(info) {
-                // Populate modal with event data
-                document.getElementById('modalCourse').textContent = info.event.title;
-                document.getElementById('modalProfessor').textContent = info.event.extendedProps.profesor || 'N/A';
-                document.getElementById('modalDate').textContent = info.event.start.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                document.getElementById('modalTime').textContent = info.event.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-
-                // Show the modal
-                eventDetailModal.show();
-            }
-        });
-        calendar.render();
-    });
-</script>
-
 
             
 </div>

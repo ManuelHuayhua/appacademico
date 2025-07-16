@@ -664,7 +664,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="calificaciones">
+                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}"  data-page="calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>

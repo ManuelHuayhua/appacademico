@@ -1,5 +1,12 @@
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 CSS y JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <div class="container">
-    <h2>📚 Matricular Alumno</h2>
+    <h2>📚 Matricular Alumnos</h2>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -11,28 +18,44 @@
         @csrf
 
         <div class="mb-3">
-            <label for="user_id">Alumno</label>
-            <select name="user_id" class="form-control" required>
+            <label for="user_ids">Alumnos</label>
+            <select name="user_ids[]" class="form-control select-alumnos" multiple required>
                 @foreach($alumnos as $alumno)
-                    <option value="{{ $alumno->id }}">{{ $alumno->name }} - {{ $alumno->email }}</option>
+                    <option value="{{ $alumno->id }}">{{ $alumno->name }} {{ $alumno->apellido_p }} {{ $alumno->apellido_m }} - DNI: {{ $alumno->dni }}</option>
                 @endforeach
             </select>
+            <small class="form-text text-muted">Puedes buscar y seleccionar varios alumnos.</small>
         </div>
 
         <div class="mb-3">
-            <label for="curso_periodo_id">Curso</label>
-            <select name="curso_periodo_id" class="form-control" required>
-                @foreach($cursos as $curso)
-                    <option value="{{ $curso->id }}">
-                        {{ $curso->curso->nombre }} ({{ $curso->periodo->nombre }} - Sección {{ $curso->seccion }})
-                    </option>
-                @endforeach
-            </select>
-        </div>
+    <label for="curso_periodo_id">Curso</label>
+    <select name="curso_periodo_id" class="form-control select-curso" required>
+        @foreach($cursos as $curso)
+            <option value="{{ $curso->id }}">
+                {{ $curso->curso->nombre }} ({{ $curso->periodo->nombre }} - Sección {{ $curso->seccion }})
+            </option>
+        @endforeach
+    </select>
+</div>
 
         <button type="submit" class="btn btn-primary">Matricular</button>
     </form>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('.select-alumnos').select2({
+            placeholder: "Selecciona los alumnos",
+            allowClear: true,
+            width: '100%'
+        });
+        $('.select-curso').select2({
+            placeholder: "Selecciona el curso",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>
 
 
 
