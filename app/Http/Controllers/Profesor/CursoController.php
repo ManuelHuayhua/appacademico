@@ -21,9 +21,22 @@ class CursoController extends Controller
     // Obtener todos los periodos (para el select)
     $periodos = DB::table('periodos')->orderBy('fecha_inicio', 'desc')->get();
 
-    if (!$periodoSeleccionado && $periodos->isNotEmpty()) {
+    if (!$periodoSeleccionado) {
+    $hoy = Carbon::now();
+
+    $periodoActual = DB::table('periodos')
+        ->where('fecha_inicio', '<=', $hoy)
+        ->where('fecha_fin', '>=', $hoy)
+        ->orderBy('fecha_inicio', 'desc')
+        ->first();
+
+    // Si hay un periodo actual, lo usamos; si no, usamos el más reciente
+    if ($periodoActual) {
+        $periodoSeleccionado = $periodoActual->id;
+    } elseif ($periodos->isNotEmpty()) {
         $periodoSeleccionado = $periodos->first()->id;
     }
+}
 
     // Obtener cursos asignados del profesor en ese periodo
     $cursos = DB::table('curso_periodo')
@@ -77,24 +90,28 @@ class CursoController extends Controller
     return view('profesor.cursos', compact('cursos', 'alumnosPorCurso', 'fechasPorSemana', 'periodos', 'periodoSeleccionado'));
 }
 
-  public function guardarAsistencia(Request $request)
+public function guardarAsistencia(Request $request)
 {
     $request->validate([
         'curso_periodo_id' => 'required|exists:curso_periodo,id',
+        'fecha' => 'required|date',
         'asistencias' => 'required|array',
     ]);
 
-    foreach ($request->asistencias as $userId => $asistenciasPorFecha) {
-        foreach ($asistenciasPorFecha as $fecha => $asistio) {
-            DB::table('asistencias')
-                ->where('user_id', $userId)
-                ->where('curso_periodo_id', $request->curso_periodo_id)
-                ->where('fecha', $fecha)
-                ->update([
-                    'asistio' => $asistio,
+    foreach ($request->asistencias as $userId => $asistio) {
+        DB::table('asistencias')
+            ->updateOrInsert(
+                [
+                    'user_id' => $userId,
+                    'curso_periodo_id' => $request->curso_periodo_id,
+                    'fecha' => $request->fecha,
+                ],
+                [
+                    'asistio' => $asistio !== '' ? $asistio : null,
                     'updated_at' => now(),
-                ]);
-        }
+                    'created_at' => now(), // si es nuevo registro
+                ]
+            );
     }
 
     return back()->with('success', 'Asistencia guardada correctamente.');

@@ -639,45 +639,45 @@
                 </button>
             </div>
             
-            <nav class="sidebar-nav">
+             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
-                   <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('admin.dashboard') }}" data-page="general">
+                    <li class="nav-item">
+                        <a class="nav-link " href="{{ route('profesor.dashboard') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">Inicio</span>
                             <div class="tooltip-custom">Inicio</div>
                         </a>
                     </li>
-                    
+                  
                     <li class="nav-item">
-                        <a class="nav-link "  href="{{ route('admin.usuarios.create') }}" data-page="perfil">
+                        <a class="nav-link " href="{{ route('profesor.cursos') }}" data-page="perfil">
                             <i class="fas fa-user"></i>
-                            <span class="nav-text">Usuarios y Roles</span>
-                            <div class="tooltip-custom">Usuarios y Roles</div>
+                            <span class="nav-text">Cursos</span>
+                            <div class="tooltip-custom">Cursos</div>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link"    href="{{ route('admin.cursos.create') }}" data-page="cursos">
+                    <li class="nav-item ">
+                        <a class="nav-link active"   href="{{ route('profesor.calificaciones') }}" data-page="cursos">
                             <i class="fas fa-book"></i>
-                            <span class="nav-text">Crear Curso</span>
-                            <div class="tooltip-custom">Crear Curso</div>
+                            <span class="nav-text">Calificaciones</span>
+                            <div class="tooltip-custom">Calificaciones</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"  href="{{ route('admin.matricula.create') }}" data-page="calificaciones">
-                            <i class="fas fa-chart-line"></i>
-                            <span class="nav-text">Matricula</span>
-                            <div class="tooltip-custom">Matricula</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.calificaciones.index') }}" data-page="calendario">
+                        <a class="nav-link" href="" data-page="calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
                         </a>
                     </li>
-                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="" data-page="calendario">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="nav-text">Calendario</span>
+                            <div class="tooltip-custom">Calendario</div>
+                        </a>
+                    </li>
+                    
                 </ul>
             </nav>
             
@@ -723,6 +723,86 @@
             
             <!-- Content -->
             <div class="content-area">
+                  <h2>📝 Evaluación de Alumnos</h2>
+
+    {{-- Mensaje de éxito --}}
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    {{-- Filtro por periodo --}}
+    <form method="GET" action="{{ route('profesor.calificaciones') }}" class="row g-3 mb-3">
+        <div class="col-md-4">
+            <label>Periodo:</label>
+            <select name="periodo_id" onchange="this.form.submit()" class="form-select">
+                @foreach($periodos as $periodo)
+                    <option value="{{ $periodo->id }}" {{ $periodoSeleccionado == $periodo->id ? 'selected' : '' }}>
+                        {{ $periodo->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label>Curso:</label>
+            <select name="curso_periodo_id" onchange="this.form.submit()" class="form-select">
+                <option value="">-- Selecciona Curso --</option>
+                @foreach($cursos->unique('curso_periodo_id') as $c)
+                    <option value="{{ $c->curso_periodo_id }}" {{ $cursoSeleccionado == $c->curso_periodo_id ? 'selected' : '' }}>
+                        {{ $c->cursoPeriodo->curso->nombre }} - Sección {{ $c->cursoPeriodo->seccion }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </form>
+
+    {{-- Tabla de calificaciones --}}
+    @if($alumnos && count($alumnos))
+        <form method="POST" action="{{ route('profesor.calificaciones.guardar') }}">
+            @csrf
+            <input type="hidden" name="curso_periodo_id" value="{{ $cursoSeleccionado }}">
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>1er Avance</th>
+                        <th>2do Avance</th>
+                        <th>Presentación</th>
+                        <th>Oral 1</th>
+                        <th>Oral 2</th>
+                        <th>Oral 3</th>
+                        <th>Oral 4</th>
+                        <th>Oral 5</th>
+                        <th>Examen Final</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($alumnos as $alumno)
+                        <tr>
+                            <td>{{ $alumno->name }} {{ $alumno->apellido_p }} {{ $alumno->apellido_m }}</td>
+                            @php
+                                $notas = [
+                                    'primer_avance', 'segundo_avance', 'presentacion_final',
+                                    'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'
+                                ];
+                            @endphp
+                            @foreach($notas as $nota)
+                                <td>
+                                    <input type="number" step="0.01" name="notas[{{ $alumno->id }}][{{ $nota }}]"
+                                        class="form-control" value="{{ $alumno->$nota }}">
+                                </td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary">💾 Guardar Calificaciones</button>
+        </form>
+    @elseif($cursoSeleccionado)
+        <div class="alert alert-warning">No hay alumnos matriculados en este curso.</div>
+    @endif
             
 </div>
 
@@ -842,3 +922,4 @@
     </form>
 </body>
 </html>
+

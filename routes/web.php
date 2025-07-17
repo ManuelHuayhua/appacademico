@@ -157,5 +157,8 @@ Route::get('/admin/calificaciones', [CalificacionesController::class, 'index'])-
         Route::post('/asistencia/guardar', [ProfesorCursoController::class, 'guardarAsistencia'])->name('asistencia.guardar');
     });
 
+    Route::get('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'index'])->name('profesor.calificaciones');
+    Route::post('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'guardar'])->name('profesor.calificaciones.guardar');
+
 });
 

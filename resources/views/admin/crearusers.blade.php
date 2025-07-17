@@ -27,7 +27,7 @@
 
         /* Sidebar Styles - Azul menos intenso */
         .sidebar {
-            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             min-height: 100vh;
@@ -234,7 +234,7 @@
             background: none;
             border: none;
             font-size: 18px;
-            color: #4a90e2;
+            color: #003bb1;
             cursor: pointer;
             transition: all 0.3s ease;
             padding: 8px;
@@ -242,7 +242,7 @@
         }
 
         .toggle-btn:hover {
-            color: #357abd;
+            color: #003bb1;
             background-color: rgba(74, 144, 226, 0.1);
         }
 
@@ -258,7 +258,7 @@
             width: 35px;
             height: 35px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -330,7 +330,7 @@
             width: 100%;
             max-width: 100%;
             margin-bottom: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
             color: white;
         }
 
@@ -639,9 +639,9 @@
                 </button>
             </div>
             
-            <nav class="sidebar-nav">
+           <nav class="sidebar-nav">
                 <ul class="nav flex-column">
-                    <li class="nav-item">
+                   <li class="nav-item">
                         <a class="nav-link " href="{{ route('admin.dashboard') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">Inicio</span>
@@ -657,54 +657,27 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="cursos">
+                        <a class="nav-link "    href="{{ route('admin.cursos.create') }}" data-page="cursos">
                             <i class="fas fa-book"></i>
-                            <span class="nav-text">Cursos</span>
-                            <div class="tooltip-custom">Cursos</div>
+                            <span class="nav-text">Crear Curso</span>
+                            <div class="tooltip-custom">Crear Curso</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="calificaciones">
+                        <a class="nav-link"  href="{{ route('admin.matricula.create') }}" data-page="calificaciones">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="nav-text">Matricula</span>
+                            <div class="tooltip-custom">Matricula</div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="{{ route('admin.calificaciones.index') }}" data-page="calendario">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="calendario">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span class="nav-text">Calendario</span>
-                            <div class="tooltip-custom">Calendario</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="mensajes">
-                            <i class="fas fa-envelope"></i>
-                            <span class="nav-text">Mensajes</span>
-                            <div class="tooltip-custom">Mensajes</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="comprobantes">
-                            <i class="fas fa-file-invoice"></i>
-                            <span class="nav-text">Comprobantes</span>
-                            <div class="tooltip-custom">Comprobantes</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="tutorial">
-                            <i class="fas fa-play-circle"></i>
-                            <span class="nav-text">Tutorial Aula Virtual</span>
-                            <div class="tooltip-custom">Tutorial Aula Virtual</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="biblioteca">
-                            <i class="fas fa-book-open"></i>
-                            <span class="nav-text">Biblioteca</span>
-                            <div class="tooltip-custom">Biblioteca</div>
-                        </a>
-                    </li>
+                   
                 </ul>
             </nav>
             
