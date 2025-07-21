@@ -851,19 +851,30 @@
 </style>
             <!-- Content -->
             <div class="content-area">
-                @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+
+                 <!-- error y succes -->
+          @if(session('success') || session('error'))
+    <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+        <div class="toast align-items-center text-bg-{{ session('success') ? 'success' : 'danger' }} border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ session('success') ?? session('error') }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
     </div>
 @endif
 
-@if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-    </div>
-@endif
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        toastElList.map(function (toastEl) {
+            new bootstrap.Toast(toastEl, { delay: 3000 }).show(); // 3 segundos
+        });
+    });
+</script>
+ <!-- error y succes -->
              <div class="container py-5">
     <div class="card profile-card mx-auto shadow-lg" style="max-width: 500px;">
         {{-- Header con gradiente --}}
@@ -944,57 +955,225 @@
 </div>
 
 <!-- Modal de edición -->
-<!-- Modal de edición -->
+
+<!-- -->
+<style>
+    .readonly-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #6c757d;
+    }
+    
+    .editable-section {
+        background: #fff3cd;
+        border-radius: 10px;
+        padding: 1.5rem;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .readonly-title {
+        color: #6c757d;
+    }
+    
+    .editable-title {
+        color: #856404;
+    }
+    
+    .form-control:read-only {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        color: #6c757d;
+    }
+    
+    .editable-field {
+        background: white;
+        border: 2px solid #ffc107;
+        transition: all 0.3s ease;
+    }
+    
+    .editable-field:focus {
+        border-color: #ffcd39;
+        box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+    }
+    
+    .modal-header {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border-radius: 0.5rem 0.5rem 0 0;
+    }
+    
+    .modal-title {
+        font-weight: 600;
+    }
+    
+    .btn-close {
+        filter: invert(1);
+    }
+    
+    .alert-info-custom {
+        background: #e7f3ff;
+        border: 1px solid #b8daff;
+        color: #0c5460;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .modal-footer {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<!-- Modal de edición mejorado -->
 <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" action="{{ route('perfil.update') }}">
-      @csrf
-      @method('PUT')
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editarPerfilModalLabel">Editar Contacto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
+    <div class="modal-dialog modal-lg">
+        <form method="POST" action="{{ route('perfil.update') }}">
+            @csrf
+            @method('PUT')
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarPerfilModalLabel">
+                        <i class="fa-solid fa-user-edit me-2"></i>
+                        Editar Información de Contacto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Alerta informativa -->
+                    <div class="alert alert-info-custom d-flex align-items-center" role="alert">
+                        <i class="fa-solid fa-info-circle me-2"></i>
+                        <div>
+                            <strong>Información:</strong> Solo puedes modificar tu teléfono y correo electrónico. 
+                            Los demás datos son permanentes por motivos de seguridad.
+                        </div>
+                    </div>
 
-            {{-- Nombre (solo lectura) --}}
-            <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input type="text" class="form-control" value="{{ $user->name }}" readonly>
+                    <!-- Sección de datos no editables -->
+                    <div class="readonly-section">
+                        <h6 class="section-title readonly-title">
+                            <i class="fa-solid fa-lock"></i>
+                            Información Personal (No editable)
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label text-muted">Nombre Completo</label>
+                                <input type="text" class="form-control" value="{{ $user->name }} {{ $user->apellido_p }} {{ $user->apellido_m }}" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label text-muted">DNI</label>
+                                <input type="text" class="form-control" value="{{ $user->dni }}" readonly>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Fecha de Nacimiento</label>
+                            <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($user->fecha_nacimiento)->format('d/m/Y') }}" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Sección de datos editables -->
+                    <div class="editable-section">
+                        <h6 class="section-title editable-title">
+                            <i class="fa-solid fa-edit"></i>
+                            Información de Contacto (Editable)
+                        </h6>
+                        
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label fw-bold">
+                                <i class="fa-solid fa-phone me-1"></i>
+                                Teléfono
+                            </label>
+                            <input type="text" 
+                                   class="form-control editable-field" 
+                                   name="telefono" 
+                                   id="telefono"
+                                   value="{{ $user->telefono }}" 
+                                   placeholder="Ingresa tu número de teléfono"
+                                   required>
+                            <div class="form-text">
+                                <i class="fa-solid fa-info-circle"></i>
+                                Incluye el código de país (ej: +51 para Perú)
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-bold">
+                                <i class="fa-solid fa-envelope me-1"></i>
+                                Correo Electrónico
+                            </label>
+                            <input type="email" 
+                                   class="form-control editable-field" 
+                                   name="email" 
+                                   id="email"
+                                   value="{{ $user->email }}" 
+                                   placeholder="Ingresa tu correo electrónico"
+                                   required>
+                            <div class="form-text">
+                                <i class="fa-solid fa-info-circle"></i>
+                                Asegúrate de que sea un correo válido y activo
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa-solid fa-save me-2"></i>
+                        Guardar Cambios
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-times me-2"></i>
+                        Cancelar
+                    </button>
+                </div>
             </div>
+        </form>
+    </div>
+</div>
 
-            {{-- DNI (solo lectura) --}}
-            <div class="mb-3">
-                <label class="form-label">DNI</label>
-                <input type="text" class="form-control" value="{{ $user->dni }}" readonly>
-            </div>
+<!-- JavaScript para validación (opcional) -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validación en tiempo real para teléfono
+        const telefonoInput = document.getElementById('telefono');
+        if (telefonoInput) {
+            telefonoInput.addEventListener('input', function() {
+                const telefono = this.value;
+                const telefonoRegex = /^\+?[\d\s\-\(\)]+$/;
+                
+                if (telefono && !telefonoRegex.test(telefono)) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
 
-            {{-- Fecha de Nacimiento (solo lectura) --}}
-            <div class="mb-3">
-                <label class="form-label">Fecha de Nacimiento</label>
-                <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($user->fecha_nacimiento)->format('d/m/Y') }}" readonly>
-            </div>
-
-            {{-- Teléfono (editable) --}}
-            <div class="mb-3">
-                <label for="telefono" class="form-label">Teléfono</label>
-                <input type="text" class="form-control" name="telefono" value="{{ $user->telefono }}" required>
-            </div>
-
-            {{-- Correo (editable) --}}
-            <div class="mb-3">
-                <label for="email" class="form-label">Correo</label>
-                <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
-            </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Guardar cambios</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
-      </div>
-    </form>
-  </div>
+        // Validación en tiempo real para email
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.addEventListener('input', function() {
+                const email = this.value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (email && !emailRegex.test(email)) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        }
+    });
+</script>
 </div>
 
 

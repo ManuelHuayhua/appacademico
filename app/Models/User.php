@@ -80,5 +80,9 @@ class User extends Authenticatable
 }
 
 
+public function matriculas()
+{
+    return $this->hasMany(Matricula::class, 'user_id');
+}
 
 }

@@ -725,122 +725,460 @@
             </nav>
             
             <!-- Content -->
-            <div class="content-area">
-                 <h2>👨‍🏫 Cursos Asignados</h2>
+
+            <style>
+    /* Estilos mejorados para el diseño */
+    .curso-card {
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .curso-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .curso-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border: none;
+    }
+    
+    .curso-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    .btn-toggle {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-toggle:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        transform: scale(1.05);
+    }
+    
+    .fecha-section {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+    
+    .fecha-header {
+        background: white;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .fecha-title {
+        color: #495057;
+        font-weight: 600;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-asistencia {
+        background: #6c757d;
+        border: none;
+        color: white;
+        border-radius: 6px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-asistencia:hover {
+        background: #5a6268;
+        color: white;
+        transform: scale(1.05);
+    }
+    
+    .asistencia-form {
+        padding: 1.5rem;
+    }
+    
+    .table-asistencia {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .table-asistencia thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .table-asistencia th {
+        border: none;
+        padding: 1rem;
+        font-weight: 600;
+    }
+    
+    .table-asistencia td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-color: #e9ecef;
+    }
+    
+    .btn-group-asistencia .btn {
+        border-radius: 6px;
+        margin: 0 2px;
+        font-size: 0.875rem;
+        padding: 0.5rem 0.8rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-group-asistencia .btn:hover {
+        transform: scale(1.05);
+    }
+    
+    .btn-guardar {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-guardar:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+    
+    .filtro-section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .form-select {
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    /* Sistema de notificaciones flotantes */
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1055;
+        max-width: 350px;
+    }
+    
+    .toast-custom {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
+    }
+    
+    .toast-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+    }
+    
+    .toast-error {
+        background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+        color: white;
+    }
+    
+    .toast-header-custom {
+        background: rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+    
+    .toast-body-custom {
+        color: white;
+        font-weight: 500;
+    }
+    
+    /* Animaciones */
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .slide-in-left {
+        animation: slideInLeft 0.5s ease-out;
+    }
+    
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+        .curso-header {
+            padding: 1rem;
+        }
+        
+        .curso-header .d-flex {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start !important;
+        }
+        
+        .btn-toggle {
+            align-self: stretch;
+            text-align: center;
+        }
+        
+        .fecha-header .d-flex {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-start !important;
+        }
+        
+        .btn-asistencia {
+            align-self: stretch;
+        }
+        
+        .table-responsive {
+            border-radius: 8px;
+        }
+        
+        .btn-group-asistencia {
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .btn-group-asistencia .btn {
+            margin: 2px 0;
+            border-radius: 6px !important;
+        }
+        
+        .toast-container {
+            left: 10px;
+            right: 10px;
+            max-width: none;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .asistencia-form {
+            padding: 1rem;
+        }
+        
+        .filtro-section {
+            padding: 1rem;
+        }
+    }
+</style>
+
+          <div class="content-area">
+    <div class="d-flex align-items-center mb-4">
+        <i class="fas fa-chalkboard-teacher me-3" style="font-size: 2rem; color: #667eea;"></i>
+        <h2 class="mb-0" style="color: #495057; font-weight: 700;">Cursos Asignados</h2>
+    </div>
 
     {{-- Filtro por periodo --}}
-    <form method="GET" action="{{ route('profesor.cursos') }}" class="mb-4">
-        <div class="row g-2 align-items-end">
-            <div class="col-md-4">
-                <label for="periodo_id" class="form-label">Seleccionar periodo:</label>
-                <select class="form-select" name="periodo_id" id="periodo_id" onchange="this.form.submit()">
-                    @foreach($periodos as $periodo)
-                        <option value="{{ $periodo->id }}" {{ $periodo->id == $periodoSeleccionado ? 'selected' : '' }}>
-                            {{ $periodo->nombre }}
-                        </option>
-                    @endforeach
-                </select>
+    <div class="filtro-section">
+        <form method="GET" action="{{ route('profesor.cursos') }}">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <label for="periodo_id" class="form-label fw-semibold">
+                        <i class="fas fa-calendar-alt me-2"></i>Seleccionar periodo:
+                    </label>
+                    <select class="form-select" name="periodo_id" id="periodo_id" onchange="this.form.submit()">
+                        @foreach($periodos as $periodo)
+                            <option value="{{ $periodo->id }}" {{ $periodo->id == $periodoSeleccionado ? 'selected' : '' }}>
+                                {{ $periodo->nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div>
-    </form>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+        </form>
+    </div>
 
     @foreach($cursos as $curso)
-    <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>{{ $curso->curso }} - {{ $curso->periodo }} (Sección {{ $curso->seccion }})</strong>
-            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#detallesCurso{{ $curso->curso_periodo_id }}">
-                📂 Ver detalles
-            </button>
+    <div class="card curso-card mb-4">
+        <div class="card-header curso-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="curso-title">
+                    <i class="fas fa-book me-2"></i>
+                    {{ $curso->curso }} - {{ $curso->periodo }} 
+                    <span class="badge bg-light text-dark ms-2">Sección {{ $curso->seccion }}</span>
+                </div>
+                <button class="btn btn-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#detallesCurso{{ $curso->curso_periodo_id }}">
+                    <i class="fas fa-folder-open me-2"></i>Ver detalles
+                </button>
+            </div>
         </div>
         <div class="card-body collapse" id="detallesCurso{{ $curso->curso_periodo_id }}">
             @php
                 $fechas = collect($fechasPorSemana[$curso->curso_periodo_id] ?? [])->flatten();
             @endphp
-
             @if($fechas->isEmpty())
-                <p>No hay fechas registradas para este curso.</p>
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times" style="font-size: 3rem; color: #6c757d; opacity: 0.5;"></i>
+                    <p class="mt-3 text-muted">No hay fechas registradas para este curso.</p>
+                </div>
             @else
                 @foreach($fechas->sort()->values() as $index => $fecha)
-                    <div class="mb-3 border p-3 rounded">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">📅 Día: {{ \Carbon\Carbon::parse($fecha)->translatedFormat('l d/m/Y') }}</h5>
-                            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#fecha{{ $curso->curso_periodo_id }}_{{ $index }}">
-                                Ver asistencia
-                            </button>
+                    <div class="fecha-section">
+                        <div class="fecha-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="fecha-title">
+                                    <i class="fas fa-calendar-day"></i>
+                                    {{ \Carbon\Carbon::parse($fecha)->translatedFormat('l d/m/Y') }}
+                                </h5>
+                                <button class="btn btn-asistencia" type="button" data-bs-toggle="collapse" data-bs-target="#fecha{{ $curso->curso_periodo_id }}_{{ $index }}">
+                                    <i class="fas fa-users me-2"></i>Ver asistencia
+                                </button>
+                            </div>
                         </div>
+                        <div class="collapse" id="fecha{{ $curso->curso_periodo_id }}_{{ $index }}">
+                            <div class="asistencia-form">
+                                <form action="{{ route('profesor.asistencia.guardar') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="curso_periodo_id" value="{{ $curso->curso_periodo_id }}">
+                                    <input type="hidden" name="fecha" value="{{ $fecha }}">
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-asistencia mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th><i class="fas fa-user me-2"></i>Alumno</th>
+                                                    <th><i class="fas fa-check-circle me-2"></i>Asistencia</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($alumnosPorCurso[$curso->curso_periodo_id] as $alumno)
+                                                    @php
+                                                        $registro = DB::table('asistencias')
+                                                            ->where('user_id', $alumno->id)
+                                                            ->where('curso_periodo_id', $curso->curso_periodo_id)
+                                                            ->where('fecha', $fecha)
+                                                            ->first();
+                                                    @endphp
+                                                    <tr>
+                                                        <td class="fw-semibold">{{ $alumno->name }}</td>
+                                                        <td>
+                                                            <div class="btn-group btn-group-asistencia" role="group">
+                                                                <input type="radio" class="btn-check"
+                                                                    name="asistencias[{{ $alumno->id }}]"
+                                                                    id="asistio_{{ $alumno->id }}_{{ $index }}"
+                                                                    value="1"
+                                                                    {{ optional($registro)->asistio === 1 ? 'checked' : '' }}>
+                                                                <label class="btn btn-outline-success"
+                                                                    for="asistio_{{ $alumno->id }}_{{ $index }}">
+                                                                    <i class="fas fa-check me-1"></i>Asistió
+                                                                </label>
 
-                        <div class="collapse mt-3" id="fecha{{ $curso->curso_periodo_id }}_{{ $index }}">
-                            <form action="{{ route('profesor.asistencia.guardar') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="curso_periodo_id" value="{{ $curso->curso_periodo_id }}">
-                                <input type="hidden" name="fecha" value="{{ $fecha }}">
+                                                                <input type="radio" class="btn-check"
+                                                                    name="asistencias[{{ $alumno->id }}]"
+                                                                    id="falto_{{ $alumno->id }}_{{ $index }}"
+                                                                    value="0"
+                                                                    {{ optional($registro)->asistio === 0 ? 'checked' : '' }}>
+                                                                <label class="btn btn-outline-danger"
+                                                                    for="falto_{{ $alumno->id }}_{{ $index }}">
+                                                                    <i class="fas fa-times me-1"></i>Faltó
+                                                                </label>
 
-                                <table class="table table-sm table-bordered mt-2">
-                                    <thead>
-                                        <tr>
-                                            <th>Alumno</th>
-                                            <th>Asistencia</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($alumnosPorCurso[$curso->curso_periodo_id] as $alumno)
-                                            @php
-                                                $registro = DB::table('asistencias')
-                                                    ->where('user_id', $alumno->id)
-                                                    ->where('curso_periodo_id', $curso->curso_periodo_id)
-                                                    ->where('fecha', $fecha)
-                                                    ->first();
-                                            @endphp
-                                            <tr>
-                                                <td>{{ $alumno->name }}</td>
-                                                <td>
-                                                    <div class="btn-group" role="group">
-                                                        <input type="radio" class="btn-check"
-                                                            name="asistencias[{{ $alumno->id }}]"
-                                                            id="asistio_{{ $alumno->id }}_{{ $index }}"
-                                                            value="1"
-                                                            {{ optional($registro)->asistio === 1 ? 'checked' : '' }}>
-                                                        <label class="btn btn-outline-success btn-sm"
-                                                            for="asistio_{{ $alumno->id }}_{{ $index }}">✅ Asistió</label>
-
-                                                        <input type="radio" class="btn-check"
-                                                            name="asistencias[{{ $alumno->id }}]"
-                                                            id="falto_{{ $alumno->id }}_{{ $index }}"
-                                                            value="0"
-                                                            {{ optional($registro)->asistio === 0 ? 'checked' : '' }}>
-                                                        <label class="btn btn-outline-danger btn-sm"
-                                                            for="falto_{{ $alumno->id }}_{{ $index }}">❌ Faltó</label>
-
-                                                        <input type="radio" class="btn-check"
-                                                            name="asistencias[{{ $alumno->id }}]"
-                                                            id="pendiente_{{ $alumno->id }}_{{ $index }}"
-                                                            value=""
-                                                            {{ is_null(optional($registro)->asistio) ? 'checked' : '' }}>
-                                                        <label class="btn btn-outline-secondary btn-sm"
-                                                            for="pendiente_{{ $alumno->id }}_{{ $index }}">⏳ Pendiente</label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-
-                                <button class="btn btn-success btn-sm mt-2">Guardar asistencia</button>
-                            </form>
+                                                                <input type="radio" class="btn-check"
+                                                                    name="asistencias[{{ $alumno->id }}]"
+                                                                    id="pendiente_{{ $alumno->id }}_{{ $index }}"
+                                                                    value=""
+                                                                    {{ is_null(optional($registro)->asistio) ? 'checked' : '' }}>
+                                                                <label class="btn btn-outline-secondary"
+                                                                    for="pendiente_{{ $alumno->id }}_{{ $index }}">
+                                                                    <i class="fas fa-clock me-1"></i>Pendiente
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-end mt-3">
+                                        <button class="btn btn-guardar">
+                                            <i class="fas fa-save me-2"></i>Guardar asistencia
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @endforeach
             @endif
         </div>
     </div>
-@endforeach
-
+    @endforeach
             
 </div>
+
+<!-- Toast Container para notificaciones -->
+<div class="toast-container">
+    @if(session('success'))
+        <div class="toast toast-custom toast-success slide-in-left" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+            <div class="toast-header toast-header-custom">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong class="me-auto">Éxito</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body toast-body-custom">
+                {{ session('success') }}
+            </div>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="toast toast-custom toast-error slide-in-left" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+            <div class="toast-header toast-header-custom">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body toast-body-custom">
+                {{ session('error') }}
+            </div>
+        </div>
+    @endif
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        toastElList.map(function (toastEl) {
+            var toast = new bootstrap.Toast(toastEl)
+            toast.show()
+        });
+    });
+</script>
+
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

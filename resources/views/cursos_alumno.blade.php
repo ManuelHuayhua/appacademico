@@ -751,61 +751,174 @@
             <!-- Content -->
             <div class="content-area">
 
-          <div class="container mt-4">
-    <h2>📘 Mis cursos matriculados</h2>
+            <style>
+                .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Sombra sutil */
+        }
+        .table thead th {
+            background-color: #e9ecef; /* Fondo ligeramente gris para el encabezado de la tabla */
+            color: #495057; /* Color de texto más oscuro */
+            border-bottom: 2px solid #dee2e6;
+        }
+        .table-responsive-custom {
+            border-radius: 0.5rem; /* Bordes redondeados para la tabla responsiva */
+            overflow: hidden; /* Asegura que los bordes redondeados se apliquen al contenido */
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Sombra para la tabla */
+        }
+        .badge-custom-success {
+            background-color: #d4edda; /* Verde claro */
+            color: #155724; /* Verde oscuro */
+        }
+        .badge-custom-danger {
+            background-color: #f8d7da; /* Rojo claro */
+            color: #721c24; /* Rojo oscuro */
+        }
+        .badge-custom-secondary {
+            background-color: #e2e3e5; /* Gris claro */
+            color: #383d41; /* Gris oscuro */
+        }
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .modal-footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+
+        /* --- Mejoras de Responsividad para la Tabla --- */
+        @media (max-width: 767.98px) { /* Para pantallas pequeñas (sm y abajo) */
+            .table-responsive-custom {
+                border: none; /* Quitamos el borde de la tabla principal */
+                box-shadow: none; /* Quitamos la sombra de la tabla principal */
+            }
+            .table-responsive-custom table {
+                border: none !important; /* Aseguramos que no haya bordes en la tabla */
+            }
+            .table-responsive-custom thead {
+                display: none; /* Ocultamos el encabezado de la tabla */
+            }
+            .table-responsive-custom tbody,
+            .table-responsive-custom tr,
+            .table-responsive-custom td {
+                display: block; /* Hacemos que las filas y celdas se comporten como bloques */
+                width: 100%; /* Ocupan todo el ancho disponible */
+            }
+            .table-responsive-custom tr {
+                margin-bottom: 1rem; /* Espacio entre cada "tarjeta" de curso */
+                border: 1px solid #dee2e6; /* Borde para cada tarjeta */
+                border-radius: 0.5rem; /* Bordes redondeados */
+                background-color: #fff; /* Fondo blanco */
+                box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Sombra */
+                padding: 1rem; /* Padding interno */
+            }
+            .table-responsive-custom td {
+                text-align: right; /* Alineamos el contenido a la derecha */
+                padding-left: 50%; /* Espacio para la etiqueta */
+                position: relative;
+                border: none; /* Quitamos los bordes de las celdas */
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            .table-responsive-custom td::before {
+                content: attr(data-label); /* Usamos el atributo data-label para la etiqueta */
+                position: absolute;
+                left: 0;
+                width: 45%; /* Ancho de la etiqueta */
+                padding-left: 1rem;
+                font-weight: bold;
+                text-align: left;
+                color: #6c757d; /* Color de la etiqueta */
+            }
+            .table-responsive-custom td:last-child {
+                text-align: center; /* Centramos el botón de asistencias */
+                padding-left: 0;
+            }
+            .table-responsive-custom td:last-child::before {
+                content: none; /* No mostramos etiqueta para el botón */
+            }
+        }
+            </style>
+
+       <div class="container mt-5 mb-5">
+    <div class="d-flex align-items-center mb-4">
+        <i class="fas fa-book-open fa-2x text-primary me-3"></i>
+        <h2 class="fw-bold text-dark">Mis cursos matriculados</h2>
+    </div>
 
     {{-- Filtro por periodo --}}
-    <form method="GET" class="mb-3">
-        <label for="periodo_id" class="form-label">Filtrar por periodo:</label>
-        <select name="periodo_id" id="periodo_id" class="form-select" onchange="this.form.submit()">
-            @foreach($periodos as $periodo)
-                <option value="{{ $periodo->id }}" {{ $periodo->id == $periodoSeleccionadoId ? 'selected' : '' }}>
-                    {{ $periodo->nombre }} ({{ \Carbon\Carbon::parse($periodo->fecha_inicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($periodo->fecha_fin)->format('d/m/Y') }})
-                </option>
-            @endforeach
-        </select>
-    </form>
+    <div class="card p-4 mb-4">
+        <form method="GET">
+            <div class="mb-3">
+                <label for="periodo_id" class="form-label fw-semibold text-muted">Filtrar por periodo:</label>
+                <select name="periodo_id" id="periodo_id" class="form-select" onchange="this.form.submit()">
+                    @foreach($periodos as $periodo)
+                        <option value="{{ $periodo->id }}" {{ $periodo->id == $periodoSeleccionadoId ? 'selected' : '' }}>
+                            {{ $periodo->nombre }} ({{ \Carbon\Carbon::parse($periodo->fecha_inicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($periodo->fecha_fin)->format('d/m/Y') }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </form>
+    </div>
 
     @if($cursos->isEmpty())
-        <p>No estás matriculado en ningún curso para este periodo.</p>
+        <div class="alert alert-info text-center py-4" role="alert">
+            <i class="fas fa-info-circle me-2"></i> No estás matriculado en ningún curso para este periodo.
+        </div>
     @else
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Curso</th>
-                    <th>Descripción</th>
-                    <th>Periodo</th>
-                    <th>Sección</th>
-                    <th>Fecha de matrícula</th>
-                    <th>Estado</th>
-                    <th>Asistencias</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($cursos as $curso)
-                <tr>
-                    <td>{{ $curso->curso }}</td>
-                    <td>{{ $curso->descripcion ?? '—' }}</td>
-                    <td>{{ $curso->periodo }}</td>
-                    <td>{{ $curso->seccion }}</td>
-                    <td>{{ \Carbon\Carbon::parse($curso->fecha_matricula)->format('d/m/Y') }}</td>
-                    <td>{{ ucfirst($curso->estado) }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalAsistencia{{ $curso->curso_periodo_id }}">
-                            Ver Asistencias
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="table-responsive-custom"> {{-- Usamos nuestra clase personalizada --}}
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">Curso</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Periodo</th>
+                        <th scope="col">Sección</th>
+                        <th scope="col">Fecha de matrícula</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Asistencias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($cursos as $curso)
+                        <tr>
+                            <td data-label="Curso" class="fw-bold">{{ $curso->curso }}</td>
+                            <td data-label="Descripción">{{ $curso->descripcion ?? '—' }}</td>
+                            <td data-label="Periodo">{{ $curso->periodo }}</td>
+                            <td data-label="Sección">{{ $curso->seccion }}</td>
+                            <td data-label="Fecha de matrícula">{{ \Carbon\Carbon::parse($curso->fecha_matricula)->format('d/m/Y') }}</td>
+                            <td data-label="Estado">
+                                @php
+                                    $estadoClass = '';
+                                    if ($curso->estado === 'activo') {
+                                        $estadoClass = 'badge-custom-success';
+                                    } elseif ($curso->estado === 'inactivo') {
+                                        $estadoClass = 'badge-custom-danger';
+                                    } else {
+                                        $estadoClass = 'badge-custom-secondary';
+                                    }
+                                @endphp
+                                <span class="badge {{ $estadoClass }}">{{ ucfirst($curso->estado) }}</span>
+                            </td>
+                            <td data-label="Acciones"> {{-- Cambiado a Acciones para el label --}}
+                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalAsistencia{{ $curso->curso_periodo_id }}">
+                                    <i class="fas fa-eye me-1"></i> Ver Asistencias
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     @endif
 </div>
 
 {{-- MODALES DE ASISTENCIA --}}
 @foreach($cursos as $curso)
 <div class="modal fade" id="modalAsistencia{{ $curso->curso_periodo_id }}" tabindex="-1" aria-labelledby="label{{ $curso->curso_periodo_id }}" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="label{{ $curso->curso_periodo_id }}">
@@ -821,35 +934,51 @@
                 ->orderBy('fecha')
                 ->get();
         @endphp
-
         @if($asistencias->isEmpty())
-            <p>No hay asistencias registradas para este curso.</p>
+            <p class="text-center text-muted">No hay asistencias registradas para este curso.</p>
         @else
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Asistencia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($asistencias as $asistencia)
-                    <tr>
-                        <td>{{ \Carbon\Carbon::parse($asistencia->fecha)->format('d/m/Y') }}</td>
-                        <td>
-                            @if(is_null($asistencia->asistio))
-                                <span class="badge bg-secondary">Pendiente</span>
-                            @elseif($asistencia->asistio)
-                                <span class="badge bg-success">Asistió</span>
-                            @else
-                                <span class="badge bg-danger">Faltó</span>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <div class="table-responsive"> {{-- table-responsive de Bootstrap para el modal --}}
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Asistencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($asistencias as $asistencia)
+                            <tr>
+                                <td>{{ \Carbon\Carbon::parse($asistencia->fecha)->format('d/m/Y') }}</td>
+                                <td>
+                                    @php
+                                        $asistenciaClass = '';
+                                        if (is_null($asistencia->asistio)) {
+                                            $asistenciaClass = 'badge-custom-secondary'; // Pendiente
+                                        } elseif ($asistencia->asistio) {
+                                            $asistenciaClass = 'badge-custom-success'; // Asistió
+                                        } else {
+                                            $asistenciaClass = 'badge-custom-danger'; // Faltó
+                                        }
+                                    @endphp
+                                    <span class="badge {{ $asistenciaClass }}">
+                                        @if(is_null($asistencia->asistio))
+                                            Pendiente
+                                        @elseif($asistencia->asistio)
+                                            Asistió
+                                        @else
+                                            Faltó
+                                        @endif
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         @endif
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>

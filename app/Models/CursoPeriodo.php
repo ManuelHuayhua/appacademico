@@ -38,5 +38,9 @@ class CursoPeriodo extends Model
     return $this->hasMany(Asistencia::class);
 }
 
+public function matriculas()
+{
+    return $this->hasMany(Matricula::class);
+}
     
 }

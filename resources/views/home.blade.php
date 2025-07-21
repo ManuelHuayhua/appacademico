@@ -749,584 +749,424 @@
             </nav>
             <br>
             <!-- Content -->
+
+    {{-- Modal de mensajes importantes --}}
+    @if(isset($mensajes) && $mensajes->isNotEmpty())
+        <div class="modal fade" id="mensajesModal" tabindex="-1" aria-labelledby="mensajesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="mensajesModalLabel"><i class="fas fa-bullhorn me-2"></i> Mensajes Importantes</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        @foreach($mensajes as $mensaje)
+                            <div class="alert alert-info shadow-sm border-start border-4 border-primary mb-3">
+                                <strong>{{ $mensaje->titulo }}</strong><br>
+                                {{ $mensaje->contenido }}
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+   @if(isset($mensajes) && $mensajes->isNotEmpty())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = new bootstrap.Modal(document.getElementById('mensajesModal'));
+            modal.show();
+        });
+    </script>
+    @endif
+
               <!-- Content -->
 
-          <style>
-
-       
-/* Variables de colores para consistencia */
-:root {
-    --primary-blue:#003bb1;
-    --secondary-blue:#003bb1;
-    --light-blue: #e0e7ff;
-    --dark-blue:#003bb1;
-    --white: #ffffff;
-    --light-gray: #f8fafc;
-    --medium-gray: #64748b;
-    --dark-gray: #334155;
-    --success: #10b981;
-    --warning: #f59e0b;
-}
-
-/* Animaciones mejoradas */
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes floatSoft {
-    0%, 100% {
-        transform: translateY(0px) scale(1);
-    }
-    50% {
-        transform: translateY(-8px) scale(1.02);
-    }
-}
-
-@keyframes pulse {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
-    }
-    50% {
-        box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
-    }
-}
-
-/* Contenedor principal adaptado */
-.content-area {
-    background: linear-gradient(135deg, var(--light-gray) 0%, #e2e8f0 100%);
-    min-height: 100vh;
-    padding: 2rem 1rem;
-}
-
-/* Header de bienvenida */
-.welcome-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    animation: slideInUp 0.8s ease-out;
-}
-
-.welcome-header h1 {
-    color: var(--primary-blue);
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    position: relative;
-}
-
-.welcome-header h1::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
-    border-radius: 2px;
-}
-
-.welcome-header p {
-    color: var(--medium-gray);
-    font-size: 1.1rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Tarjeta principal mejorada */
-.hero-section {
-    background: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(79, 70, 229, 0.1);
-    overflow: hidden;
-    margin-bottom: 3rem;
-    border: 1px solid rgba(79, 70, 229, 0.1);
-    animation: slideInUp 1s ease-out 0.2s both;
-}
-
-.hero-content {
-    padding: 3rem 2rem;
-    min-height: 450px;
-    display: flex;
-    align-items: center;
-}
-
-.hero-image-container {
-    position: relative;
-    animation: slideInLeft 1.2s ease-out 0.4s both;
-}
-
-.hero-image-container::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    left: -20px;
-    right: -20px;
-    bottom: -20px;
-    background: linear-gradient(135deg, var(--light-blue), rgba(99, 102, 241, 0.1));
-    border-radius: 20px;
-    z-index: -1;
-}
-
-.student-image {
-    width: 100%;
-    max-width: 380px;
-    height: auto;
-    border-radius: 15px;
-    animation: floatSoft 4s ease-in-out infinite;
-    filter: drop-shadow(0 15px 35px rgba(79, 70, 229, 0.2));
-    transition: all 0.3s ease;
-}
-
-.student-image:hover {
-    transform: scale(1.05);
-}
-
-.hero-text {
-    animation: slideInRight 1.2s ease-out 0.6s both;
-    margin-left: 20px;
-}
-
-.hero-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--dark-blue);
-    margin-bottom: 1.5rem;
-    line-height: 1.3;
-}
-
-.hero-subtitle {
-    font-size: 1.1rem;
-    color: var(--medium-gray);
-    margin-bottom: 2.5rem;
-    line-height: 1.7;
-}
-
-/* Badges mejorados */
-.features-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-}
-
-.feature-badge {
-    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-    color: var(--white);
-    padding: 0.8rem 1.5rem;
-    border-radius: 30px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.4s ease;
-    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.feature-badge::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-}
-
-.feature-badge:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(68, 61, 190, 0.4);
-    animation: pulse 2s infinite;
-}
-
-.feature-badge:hover::before {
-    left: 100%;
-}
-
-/* Sección de noticias mejorada */
-.news-section {
-    animation: slideInUp 1.2s ease-out 0.8s both;
-}
-
-.news-title {
-    color: var(--dark-blue);
-    font-size: 2.2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 3rem;
-    position: relative;
-}
-
-.news-title::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: var(--primary-blue);
-    border-radius: 2px;
-}
-
-.news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.news-card {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 2rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(79, 70, 229, 0.1);
-    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.08);
-    position: relative;
-    overflow: hidden;
-    animation: slideInUp 0.8s ease-out both;
-}
-
-.news-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
-}
-
-.news-card:nth-child(1) { animation-delay: 1s; }
-.news-card:nth-child(2) { animation-delay: 1.1s; }
-.news-card:nth-child(3) { animation-delay: 1.2s; }
-.news-card:nth-child(4) { animation-delay: 1.3s; }
-.news-card:nth-child(5) { animation-delay: 1.4s; }
-
-.news-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15);
-    border-color: var(--primary-blue);
-}
-
-.news-date {
-    color: var(--primary-blue);
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-}
-
-.news-card-title {
-    color: var(--dark-blue);
-    font-weight: 700;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    line-height: 1.4;
-}
-
-.news-excerpt {
-    color: var(--medium-gray);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-}
-
-.btn-news {
-    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-    border: none;
-    color: var(--white);
-    padding: 0.7rem 1.8rem;
-    border-radius: 25px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-news::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-}
-
-.btn-news:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
-    color: var(--white);
-}
-
-.btn-news:hover::before {
-    left: 100%;
-}
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .hero-content {
-        padding: 2.5rem 1.5rem;
-    }
-    
-    .news-grid {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .content-area {
-        padding: 1rem 0.5rem;
-    }
-    
-    .welcome-header h1 {
-        font-size: 2.2rem;
-    }
-    
-    .hero-content {
-        flex-direction: column;
-        text-align: center;
-        padding: 2rem 1rem;
-        min-height: auto;
-    }
-    
-    .hero-title {
-        font-size: 1.8rem;
-        margin-bottom: 1rem;
-        margin-top: 2rem;
-
-    }
-    
-    .student-image {
-        max-width: 280px;
-        margin-bottom: 2rem;
-    }
-    
-    .features-container {
-        justify-content: center;
-    }
-    
-    .feature-badge {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
-    }
-    
-    .news-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .news-card {
-        padding: 1.5rem;
-    }
-    
-    .news-title {
-        font-size: 1.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .welcome-header h1 {
-        font-size: 1.9rem;
-        
-    }
-    
-    .hero-title {
-        font-size: 1.6rem;
-    }
-    
-    .student-image {
-        max-width: 240px;
-    }
-    
-    .feature-badge {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
-    }
-    
-    .news-card {
-        padding: 1.2rem;
-    }
-}
-</style>
+         
 
 
  <!-- Content -->
 <div class="content-area">
-    <div class="container-fluid">
-        <!-- Header de Bienvenida -->
-        <div class="welcome-header">
-            <h1>¡Bienvenido al Portal Estudiantil!</h1>
-            <p>Tu espacio digital para el crecimiento académico y profesional</p>
-        </div>
 
-        <!-- Hero Section -->
-        <div class="hero-section">
-            <div class="hero-content">
-                <div class="row w-100 align-items-center">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="hero-image-container text-center">
-                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/estudiante-estudiando-en-una-computadora-portatil-mientras-esta-sentado-en-un-puf-5711047-4779535.png?f=webp"
-                                 alt="Estudiante estudiando" class="student-image">
+
+
+ <style>
+        :root {
+            --primary-blue: #0249BB;
+            --dark-blue: #003BB1;
+            --warning-orange: #ff6b35;
+            --light-gray: #f8f9fa;
+        }
+
+        .custom-banner-height {
+            height: 300px;
+        }
+
+        @media (min-width: 536px) {
+            .custom-banner-height {
+                height: 450px;
+            }
+        }
+
+        .custom-banner-altura {
+            min-height: 400px;
+        }
+
+        @media (min-width: 992px) {
+            .custom-banner-altura {
+                min-height: 550px;
+            }
+        }
+
+        .text-truncate-2-lines {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+        }
+
+        .carousel-item img {
+            filter: brightness(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .carousel-item.active img {
+            filter: brightness(1);
+        }
+
+        .btn-glow {
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-glow:hover {
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .news-item {
+            transition: all 0.2s ease;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .news-item:hover {
+            background-color: var(--light-gray);
+            transform: translateX(5px);
+        }
+
+        .news-image {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .news-image:hover {
+            transform: scale(1.05);
+        }
+
+        .gradient-overlay {
+            background: linear-gradient(135deg, rgba(2, 73, 187, 0.9) 0%, rgba(0, 59, 177, 0.7) 50%, rgba(2, 73, 187, 0.8) 100%);
+        }
+
+        .learning-card-bg {
+            background: linear-gradient(135deg, rgba(2, 73, 187, 0.95) 0%, rgba(0, 59, 177, 0.85) 100%);
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modern-shadow {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .icon-badge {
+            background: linear-gradient(135deg, var(--warning-orange), #ff8f65);
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-indicator {
+            background: linear-gradient(90deg, var(--warning-orange) 0%, #ff8f65 100%);
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 1rem;
+        }
+
+        .news-badge {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+</head>
+
+
+<!-- Sección de Carrusel/Banner Superior -->
+<div class="container-fluid mb-5 fade-in-up">
+    <div class="position-relative overflow-hidden rounded-4 modern-shadow custom-banner-height" style="background-color: var(--primary-blue);">
+        
+        <!-- Contenido del banner -->
+        <div id="carouselExampleIndicators" class="carousel slide h-100" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner h-100">
+                <div class="carousel-item active h-100">
+                    <img src="https://image.ondacero.es/clipping/cmsimages01/2025/07/11/BFACE3C9-9406-433A-A3F5-22E8F4B4B191/universidad-extremadura-ocupa-posicion-numero-13-universidades-espanolas-titulaciones-titulados_103.jpg?crop=1920,1440,x0,y0&width=1200&height=900&optimize=low&format=webply" class="d-block w-100 h-100 object-fit-cover" alt="Banner 1">
+                </div>
+                <div class="carousel-item h-100">
+                    <img src="https://imagenes.20minutos.es/files/image_990_556/files/fp/uploads/imagenes/2022/08/28/estudiantes-universitarios.r_d.3355-2237.jpeg" class="d-block w-100 h-100 object-fit-cover" alt="Banner 2">
+                </div>
+                <div class="carousel-item h-100">
+                    <img src="https://imagenes.20minutos.es/files/image_990_556/files/fp/uploads/imagenes/2022/08/28/estudiantes-universitarios.r_d.3355-2237.jpeg" class="d-block w-100 h-100 object-fit-cover" alt="Banner 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Sección Inferior de Contenido -->
+<div class="container-fluid fade-in-up">
+    <div class="row g-4">
+        <!-- Columna Izquierda: Imagen de Fondo con Texto -->
+        <div class="col-12 col-lg-8">
+            <div class="position-relative overflow-hidden rounded-4 modern-shadow d-flex align-items-center p-4 p-md-5 custom-banner-altura card-hover" style="background-color: var(--primary-blue);">
+
+                <!-- Imagen de fondo y overlay -->
+                <div class="position-absolute w-100 h-100" style="background-image: url('https://www.infobae.com/resizer/v2/https%3A%2F%2Fs3.amazonaws.com%2Farc-wordpress-client-uploads%2Finfobae-wp%2Fwp-content%2Fuploads%2F2016%2F11%2F25090433%2FUniversidad-Austral-1920.jpg?auth=295e8c7c90fd29faaaf230dc03033415f3a275abdfa87d1e03fac004f7069c27&smart=true&width=1200&height=900&quality=85'); background-size: cover; background-position: center;"></div>
+                <div class="position-absolute w-100 h-100 learning-card-bg"></div>
+
+                <!-- Contenido de la tarjeta de aprendizaje -->
+                <div class="position-relative z-1 text-white" style="max-width: 500px;">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-badge me-3">
+                            <i class="fas fa-play"></i>
                         </div>
+                        <span class="badge news-badge">Continúa Aprendiendo</span>
                     </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="hero-text">
-                            <h2 class="hero-title">Explora un mundo de oportunidades</h2>
-                            <p class="hero-subtitle">
-                                Accede a todas las herramientas y recursos diseñados especialmente para 
-                                potenciar tu aprendizaje y alcanzar tus metas académicas.
-                            </p>
-                            <div class="features-container">
-                                <span class="feature-badge">
-                                    <i class="fas fa-book me-2"></i>Cursos Activos
-                                </span>
-                                <span class="feature-badge">
-                                    <i class="fas fa-calendar me-2"></i>Calendario
-                                </span>
-                                <span class="feature-badge">
-                                    <i class="fas fa-chart-line me-2"></i>Mi Progreso
-                                </span>
-                                <span class="feature-badge">
-                                    <i class="fas fa-graduation-cap me-2"></i>Certificaciones
-                                </span>
-                                <span class="feature-badge">
-                                    <i class="fas fa-users me-2"></i>Comunidad
-                                </span>
-                            </div>
+                    
+                    <h1 class="display-5 fw-bolder lh-1 mb-3">
+                        Contabilidad 
+                        <span style="color: var(--warning-orange);">BÁSICA</span>
+                    </h1>
+                    
+                    <div class="mb-4">
+                        <p class="fs-5 mb-2 opacity-90">
+                            <i class="fas fa-bookmark me-2"></i>
+                            Sesión 06: Beneficios Sociales-2024
+                        </p>
+                        <div class="d-flex align-items-center text-white-50">
+                            <i class="fas fa-clock me-2"></i>
+                            <span class="me-3">2h 30min restantes</span>
+                            <i class="fas fa-chart-line me-2"></i>
+                            <span>75% completado</span>
                         </div>
+                        <div class="progress-indicator" style="width: 75%;"></div>
+                    </div>
+                    
+                    <div class="d-flex flex-column flex-sm-row gap-3">
+                        <button class="btn btn-warning btn-lg rounded-pill fw-bold btn-glow pulse-animation">
+                            <i class="fas fa-play me-2"></i>
+                            Continuar Curso
+                        </button>
+                        <button class="btn btn-outline-light btn-lg rounded-pill fw-semibold">
+                            <i class="fas fa-book-open me-2"></i>
+                            Mis Cursos
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- News Section -->
-        <div class="news-section">
-            <h2 class="news-title">
-                <i class="fas fa-newspaper me-3"></i>Noticias y Anuncios
-            </h2>
-            
-            <div class="news-grid">
-                <div class="news-card">
-                    <div class="news-date">
-                        <i class="fas fa-calendar-alt me-2"></i>15 de Enero, 2024
+        <!-- Columna Derecha: Noticias -->
+        <div class="col-12 col-lg-4">
+            <div class="card rounded-4 modern-shadow p-4 card-hover h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="fs-4 fw-bold text-dark mb-1">
+                            <i class="fas fa-newspaper me-2" style="color: var(--warning-orange);"></i>
+                            NOTICIAS
+                        </h3>
+                        <p class="text-muted small mb-0">Mantente actualizado</p>
                     </div>
-                    <h5 class="news-card-title">Nueva Plataforma de Aprendizaje Virtual</h5>
-                    <p class="news-excerpt">
-                        Nos complace anunciar el lanzamiento de nuestra nueva plataforma de aprendizaje virtual con herramientas interactivas, 
-                        videos en alta definición y sistema de evaluación en tiempo real para mejorar tu experiencia educativa.
-                    </p>
-                    <a href="#" class="btn-news">
-                        Leer más <i class="fas fa-arrow-right ms-2"></i>
+                    <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">
+                        <i class="fas fa-arrow-right me-1"></i>
+                        Ver Blog
                     </a>
                 </div>
 
-                <div class="news-card">
-                    <div class="news-date">
-                        <i class="fas fa-calendar-alt me-2"></i>12 de Enero, 2024
+                <div class="d-flex flex-column gap-3">
+                    <!-- Noticia 1 -->
+                    <div class="news-item d-flex align-items-start">
+                        <div class="position-relative me-3">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR690ND98zM-XCQM-jMKT1F5Szk17y8r5t65g&s" alt="Noticia 1" class="news-image" style="width: 90px; height: 90px; object-fit: cover;">
+                            <span class="position-absolute top-0 start-0 badge bg-danger rounded-pill" style="font-size: 0.6rem; margin: 5px;">
+                                <i class="fas fa-fire"></i>
+                            </span>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-primary me-2" style="font-size: 0.7rem;">Economía</span>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>Hace 2h
+                                </small>
+                            </div>
+                            <h4 class="fs-6 fw-semibold text-dark mb-2">FMI advierte sobre impacto fiscal de Zonas Económicas Especiales</h4>
+                            <p class="text-muted small mb-2 text-truncate-2-lines">El Fondo Monetario Internacional ha alertado sobre el posible impacto fiscal negativo de las zonas económicas especiales...</p>
+                            <a href="#" class="text-primary text-decoration-none small fw-semibold">
+                                <i class="fas fa-arrow-right me-1"></i>Leer más
+                            </a>
+                        </div>
                     </div>
-                    <h5 class="news-card-title">Inscripciones Abiertas para Cursos de Verano</h5>
-                    <p class="news-excerpt">
-                        Ya están disponibles las inscripciones para los cursos intensivos de verano. Aprovecha esta oportunidad 
-                        para adelantar materias o reforzar conocimientos en áreas específicas.
-                    </p>
-                    <a href="#" class="btn-news">
-                        Ver cursos <i class="fas fa-external-link-alt ms-2"></i>
-                    </a>
-                </div>
 
-                <div class="news-card">
-                    <div class="news-date">
-                        <i class="fas fa-calendar-alt me-2"></i>10 de Enero, 2024
-                    </div>
-                    <h5 class="news-card-title">Biblioteca Digital Ampliada</h5>
-                    <p class="news-excerpt">
-                        Hemos añadido más de 500 nuevos libros digitales y recursos académicos a nuestra biblioteca virtual. 
-                        Accede desde cualquier dispositivo las 24 horas del día.
-                    </p>
-                    <a href="#" class="btn-news">
-                        Explorar <i class="fas fa-book-open ms-2"></i>
-                    </a>
-                </div>
+                    <hr class="my-2 opacity-25">
 
-                <div class="news-card">
-                    <div class="news-date">
-                        <i class="fas fa-calendar-alt me-2"></i>8 de Enero, 2024
+                    <!-- Noticia 2 -->
+                    <div class="news-item d-flex align-items-start">
+                        <div class="position-relative me-3">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR690ND98zM-XCQM-jMKT1F5Szk17y8r5t65g&s" alt="Noticia 2" class="news-image" style="width: 90px; height: 90px; object-fit: cover;">
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-success me-2" style="font-size: 0.7rem;">Tributario</span>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>Hace 5h
+                                </small>
+                            </div>
+                            <h4 class="fs-6 fw-semibold text-dark mb-2">Exoneración del Impuesto predial para adultos mayores en 2025</h4>
+                            <p class="text-muted small mb-2 text-truncate-2-lines">Nueva normativa beneficia a propietarios mayores de 65 años con exoneración total del impuesto predial...</p>
+                            <a href="#" class="text-primary text-decoration-none small fw-semibold">
+                                <i class="fas fa-arrow-right me-1"></i>Leer más
+                            </a>
+                        </div>
                     </div>
-                    <h5 class="news-card-title">Nuevo Sistema de Calificaciones Online</h5>
-                    <p class="news-excerpt">
-                        Implementamos un nuevo sistema de consulta de calificaciones en tiempo real. Ahora podrás ver tus notas 
-                        y comentarios de los profesores inmediatamente después de cada evaluación.
-                    </p>
-                    <a href="#" class="btn-news">
-                        Ver notas <i class="fas fa-chart-bar ms-2"></i>
-                    </a>
-                </div>
 
-                <div class="news-card">
-                    <div class="news-date">
-                        <i class="fas fa-calendar-alt me-2"></i>5 de Enero, 2024
+                    <hr class="my-2 opacity-25">
+
+                    <!-- Noticia 3 -->
+                    <div class="news-item d-flex align-items-start">
+                        <div class="position-relative me-3">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR690ND98zM-XCQM-jMKT1F5Szk17y8r5t65g&s" alt="Noticia 3" class="news-image" style="width: 90px; height: 90px; object-fit: cover;">
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge bg-info me-2" style="font-size: 0.7rem;">Bancario</span>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>Hace 1d
+                                </small>
+                            </div>
+                            <h4 class="fs-6 fw-semibold text-dark mb-2">Perú facilitará apertura de cuentas bancarias para extranjeros</h4>
+                            <p class="text-muted small mb-2 text-truncate-2-lines">La SBS simplifica procesos de apertura de cuentas para ciudadanos extranjeros residentes en el país...</p>
+                            <a href="#" class="text-primary text-decoration-none small fw-semibold">
+                                <i class="fas fa-arrow-right me-1"></i>Leer más
+                            </a>
+                        </div>
                     </div>
-                    <h5 class="news-card-title">Talleres de Habilidades Digitales</h5>
-                    <p class="news-excerpt">
-                        Se han programado talleres gratuitos para desarrollar habilidades digitales esenciales. Incluye cursos de 
-                        Microsoft Office, herramientas de presentación y técnicas de investigación online.
-                    </p>
-                    <a href="#" class="btn-news">
-                        Inscribirse <i class="fas fa-user-plus ms-2"></i>
-                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-    
-    
-   
-               
-            
-   
-        </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Animación suave al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        const fadeElements = document.querySelectorAll('.fade-in-up');
+        fadeElements.forEach((element, index) => {
+            element.style.animationDelay = `${index * 0.2}s`;
+        });
+    });
+
+    // Efecto hover mejorado para las noticias
+    document.querySelectorAll('.news-item').forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(8px)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
+</script>
+
+
+ <!-- Fin del content -->
+
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+ 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');

@@ -751,6 +751,7 @@
             <!-- Content -->
             <div class="content-area">
             
+            <!-- aqui agrega -->
 </div>
 
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\MatriculaController;
 use App\Http\Controllers\Profesor\CursoController as ProfesorCursoController;
 use App\Http\Controllers\Alumnos\CalificacionalumnoController;
 use App\Http\Controllers\Admin\CalificacionesController;
+use App\Http\Controllers\Admin\MensajeController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -136,6 +137,9 @@ Route::delete('/admin/matricula/{id}', [MatriculaController::class, 'destroy'])
 Route::get('/admin/calificaciones', [CalificacionesController::class, 'index'])->name('admin.calificaciones.index') ->middleware('adminonly');
 
 
+//enviar mensaje
+Route::get('/admin/mensajes/crear', [MensajeController::class, 'crear'])->name('admin.mensajes.crear');
+Route::post('/admin/mensajes/enviar', [MensajeController::class, 'enviar'])->name('admin.mensajes.enviar');
 
 
 
@@ -159,6 +163,6 @@ Route::get('/admin/calificaciones', [CalificacionesController::class, 'index'])-
 
     Route::get('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'index'])->name('profesor.calificaciones');
     Route::post('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'guardar'])->name('profesor.calificaciones.guardar');
-
+    Route::get('/calendario', [App\Http\Controllers\Profesor\CalendarioController::class, 'index'])->name('calendario');
 });
 
