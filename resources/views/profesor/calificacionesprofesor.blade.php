@@ -722,8 +722,8 @@
             </nav>
             
             <!-- Content -->
-            <div class="content-area">
-                  <h2>📝 Evaluación de Alumnos</h2>
+           <div class="content-area">
+    <h2>📝 Evaluación de Alumnos</h2>
 
     {{-- Mensaje de éxito --}}
     @if(session('success'))
@@ -756,54 +756,56 @@
         </div>
     </form>
 
-    {{-- Tabla de calificaciones --}}
+    {{-- Formulario por alumno --}}
     @if($alumnos && count($alumnos))
-        <form method="POST" action="{{ route('profesor.calificaciones.guardar') }}">
-            @csrf
-            <input type="hidden" name="curso_periodo_id" value="{{ $cursoSeleccionado }}">
+        @foreach($alumnos as $alumno)
+    @php
+        $permiso = $alumno->permiso ?? 'denegado'; // valor por defecto
+        $editable = match($permiso) {
+            '1' => ['primer_avance', 'segundo_avance', 'presentacion_final'],
+            '2' => ['oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5'],
+            '3' => ['examen_final'],
+            'editable' => ['primer_avance', 'segundo_avance', 'presentacion_final', 'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'],
+            default => []
+        };
+    @endphp
 
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Alumno</th>
-                        <th>1er Avance</th>
-                        <th>2do Avance</th>
-                        <th>Presentación</th>
-                        <th>Oral 1</th>
-                        <th>Oral 2</th>
-                        <th>Oral 3</th>
-                        <th>Oral 4</th>
-                        <th>Oral 5</th>
-                        <th>Examen Final</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($alumnos as $alumno)
-                        <tr>
-                            <td>{{ $alumno->name }} {{ $alumno->apellido_p }} {{ $alumno->apellido_m }}</td>
-                            @php
-                                $notas = [
-                                    'primer_avance', 'segundo_avance', 'presentacion_final',
-                                    'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'
-                                ];
-                            @endphp
-                            @foreach($notas as $nota)
-                                <td>
-                                    <input type="number" step="0.01" name="notas[{{ $alumno->id }}][{{ $nota }}]"
-                                        class="form-control" value="{{ $alumno->$nota }}">
-                                </td>
-                            @endforeach
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+    <form method="POST" action="{{ route('profesor.calificaciones.guardar') }}" class="mb-4 border rounded p-3">
+        @csrf
+        <input type="hidden" name="curso_periodo_id" value="{{ $cursoSeleccionado }}">
+        <input type="hidden" name="notas[{{ $alumno->id }}][user_id]" value="{{ $alumno->id }}">
 
-            <button class="btn btn-primary">💾 Guardar Calificaciones</button>
-        </form>
+        <h5 class="mb-3">{{ $alumno->name }} {{ $alumno->apellido_p }} {{ $alumno->apellido_m }}</h5>
+
+        <div class="row g-2">
+            @foreach([
+                'primer_avance', 'segundo_avance', 'presentacion_final',
+                'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5',
+                'examen_final'
+            ] as $campo)
+                <div class="col-md-2">
+                    <label class="form-label">{{ ucwords(str_replace('_', ' ', $campo)) }}</label>
+                    <input type="number" step="0.01"
+                        name="notas[{{ $alumno->id }}][{{ $campo }}]"
+                        class="form-control"
+                        value="{{ $alumno->$campo }}"
+                        {{ in_array($campo, $editable) ? '' : 'readonly' }}>
+                </div>
+            @endforeach
+        </div>
+
+        @if($editable)
+            <div class="mt-3">
+                <button type="submit" class="btn btn-success btn-sm">💾 Guardar Calificaciones</button>
+            </div>
+        @else
+            <div class="text-danger mt-2">⚠️ Edición no permitida</div>
+        @endif
+    </form>
+@endforeach
     @elseif($cursoSeleccionado)
         <div class="alert alert-warning">No hay alumnos matriculados en este curso.</div>
     @endif
-            
 </div>
 
 

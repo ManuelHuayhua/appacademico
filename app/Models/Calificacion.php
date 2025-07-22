@@ -25,7 +25,11 @@ class Calificacion extends Model
         'promedio',
         'promedio_evaluacion_permanente',
         'examen_final',
-        'promedio_final'
+        'promedio_final',
+          'codigo_certificado',
+    'pago_realizado',
+    'califica_profesor',
+        'permiso',
     ];
 
     public function alumno()

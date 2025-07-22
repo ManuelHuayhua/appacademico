@@ -8,9 +8,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CursoPeriodo;
 use App\Models\Horario;
 use App\Models\Calificacion;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Models\Periodo;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 class Calificacionesprofesor extends Controller
 {
@@ -53,7 +56,7 @@ class Calificacionesprofesor extends Controller
                      ->where('calificaciones.curso_periodo_id', '=', $cursoSeleccionado);
             })
             ->where('matriculas.curso_periodo_id', $cursoSeleccionado)
-            ->select('users.*', 'calificaciones.id as calificacion_id', 'calificaciones.primer_avance', 'calificaciones.segundo_avance', 'calificaciones.presentacion_final', 'calificaciones.oral_1', 'calificaciones.oral_2', 'calificaciones.oral_3', 'calificaciones.oral_4', 'calificaciones.oral_5', 'calificaciones.examen_final')
+            ->select('users.*', 'calificaciones.id as calificacion_id', 'calificaciones.primer_avance', 'calificaciones.segundo_avance', 'calificaciones.presentacion_final', 'calificaciones.oral_1', 'calificaciones.oral_2', 'calificaciones.oral_3', 'calificaciones.oral_4', 'calificaciones.oral_5', 'calificaciones.examen_final', 'calificaciones.permiso')
             ->get();
     }
 
@@ -65,21 +68,54 @@ public function guardar(Request $request)
     $cursoId = $request->input('curso_periodo_id');
 
     foreach ($request->input('notas', []) as $userId => $nota) {
-        $primerAvance = $nota['primer_avance'];
-        $segundoAvance = $nota['segundo_avance'];
-        $presentacionFinal = $nota['presentacion_final'];
+        $calificacion = Calificacion::where('user_id', $userId)
+            ->where('curso_periodo_id', $cursoId)
+            ->first();
 
-        $oral1 = $nota['oral_1'];
-        $oral2 = $nota['oral_2'];
-        $oral3 = $nota['oral_3'];
-        $oral4 = $nota['oral_4'];
-        $oral5 = $nota['oral_5'];
+        $permiso = $calificacion?->permiso ?? 'denegado';
 
-        $examenFinal = $nota['examen_final'];
+        if (!$calificacion) {
+            $calificacion = new Calificacion([
+                'user_id' => $userId,
+                'curso_periodo_id' => $cursoId,
+                'permiso' => $permiso
+            ]);
+        }
+
+        // Campos que puede editar según permiso
+        $camposPermitidos = match ($permiso) {
+            '1' => ['primer_avance', 'segundo_avance', 'presentacion_final'],
+            '2' => ['oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5'],
+            '3' => ['examen_final'],
+            'editable' => ['primer_avance', 'segundo_avance', 'presentacion_final', 'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'],
+            default => []
+        };
+
+        // Validar si hay campos permitidos
+        if (empty($camposPermitidos)) {
+            Session::flash('error', "No tienes permiso para editar la calificación del usuario ID $userId.");
+            continue;
+        }
+
+        // Asignar solo los campos permitidos
+        foreach ($camposPermitidos as $campo) {
+            $calificacion->$campo = $nota[$campo] ?? null;
+        }
 
         // Calcular promedios
-        $promedioAvance = collect([$primerAvance, $segundoAvance, $presentacionFinal])->avg();
-        $promedioOrales = collect([$oral1, $oral2, $oral3, $oral4, $oral5])->avg();
+        $promedioAvance = collect([
+            $calificacion->primer_avance,
+            $calificacion->segundo_avance,
+            $calificacion->presentacion_final
+        ])->filter()->avg();
+
+        $promedioOrales = collect([
+            $calificacion->oral_1,
+            $calificacion->oral_2,
+            $calificacion->oral_3,
+            $calificacion->oral_4,
+            $calificacion->oral_5
+        ])->filter()->avg();
 
         $promedioEvaluacionPermanente = null;
         $promedioFinal = null;
@@ -87,33 +123,28 @@ public function guardar(Request $request)
         if (!is_null($promedioAvance) && !is_null($promedioOrales)) {
             $promedioEvaluacionPermanente = collect([$promedioAvance, $promedioOrales])->avg();
 
-            if (!is_null($examenFinal)) {
-                $promedioFinal = collect([$promedioEvaluacionPermanente, $examenFinal])->avg();
+            if (!is_null($calificacion->examen_final)) {
+                $promedioFinal = collect([$promedioEvaluacionPermanente, $calificacion->examen_final])->avg();
             }
         }
 
-        Calificacion::updateOrCreate(
-            [
-                'user_id' => $userId,
-                'curso_periodo_id' => $cursoId
-            ],
-            [
-                'profesor_id' => Auth::id(),
-                'primer_avance' => $primerAvance,
-                'segundo_avance' => $segundoAvance,
-                'presentacion_final' => $presentacionFinal,
-                'oral_1' => $oral1,
-                'oral_2' => $oral2,
-                'oral_3' => $oral3,
-                'oral_4' => $oral4,
-                'oral_5' => $oral5,
-                'examen_final' => $examenFinal,
-                'promedio_avance' => $promedioAvance,
-                'promedio' => $promedioOrales,
-                'promedio_evaluacion_permanente' => $promedioEvaluacionPermanente,
-                'promedio_final' => $promedioFinal,
-            ]
-        );
+        // Si ya tiene código, mantenerlo
+        $codigoCertificado = $calificacion->codigo_certificado;
+
+        // Generar nuevo solo si no tenía y cumple condición
+        if (is_null($codigoCertificado) && !is_null($promedioFinal) && $promedioFinal >= 10.5) {
+            $codigoCertificado = 'CERT-' . strtoupper(Str::random(10));
+        }
+
+        // Guardar todo
+        $calificacion->profesor_id = Auth::id();
+        $calificacion->promedio_avance = $promedioAvance;
+        $calificacion->promedio = $promedioOrales;
+        $calificacion->promedio_evaluacion_permanente = $promedioEvaluacionPermanente;
+        $calificacion->promedio_final = $promedioFinal;
+        $calificacion->codigo_certificado = $codigoCertificado;
+
+        $calificacion->save();
     }
 
     return back()->with('success', 'Calificaciones guardadas correctamente.');

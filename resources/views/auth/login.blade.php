@@ -639,7 +639,7 @@ body {
                 <div class="form-content">
                     <div class="welcome-header">
                         <div class="welcome-text">¡Hola somos</div>
-                        <div class="brand-name">ACEMPERU!</div>
+                        <div class="brand-name">UNAT!</div>
                         <div class="subtitle">¡Que tu día sea excelente!</div>
                     </div>
 
