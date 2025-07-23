@@ -677,7 +677,13 @@
                             <div class="tooltip-custom">Calificaciones</div>
                         </a>
                     </li>
-                   
+                    <li class="nav-item">
+            <a class="nav-link" href="#" data-page="tramites">
+                <i class="fas fa-file-alt"></i>
+                <span class="nav-text">Trámite Documentario</span>
+                <div class="tooltip-custom">Trámite Documentario</div>
+            </a>
+        </li>
                 </ul>
             </nav>
             

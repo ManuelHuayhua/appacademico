@@ -642,7 +642,7 @@
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('home') }}" data-page="general">
+                        <a class="nav-link " href="{{ route('home') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">General</span>
                             <div class="tooltip-custom">General</div>
@@ -657,7 +657,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('alumno.cursos') }}"  data-page="cursos">
+                        <a class="nav-link " href="{{ route('alumno.cursos') }}"  data-page="cursos">
                             <i class="fas fa-book"></i>
                             <span class="nav-text">Cursos</span>
                             <div class="tooltip-custom">Cursos</div>
@@ -671,7 +671,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('alumno.calendario') }}" data-page="calendario">
+                        <a class="nav-link active" href="{{ route('alumno.calendario') }}" data-page="calendario">
                             <i class="fas fa-calendar-alt"></i>
                             <span class="nav-text">Calendario</span>
                             <div class="tooltip-custom">Calendario</div>

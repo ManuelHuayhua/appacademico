@@ -633,7 +633,7 @@
         <!-- Sidebar - Inicia colapsado -->
         <div class="sidebar sidebar-collapsed" id="sidebar">
             <div class="sidebar-header">
-                <h4>Portal Estudiante</h4>
+                <h4>Portal Profesor</h4>
                 <button class="sidebar-close-btn" id="sidebarClose">
                     <i class="fas fa-times"></i>
                 </button>
@@ -650,28 +650,22 @@
                     </li>
                   
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('profesor.cursos') }}" data-page="perfil">
-                            <i class="fas fa-user"></i>
+                        <a class="nav-link " href="{{ route('profesor.cursos') }}" data-page="Cursos">
+                            <i class="fas fa-book"></i>
                             <span class="nav-text">Cursos</span>
                             <div class="tooltip-custom">Cursos</div>
                         </a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link active"   href="{{ route('profesor.calificaciones') }}" data-page="cursos">
-                            <i class="fas fa-book"></i>
-                            <span class="nav-text">Calificaciones</span>
-                            <div class="tooltip-custom">Calificaciones</div>
-                        </a>
-                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="calificaciones">
+                        <a class="nav-link active"   href="{{ route('profesor.calificaciones') }}" data-page="Calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
                         </a>
                     </li>
+                  
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="calendario">
+                        <a class="nav-link" href="{{ route('calendario') }}"data-page="calendario">
                             <i class="fas fa-calendar-alt"></i>
                             <span class="nav-text">Calendario</span>
                             <div class="tooltip-custom">Calendario</div>

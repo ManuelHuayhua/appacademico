@@ -642,7 +642,7 @@
            <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('home') }}" data-page="general">
+                        <a class="nav-link " href="{{ route('home') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">General</span>
                             <div class="tooltip-custom">General</div>
@@ -650,7 +650,7 @@
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('alumno.perfil') }}" data-page="perfil">
+                        <a class="nav-link active" href="{{ route('alumno.perfil') }}" data-page="perfil">
                             <i class="fas fa-user"></i>
                             <span class="nav-text">Perfil</span>
                             <div class="tooltip-custom">Perfil</div>

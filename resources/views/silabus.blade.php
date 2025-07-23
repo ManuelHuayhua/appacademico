@@ -642,7 +642,7 @@
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('home') }}" data-page="general">
+                        <a class="nav-link " href="{{ route('home') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">General</span>
                             <div class="tooltip-custom">General</div>
@@ -678,7 +678,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('alumno.silabus') }}" data-page="silabus">
+                        <a class="nav-link active" href="{{ route('alumno.silabus') }}" data-page="silabus">
                            <i class="fas fa-book-open"></i>
                             <span class="nav-text">Sílabo</span>
                             <div class="tooltip-custom">Sílabo</div>

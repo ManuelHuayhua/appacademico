@@ -80,10 +80,8 @@ Route::get('/alumno/calendario', [CursosController::class, 'horario'])
 
    Route::get('/alumno/silabus', [App\Http\Controllers\Alumnos\SilaboController::class, 'index'])->name('alumno.silabus')->middleware('usuarioonly');
 
-
-
-
-
+//calificaciones del profesor
+Route::post('/alumno/calificar-profesor/{id}', [CalificacionalumnoController::class, 'guardarCalificacion'])->name('alumno.calificar-profesor')->middleware('usuarioonly');
 
 
 
@@ -161,7 +159,7 @@ Route::post('/admin/mensajes/enviar', [MensajeController::class, 'enviar'])->nam
     ->group(function () {
         
         // Vista principal del profesor
-        Route::view('/', 'profesor.profesor')->name('dashboard');
+        Route::get('/', [App\Http\Controllers\Profesor\ProfesorController::class, 'index'])->name('dashboard');
 
         // Ver cursos asignados
         Route::get('/cursos', [ProfesorCursoController::class, 'index'])->name('cursos');

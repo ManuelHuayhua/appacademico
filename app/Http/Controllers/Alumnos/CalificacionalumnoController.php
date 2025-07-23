@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\CalificacionProfesor;
+use App\Models\Calificacion;
 
 class CalificacionalumnoController extends Controller
 {
@@ -67,4 +69,45 @@ class CalificacionalumnoController extends Controller
         'periodoSeleccionado' => $periodo
     ]);
 }
+
+
+   public function guardarCalificacion(Request $request, $id)
+    {
+        $request->validate([
+            'pregunta_1' => 'required|integer|min:1|max:5',
+            'pregunta_2' => 'required|integer|min:1|max:5',
+            'pregunta_3' => 'required|integer|min:1|max:5',
+            'pregunta_4' => 'required|integer|min:1|max:5',
+            'pregunta_5' => 'required|integer|min:1|max:5',
+            'comentario' => 'nullable|string',
+        ]);
+
+        $calificacion = Calificacion::findOrFail($id);
+
+        // Evita duplicado si ya se calificó
+        if ($calificacion->califica_profesor) {
+            return redirect()->back()->with('info', 'Ya has calificado a este profesor.');
+        }
+
+        // Si no hay comentario, usar "calificado"
+        $comentario = $request->comentario ?: 'calificado';
+
+        // Guardar la calificación del profesor
+        CalificacionProfesor::create([
+            'calificacion_id' => $id,
+            'profesor_id' => $calificacion->profesor_id,
+            'pregunta_1' => $request->pregunta_1,
+            'pregunta_2' => $request->pregunta_2,
+            'pregunta_3' => $request->pregunta_3,
+            'pregunta_4' => $request->pregunta_4,
+            'pregunta_5' => $request->pregunta_5,
+            'comentario' => $comentario,
+        ]);
+
+        // Actualizar estado en calificaciones
+        $calificacion->update(['califica_profesor' => true]);
+
+        return redirect()->back()->with('success', 'Gracias por calificar al profesor.');
+    }
+
 }

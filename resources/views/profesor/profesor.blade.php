@@ -633,7 +633,7 @@
         <!-- Sidebar - Inicia colapsado -->
         <div class="sidebar sidebar-collapsed" id="sidebar">
             <div class="sidebar-header">
-                <h4>Portal Estudiante</h4>
+                <h4>Portal Profesor</h4>
                 <button class="sidebar-close-btn" id="sidebarClose">
                     <i class="fas fa-times"></i>
                 </button>
@@ -650,28 +650,22 @@
                     </li>
                   
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('profesor.cursos') }}" data-page="perfil">
-                            <i class="fas fa-user"></i>
+                        <a class="nav-link " href="{{ route('profesor.cursos') }}" data-page="Cursos">
+                            <i class="fas fa-book"></i>
                             <span class="nav-text">Cursos</span>
                             <div class="tooltip-custom">Cursos</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"   href="{{ route('profesor.calificaciones') }}" data-page="cursos">
-                            <i class="fas fa-book"></i>
-                            <span class="nav-text">Calificaciones</span>
-                            <div class="tooltip-custom">Calificaciones</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="calificaciones">
+                        <a class="nav-link"   href="{{ route('profesor.calificaciones') }}" data-page="Calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
                         </a>
                     </li>
+                  
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="calendario">
+                        <a class="nav-link" href="{{ route('calendario') }}"data-page="calendario">
                             <i class="fas fa-calendar-alt"></i>
                             <span class="nav-text">Calendario</span>
                             <div class="tooltip-custom">Calendario</div>
@@ -723,7 +717,120 @@
             
             <!-- Content -->
             <div class="content-area">
-            
+           
+
+
+<div class="container">
+    <h2 class="mb-4">Panel del Profesor</h2>
+
+    <!-- Filtro de Periodo -->
+    <form method="GET" action="{{ route('profesor.dashboard') }}" class="mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="periodo_id" class="form-label">Periodo Académico</label>
+                <select name="periodo_id" id="periodo_id" class="form-select" onchange="this.form.submit()">
+                    @foreach ($periodos as $periodo)
+                        <option value="{{ $periodo->id }}" {{ $periodo->id == $periodo_id ? 'selected' : '' }}>
+                            {{ $periodo->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <!-- Clases del Día -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <strong>Clases para Hoy ({{ \Carbon\Carbon::now()->locale('es')->isoFormat('dddd') }})</strong>
+        </div>
+        <div class="card-body">
+            @if(count($clasesHoy) > 0)
+                <ul class="list-group">
+                    @foreach ($clasesHoy as $clase)
+                        <li class="list-group-item">
+                            <strong>{{ $clase->nombre }} - Sección {{ $clase->seccion }}</strong><br>
+                            Hora: {{ \Carbon\Carbon::parse($clase->hora_inicio)->format('H:i') }} - {{ \Carbon\Carbon::parse($clase->hora_fin)->format('H:i') }}
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-muted">No tienes clases programadas para hoy.</p>
+            @endif
+        </div>
+    </div>
+
+    <!-- Clases de esta semana -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <strong>Clases de esta semana</strong>
+    </div>
+    <div class="card-body">
+        @if(count($clasesSemana) > 0)
+            <ul class="list-group">
+                @foreach ($clasesSemana as $clase)
+                    <li class="list-group-item">
+                        <strong>{{ $clase->nombre }} - Sección {{ $clase->seccion }}</strong><br>
+                        Día: {{ \Carbon\Carbon::create()->startOfWeek()->addDays($clase->dia_semana - 1)->locale('es')->isoFormat('dddd') }}<br>
+                        Hora: {{ \Carbon\Carbon::parse($clase->hora_inicio)->format('H:i') }} - {{ \Carbon\Carbon::parse($clase->hora_fin)->format('H:i') }}
+                    </li>
+                @endforeach
+            </ul>
+        @else
+            <p class="text-muted">No tienes clases esta semana.</p>
+        @endif
+    </div>
+</div>
+
+    <!-- Resumen General -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-primary">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total de Alumnos</h5>
+                    <h2 class="card-text">{{ $totalAlumnos }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Género -->
+        <div class="col-md-8">
+            <div class="card border-info">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Distribución por Género</h5>
+                    <ul class="list-group list-group-flush">
+                        @foreach ($generos as $genero => $total)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ ucfirst($genero ?? 'No especificado') }}
+                                <span class="badge bg-info text-dark">{{ $total }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Cursos y Vacantes -->
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <strong>Resumen de Cursos</strong>
+        </div>
+        <div class="card-body">
+            @foreach ($cursos as $curso)
+                <div class="mb-3">
+                    <h5>{{ $curso->nombre }} - Sección {{ $curso->seccion }}</h5>
+                    <p><strong>Alumnos matriculados:</strong> {{ $conteoAlumnos[$curso->nombre . ' - ' . $curso->seccion] ?? 0 }}</p>
+                    <p><strong>Vacantes disponibles:</strong> {{ $vacantesPorCurso[$curso->nombre . ' - ' . $curso->seccion]['disponibles'] }}</p>
+                    <hr>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+
+
 </div>
 
 

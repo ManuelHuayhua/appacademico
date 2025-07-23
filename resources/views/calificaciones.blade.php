@@ -642,7 +642,7 @@
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('home') }}" data-page="general">
+                        <a class="nav-link " href="{{ route('home') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">General</span>
                             <div class="tooltip-custom">General</div>
@@ -657,14 +657,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('alumno.cursos') }}"  data-page="cursos">
+                        <a class="nav-link " href="{{ route('alumno.cursos') }}"  data-page="cursos">
                             <i class="fas fa-book"></i>
                             <span class="nav-text">Cursos</span>
                             <div class="tooltip-custom">Cursos</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}"  data-page="calificaciones">
+                        <a class="nav-link active" href="{{ route('alumno.calificaciones.index') }}"  data-page="calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
@@ -1307,6 +1307,21 @@
         <i class="fas fa-graduation-cap"></i>
         Mis Calificaciones
     </h1>
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+@endif
+
+@if(session('info'))
+    <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        {{ session('info') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+@endif
 
     {{-- Formulario para seleccionar el periodo --}}
     @if($periodos->isNotEmpty())
@@ -1453,11 +1468,22 @@
                             </div>
 
                             <div class="grade-item">
-                                <span class="grade-label">Calificación del Profesor</span>
-                                <span class="status-badge {{ $cal->califica_profesor ? 'bg-success' : 'bg-danger' }}">
-                                    <i class="fas {{ $cal->califica_profesor ? 'fa-check' : 'fa-times' }}"></i>
-                                    {{ $cal->califica_profesor ? 'Completada' : 'Pendiente' }}
-                                </span>
+            <span class="grade-label">Calificación del Profesor</span>
+            <span class="status-badge {{ $cal->califica_profesor ? 'bg-success' : 'bg-danger' }}">
+                <i class="fas {{ $cal->califica_profesor ? 'fa-check' : 'fa-times' }}"></i>
+                {{ $cal->califica_profesor ? 'Completada' : 'Pendiente' }}
+            </span>
+       
+
+    
+  @if (!$cal->califica_profesor)
+            <button type="button" class="btn btn-sm btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalCalificar{{ $cal->id }}">
+                Calificar profesor
+            </button>
+        @endif
+
+   
+
                             </div>
                         </div>
                     </div>
@@ -1476,6 +1502,480 @@
     @endif
 </div>
 
+
+<!-- Modales fuera del contenido de tarjetas -->
+
+<style>
+.modal-content {
+    border-radius: 1.5rem;
+    border: none;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 1.5rem 2rem;
+}
+
+.modal-body {
+    padding: 2.5rem;
+    background: #f8f9fa;
+}
+
+.modal-footer {
+    padding: 1.5rem 2.5rem;
+    background: #f8f9fa;
+    border-radius: 0 0 1.5rem 1.5rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.question-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.3s ease;
+}
+
+.question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.question-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.star {
+    font-size: 2rem;
+    color: #e9ecef;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.star:hover {
+    transform: scale(1.1);
+}
+
+.star.active {
+    color: #ffc107;
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}
+
+.star.hover {
+    color: #ffb84d;
+}
+
+.comment-section {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.form-control {
+    border-radius: 0.5rem;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+}
+
+.btn-secondary {
+    border-radius: 0.75rem;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+}
+
+.rating-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+/* Ocultar etiquetas en pantallas pequeñas */
+@media (max-width: 768px) {
+    .rating-labels {
+        display: none;
+    }
+    
+    .star {
+        font-size: 1.8rem;
+    }
+    
+    .star-rating {
+        gap: 0.3rem;
+    }
+    
+    .question-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-footer {
+        padding: 1rem 1.5rem;
+    }
+    
+    .modal-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .professor-info {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .rating-summary {
+        padding: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .comment-section {
+        padding: 1rem;
+    }
+}
+
+.question-icon {
+    width: 20px;
+    text-align: center;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.professor-info {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.rating-summary {
+    text-align: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 1rem;
+    color: white;
+    margin-bottom: 2rem;
+}
+</style>
+
+@foreach ($calificaciones as $cal)
+    @if (!$cal->califica_profesor)
+    <div class="modal fade" id="modalCalificar{{ $cal->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $cal->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <form action="{{ route('alumno.calificar-profesor', ['id' => $cal->id]) }}" method="POST" id="calificacionForm{{ $cal->id }}">
+                    @csrf
+                    <div class="modal-header text-white">
+                        <div>
+                            <h5 class="modal-title" id="modalLabel{{ $cal->id }}">
+                                <i class="fas fa-star"></i>
+                                Evaluar Desempeño Docente
+                            </h5>
+                            <div class="professor-info">
+                                <small><i class="fas fa-user me-2"></i>Profesor: {{ $cal->profesor->nombre ?? 'Profesor' }} - {{ $cal->materia->nombre ?? 'Materia' }}</small>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div class="rating-summary">
+                            <h6 class="mb-2"><i class="fas fa-info-circle me-2"></i>Evalúa cada aspecto del 1 al 5</h6>
+                            <small>Tu opinión es valiosa para mejorar la calidad educativa</small>
+                        </div>
+
+                        <!-- Pregunta 1: Dominio del tema -->
+                        <div class="question-card">
+                            <div class="question-title">
+                                <i class="fas fa-graduation-cap question-icon"></i>
+                                ¿Qué tan bien domina el profesor la materia que enseña?
+                            </div>
+                            <div class="star-rating" data-question="1" data-modal="{{ $cal->id }}">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <div class="rating-labels">
+                                <span>Deficiente</span>
+                                <span>Regular</span>
+                                <span>Bueno</span>
+                                <span>Muy Bueno</span>
+                                <span>Excelente</span>
+                            </div>
+                            <input type="hidden" name="pregunta_1" id="pregunta_1_{{ $cal->id }}" required>
+                        </div>
+
+                        <!-- Pregunta 2: Claridad en explicaciones -->
+                        <div class="question-card">
+                            <div class="question-title">
+                                <i class="fas fa-comments question-icon"></i>
+                                ¿Qué tan claras y comprensibles son sus explicaciones?
+                            </div>
+                            <div class="star-rating" data-question="2" data-modal="{{ $cal->id }}">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <div class="rating-labels">
+                                <span>Muy confuso</span>
+                                <span>Confuso</span>
+                                <span>Aceptable</span>
+                                <span>Claro</span>
+                                <span>Muy claro</span>
+                            </div>
+                            <input type="hidden" name="pregunta_2" id="pregunta_2_{{ $cal->id }}" required>
+                        </div>
+
+                        <!-- Pregunta 3: Metodología de enseñanza -->
+                        <div class="question-card">
+                            <div class="question-title">
+                                <i class="fas fa-chalkboard-teacher question-icon"></i>
+                                ¿Cómo evalúas su metodología y técnicas de enseñanza?
+                            </div>
+                            <div class="star-rating" data-question="3" data-modal="{{ $cal->id }}">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <div class="rating-labels">
+                                <span>Inadecuada</span>
+                                <span>Poco efectiva</span>
+                                <span>Aceptable</span>
+                                <span>Efectiva</span>
+                                <span>Excelente</span>
+                            </div>
+                            <input type="hidden" name="pregunta_3" id="pregunta_3_{{ $cal->id }}" required>
+                        </div>
+
+                        <!-- Pregunta 4: Disponibilidad y atención -->
+                        <div class="question-card">
+                            <div class="question-title">
+                                <i class="fas fa-handshake question-icon"></i>
+                                ¿Qué tan disponible está para resolver dudas y brindar apoyo?
+                            </div>
+                            <div class="star-rating" data-question="4" data-modal="{{ $cal->id }}">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <div class="rating-labels">
+                                <span>Nunca disponible</span>
+                                <span>Poco disponible</span>
+                                <span>Moderadamente</span>
+                                <span>Muy disponible</span>
+                                <span>Siempre disponible</span>
+                            </div>
+                            <input type="hidden" name="pregunta_4" id="pregunta_4_{{ $cal->id }}" required>
+                        </div>
+
+                        <!-- Pregunta 5: Evaluación general -->
+                        <div class="question-card">
+                            <div class="question-title">
+                                <i class="fas fa-trophy question-icon"></i>
+                                ¿Cuál es tu evaluación general del profesor?
+                            </div>
+                            <div class="star-rating" data-question="5" data-modal="{{ $cal->id }}">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <div class="rating-labels">
+                                <span>Muy malo</span>
+                                <span>Malo</span>
+                                <span>Regular</span>
+                                <span>Bueno</span>
+                                <span>Excelente</span>
+                            </div>
+                            <input type="hidden" name="pregunta_5" id="pregunta_5_{{ $cal->id }}" required>
+                        </div>
+
+                        <!-- Sección de comentarios -->
+                        <div class="comment-section">
+                            <label class="form-label fw-semibold mb-3">
+                                <i class="fas fa-comment-dots me-2"></i>
+                                Comentarios adicionales (opcional)
+                            </label>
+                            <textarea 
+                                name="comentario" 
+                                class="form-control" 
+                                rows="4" 
+                                placeholder="Comparte cualquier comentario adicional que consideres importante para ayudar al profesor a mejorar..."
+                            ></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success" id="submitBtn{{ $cal->id }}" disabled>
+                            <i class="fas fa-paper-plane me-2"></i>Enviar Evaluación
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
+@endforeach
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modals = document.querySelectorAll('.modal');
+    
+    modals.forEach(modal => {
+        const modalId = modal.id.replace('modalCalificar', '');
+        const starRatings = modal.querySelectorAll('.star-rating');
+        const submitBtn = modal.querySelector(`#submitBtn${modalId}`);
+        let ratings = {};
+
+        starRatings.forEach(rating => {
+            const questionNum = rating.dataset.question;
+            const stars = rating.querySelectorAll('.star');
+            const hiddenInput = modal.querySelector(`#pregunta_${questionNum}_${modalId}`);
+
+            stars.forEach((star, index) => {
+                star.addEventListener('mouseenter', function() {
+                    highlightStars(stars, index + 1, 'hover');
+                });
+
+                star.addEventListener('mouseleave', function() {
+                    removeHoverStars(stars);
+                    if (ratings[questionNum]) {
+                        highlightStars(stars, ratings[questionNum], 'active');
+                    }
+                });
+
+                star.addEventListener('click', function() {
+                    const value = parseInt(star.dataset.value);
+                    ratings[questionNum] = value;
+                    hiddenInput.value = value;
+                    
+                    removeAllStars(stars);
+                    highlightStars(stars, value, 'active');
+                    
+                    // Verificar si todas las preguntas están respondidas
+                    checkAllQuestionsAnswered();
+                });
+            });
+        });
+
+        function highlightStars(stars, count, className) {
+            for (let i = 0; i < count; i++) {
+                stars[i].classList.add(className);
+            }
+        }
+
+        function removeHoverStars(stars) {
+            stars.forEach(star => star.classList.remove('hover'));
+        }
+
+        function removeAllStars(stars) {
+            stars.forEach(star => {
+                star.classList.remove('active', 'hover');
+            });
+        }
+
+        function checkAllQuestionsAnswered() {
+            const requiredQuestions = 5;
+            const answeredQuestions = Object.keys(ratings).length;
+            
+            if (answeredQuestions === requiredQuestions) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Enviar Evaluación';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fas fa-paper-plane me-2"></i>Responde todas las preguntas (${answeredQuestions}/${requiredQuestions})`;
+            }
+        }
+
+        // Reset form when modal is closed
+        modal.addEventListener('hidden.bs.modal', function() {
+            ratings = {};
+            starRatings.forEach(rating => {
+                const stars = rating.querySelectorAll('.star');
+                removeAllStars(stars);
+            });
+            
+            // Reset hidden inputs
+            for (let i = 1; i <= 5; i++) {
+                const input = modal.querySelector(`#pregunta_${i}_${modalId}`);
+                if (input) input.value = '';
+            }
+            
+            // Reset textarea
+            const textarea = modal.querySelector('textarea[name="comentario"]');
+            if (textarea) textarea.value = '';
+            
+            checkAllQuestionsAnswered();
+        });
+    });
+});
+</script>
             
 </div>
 
