@@ -78,7 +78,8 @@ public function horario()
             'profesores.name as profesor',
             'periodos.nombre as periodo',
             'curso_periodo.fecha_inicio_clases',
-'curso_periodo.fecha_fin_clases'
+'curso_periodo.fecha_fin_clases',
+'curso_periodo.url_clase_virtual'
         )
         ->get();
 
@@ -97,6 +98,7 @@ $fin = \Carbon\Carbon::parse($clase->fecha_fin_clases);
                     'extendedProps' => [
                         'profesor' => $clase->profesor,
                         'periodo'  => $clase->periodo,
+                        'url'      => $clase->url_clase_virtual,
                     ]
                 ];
             }

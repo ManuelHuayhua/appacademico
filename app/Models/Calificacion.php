@@ -30,6 +30,7 @@ class Calificacion extends Model
     'pago_realizado',
     'califica_profesor',
         'permiso',
+        'monto_pago', 
     ];
 
     public function alumno()

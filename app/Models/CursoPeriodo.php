@@ -16,6 +16,11 @@ class CursoPeriodo extends Model
         'fecha_inicio_clases',
         'fecha_fin_clases',
         'vacantes',
+        'turno', 
+        'monto_total',
+        'url_clase_virtual',
+    
+
     ];
 
     public function curso()

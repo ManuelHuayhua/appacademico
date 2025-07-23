@@ -772,6 +772,9 @@
                     <p class="modal-detail"><strong>👨‍🏫 Profesor:</strong> <span id="modalProfessor"></span></p>
                     <p class="modal-detail"><strong>📆 Fecha:</strong> <span id="modalDate"></span></p>
                     <p class="modal-detail"><strong>🕐 Hora:</strong> <span id="modalTime"></span></p>
+                    <p class="modal-detail"><strong>🔗 Enlace de clase:</strong></p>
+                    <a id="modalUrl" class="btn btn-primary mb-2" target="_blank">Ir al enlace</a>
+                    <p id="noLinkMsg" class="text-muted mb-2" style="display: none;">Sin enlace disponible</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -946,6 +949,22 @@
                 document.getElementById('modalProfessor').textContent = info.event.extendedProps.profesor || 'N/A';
                 document.getElementById('modalDate').textContent = info.event.start.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 document.getElementById('modalTime').textContent = info.event.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                const urlBtn = document.getElementById('modalUrl');
+                const noLinkMsg = document.getElementById('noLinkMsg');
+
+                if (info.event.extendedProps.url) {
+                    urlBtn.href = info.event.extendedProps.url;
+                    urlBtn.classList.remove('disabled');
+                    urlBtn.style.display = 'inline-block';
+
+                    noLinkMsg.style.display = 'none';
+                } else {
+                    urlBtn.href = '#';
+                    urlBtn.classList.add('disabled');
+                    urlBtn.style.display = 'none';
+
+                    noLinkMsg.style.display = 'block';
+                }
 
                 // Show the modal
                 eventDetailModal.show();
