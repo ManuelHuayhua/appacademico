@@ -6,7 +6,7 @@
     <title>@yield('title', 'Panel de Estudiante')</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-   <style>
+       <style>
         * {
             margin: 0;
             padding: 0;
@@ -639,7 +639,7 @@
                 </button>
             </div>
             
-            <nav class="sidebar-nav">
+           <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ route('home') }}" data-page="general">
@@ -735,235 +735,404 @@
                     </div>
                 </div>
             </nav>
+            
+            <!-- Content -->
+            <div class="content-area">
+            
 
-
-
-              <!-- calendario-->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+            <style>
+    .header-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 15px 15px;
+    }
+    .filter-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: none;
+        margin-bottom: 2rem;
+    }
+    .payment-table {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .table thead th {
+        background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+        border: none;
+        font-weight: 600;
+        color: #495057;
+        padding: 1rem 0.75rem;
+    }
+    .table tbody td {
+        padding: 1rem 0.75rem;
+        border-bottom: 1px solid #f8f9fa;
+        vertical-align: middle;
+    }
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transition: background-color 0.3s ease;
+    }
     
+    /* Responsividad para móviles */
+    @media (max-width: 768px) {
+        .payment-table {
+            border-radius: 0;
+            margin: 0 -15px;
+        }
+        .table-responsive {
+            border: none;
+        }
+        .table thead {
+            display: none;
+        }
+        .table tbody tr {
+            display: block;
+            margin-bottom: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: none !important;
+        }
+        .table tbody td {
+            display: block;
+            text-align: left;
+            border: none;
+            padding: 0.75rem 1rem;
+            position: relative;
+            padding-left: 40%;
+        }
+        .table tbody td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 1rem;
+            width: 35%;
+            padding-right: 10px;
+            white-space: nowrap;
+            font-weight: 600;
+            color: #495057;
+        }
+        .summary-cards .col-md-4 {
+            margin-bottom: 1rem;
+        }
+        .header-section {
+            padding: 1.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+        .header-section h1 {
+            font-size: 1.5rem;
+        }
+        .header-section .lead {
+            font-size: 1rem;
+        }
+        .header-section .fa-3x {
+            font-size: 2rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .container {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .summary-card {
+            padding: 1rem;
+        }
+        .summary-card h4 {
+            font-size: 1.2rem;
+        }
+        .summary-card .fa-2x {
+            font-size: 1.5rem;
+        }
+        .filter-card .card-body {
+            padding: 1rem;
+        }
+        .table tbody td {
+            padding-left: 35%;
+            font-size: 0.9rem;
+        }
+        .table tbody td::before {
+            width: 30%;
+            font-size: 0.8rem;
+        }
+    }
+    .badge-complete {
+        background: linear-gradient(45deg, #28a745, #20c997) !important;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+    }
+    .badge-pending {
+        background: linear-gradient(45deg, #ffc107, #fd7e14) !important;
+        color: #000 !important;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+    }
+    .money-positive {
+        color: #28a745;
+        font-weight: 600;
+    }
+    .money-pending {
+        color: #dc3545;
+        font-weight: 600;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+    .custom-select {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    .custom-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    .summary-cards {
+        margin-bottom: 2rem;
+    }
+    .summary-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-left: 4px solid;
+        transition: transform 0.3s ease;
+    }
+    .summary-card:hover {
+        transform: translateY(-2px);
+    }
+    .summary-card.total { border-left-color: #007bff; }
+    .summary-card.paid { border-left-color: #28a745; }
+    .summary-card.pending { border-left-color: #dc3545; }
+</style>
 
-<!-- Content Area for Calendar -->
-<div class="content-area">
-    <h2 class="calendar-title">🗓️ Mi Horario Académico</h2>
-    <div id="calendar" class="academic-calendar"></div>
-
-    <!-- Modal para detalles del evento -->
-    <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="eventDetailModalLabel">Detalles de la Clase</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="modal-detail"><strong>📘 Curso:</strong> <span id="modalCourse"></span></p>
-                    <p class="modal-detail"><strong>👨‍🏫 Profesor:</strong> <span id="modalProfessor"></span></p>
-                    <p class="modal-detail"><strong>📆 Fecha:</strong> <span id="modalDate"></span></p>
-                    <p class="modal-detail"><strong>🕐 Hora:</strong> <span id="modalTime"></span></p>
-                    <p class="modal-detail"><strong>🔗 Enlace de clase:</strong></p>
-                    <a id="modalUrl" class="btn btn-primary mb-2" target="_blank">Ir al enlace</a>
-                    <p id="noLinkMsg" class="text-muted mb-2" style="display: none;">Sin enlace disponible</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
+<div class="header-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-6 mb-2">
+                    <i class="fas fa-receipt me-3"></i>
+                    Comprobante de Pagos
+                </h1>
+                <p class="lead mb-0">Consulta el estado de tus pagos por periodo académico</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <i class="fas fa-credit-card fa-3x opacity-75"></i>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Custom CSS for Calendar and Modal -->
-<style>
-    body {
-        background: linear-gradient(to right, #e0f2fe, #f0f9ff);
-        font-family: 'Inter', sans-serif;
-    }
+<div class="container pb-5">
+    <!-- Filtro de Periodo -->
+    <div class="card filter-card">
+        <div class="card-body">
+            <form method="GET" action="{{ route('alumno.comprobante') }}">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-3 mb-2 mb-md-0">
+                        <label for="periodo_id" class="form-label fw-bold">
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                            Seleccionar Periodo:
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <select name="periodo_id" id="periodo_id" class="form-select custom-select" onchange="this.form.submit()">
+                            @foreach($periodos as $periodo)
+                                <option value="{{ $periodo->id }}" {{ $periodo->id == $periodoSeleccionado ? 'selected' : '' }}>
+                                    {{ $periodo->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3 text-md-end">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Actualización automática
+                        </small>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    .academic-calendar {
-        background: white;
-        border-radius: 24px;
-        padding: 35px;
-        max-width: 1200px;
-        margin: 50px auto;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
+    @if(count($datos) > 0)
+        <!-- Resumen de Pagos -->
+        <div class="row summary-cards">
+            @php
+                $totalGeneral = collect($datos)->sum('monto_total');
+                $totalPagado = collect($datos)->sum('monto_pagado');
+                $totalPendiente = collect($datos)->sum('restante');
+            @endphp
+            
+            <div class="col-12 col-md-4 mb-3">
+                <div class="summary-card total">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas fa-coins fa-2x text-primary"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1">Monto Total</h6>
+                            <h4 class="mb-0">S/ {{ number_format($totalGeneral, 2) }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 col-md-4 mb-3">
+                <div class="summary-card paid">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1">Total Pagado</h6>
+                            <h4 class="mb-0 text-success">S/ {{ number_format($totalPagado, 2) }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 col-md-4 mb-3">
+                <div class="summary-card pending">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas fa-clock fa-2x text-danger"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="text-muted mb-1">Saldo Pendiente</h6>
+                            <h4 class="mb-0 text-danger">S/ {{ number_format($totalPendiente, 2) }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+ <!-- filtro -->
+<div class="mb-3 text-end">
+    <label for="filtroEstado" class="form-label me-2 fw-bold">Filtrar por Estado:</label>
+    <select id="filtroEstado" class="form-select d-inline-block w-auto">
+        <option value="todos">Todos</option>
+        <option value="completo">Pago Completo</option>
+        <option value="pendiente">Pendiente</option>
+    </select>
+</div>
 
-    .calendar-title {
-        text-align: center;
-        font-size: 2.8rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 30px;
-    }
-
-    .fc .fc-toolbar {
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding-bottom: 20px;
-    }
-
-    .fc .fc-toolbar-title {
-        font-size: 1.6rem;
-        color: #1e293b;
-        font-weight: 600;
-    }
-
-    .fc .fc-button-primary {
-        background-color: #2563eb;
-        border: none;
-        border-radius: 12px;
-        padding: 8px 16px;
-        font-size: 1rem;
-        font-weight: 500;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        transition: 0.3s ease;
-    }
-
-    .fc .fc-button-primary:hover {
-        background-color: #1d4ed8;
-        transform: scale(1.05);
-    }
-
-    .fc .fc-col-header-cell-cushion {
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        color: #334155;
-        padding: 12px;
-    }
-
-    .fc-event {
-        background: linear-gradient(145deg, #6366f1, #818cf8);
-        border-left: 6px solid #4f46e5;
-        color: white;
-        border-radius: 12px;
-        padding: 6px 8px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        box-shadow: 0 6px 12px rgba(99, 102, 241, 0.25);
-        transition: all 0.2s ease-in-out;
-    }
-
-    .fc-event:hover {
-        transform: scale(1.03);
-        background: #4f46e5;
-    }
-
-    .fc-day-today {
-        background-color: #f0f9ff !important;
-    }
-
-    .fc-timegrid-slot {
-        height: 50px;
-        border-color: #e2e8f0;
-    }
-
-    /* Modal personalizado */
-    .modal-content {
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        padding: 15px;
-    }
-
-    .modal-header {
-        border-bottom: none;
-        text-align: center;
-    }
-
-    .modal-title {
-        font-weight: 700;
-        color: #334155;
-    }
-
-    .modal-body {
-        font-size: 1rem;
-        color: #1e293b;
-    }
-
-    .modal-detail {
-        margin-bottom: 10px;
-    }
-
-    @media (max-width: 768px) {
-        .academic-calendar {
-            padding: 20px;
-            margin: 20px;
-        }
-
-        .calendar-title {
-            font-size: 2rem;
-        }
-
-        .fc .fc-toolbar-title {
-            font-size: 1.3rem;
-        }
-
-        .fc-event {
-            font-size: 0.75rem;
-        }
-    }
-</style>
-
-
-<!-- FullCalendar JS and Custom Script -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const calendarEl = document.getElementById('calendar');
-        const eventDetailModal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
+document.addEventListener('DOMContentLoaded', function () {
+    const filtro = document.getElementById('filtroEstado');
+    const filas = document.querySelectorAll('.fila-estado');
 
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
-            locale: 'es',
-            allDaySlot: false,
-            slotMinTime: "07:00:00",
-            slotMaxTime: "22:00:00",
-            slotEventOverlap: false,
-            eventOverlap: false,
-            height: 'auto',
-            nowIndicator: true,
-            headerToolbar: {
-    left: 'prev,next today',
-    center: 'title',
-    right: 'timeGridWeek,timeGridDay'
-},
-            events: {!! $eventosJson !!},
-            eventClick: function(info) {
-                // Populate modal with event data
-                document.getElementById('modalCourse').textContent = info.event.title;
-                document.getElementById('modalProfessor').textContent = info.event.extendedProps.profesor || 'N/A';
-                document.getElementById('modalDate').textContent = info.event.start.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                document.getElementById('modalTime').textContent = info.event.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                const urlBtn = document.getElementById('modalUrl');
-                const noLinkMsg = document.getElementById('noLinkMsg');
+    filtro.addEventListener('change', function () {
+        const estadoSeleccionado = filtro.value;
 
-                if (info.event.extendedProps.url) {
-                    urlBtn.href = info.event.extendedProps.url;
-                    urlBtn.classList.remove('disabled');
-                    urlBtn.style.display = 'inline-block';
-
-                    noLinkMsg.style.display = 'none';
-                } else {
-                    urlBtn.href = '#';
-                    urlBtn.classList.add('disabled');
-                    urlBtn.style.display = 'none';
-
-                    noLinkMsg.style.display = 'block';
-                }
-
-                // Show the modal
-                eventDetailModal.show();
+        filas.forEach(fila => {
+            const estado = fila.getAttribute('data-estado');
+            
+            if (estadoSeleccionado === 'todos' || estado === estadoSeleccionado) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
             }
         });
-        calendar.render();
     });
+});
 </script>
 
 
-            
+    <!-- Tabla de Pagos -->
+    <div class="payment-table">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-book me-2"></i>Curso</th>
+                        <th><i class="fas fa-users me-2"></i>Sección</th>
+                        <th><i class="fas fa-clock me-2"></i>Turno</th>
+                        <th><i class="fas fa-calendar me-2"></i>Periodo</th>
+                        <th><i class="fas fa-tag me-2"></i>Monto Total</th>
+                        <th><i class="fas fa-check me-2"></i>Monto Pagado</th>
+                        <th><i class="fas fa-exclamation me-2"></i>Restante</th>
+                        <th><i class="fas fa-info-circle me-2"></i>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($datos as $dato)
+                        <tr class="fila-estado" data-estado="{{ (!is_null($dato['monto_total']) && $dato['monto_pagado'] >= $dato['monto_total']) ? 'completo' : 'pendiente' }}">
+
+                            <td data-label="Curso">
+                                <strong>{{ $dato['curso'] }}</strong>
+                            </td>
+                            <td data-label="Sección">
+                                <span class="badge bg-light text-dark">{{ $dato['seccion'] }}</span>
+                            </td>
+                            <td data-label="Turno">{{ ucfirst($dato['turno']) }}</td>
+                            <td data-label="Periodo">{{ $dato['periodo'] }}</td>
+                            <td data-label="Monto Total">
+                                <span class="money-positive">
+                                    <i class="fas fa-coins me-1"></i>
+                                    {{ is_null($dato['monto_total']) ? '--' : 'S/ ' . number_format($dato['monto_total'], 2) }}
+                                </span>
+                            </td>
+                            <td data-label="Monto Pagado">
+                                <span class="money-positive">
+                                    <i class="fas fa-check-circle me-1"></i>
+                                    S/ {{ number_format($dato['monto_pagado'], 2) }}
+                                </span>
+                            </td>
+                            <td data-label="Restante">
+                                <span class="{{ $dato['restante'] > 0 ? 'money-pending' : 'money-positive' }}">
+                                    <i class="fas fa-{{ $dato['restante'] > 0 ? 'exclamation-triangle' : 'check' }} me-1"></i>
+                                    S/ {{ number_format($dato['restante'], 2) }}
+                                </span>
+                            </td>
+                            <td data-label="Estado">
+                               @if(!is_null($dato['monto_total']) && $dato['monto_pagado'] >= $dato['monto_total'])
+                                    <span class="badge badge-complete">
+                                        <i class="fas fa-check me-1"></i>
+                                        Pago Completo
+                                    </span>
+                                @else
+                                    <span class="badge badge-pending">
+                                        <i class="fas fa-clock me-1"></i>
+                                        Pendiente
+                                    </span>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="border-0">
+                                <div class="empty-state">
+                                    <i class="fas fa-inbox fa-4x mb-3"></i>
+                                    <h4 class="mb-3">No hay registros</h4>
+                                    <p class="mb-0">No hay cursos matriculados en este periodo académico.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if(count($datos) > 0)
+        <div class="text-center mt-4">
+            <small class="text-muted">
+                <i class="fas fa-info-circle me-1"></i>
+                Mostrando {{ count($datos) }} curso(s) para el periodo seleccionado
+            </small>
+        </div>
+    @endif
+</div>
+            <!-- aqui agrega -->
 </div>
 
 

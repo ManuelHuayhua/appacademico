@@ -678,33 +678,21 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="mensajes">
-                            <i class="fas fa-envelope"></i>
-                            <span class="nav-text">Mensajes</span>
-                            <div class="tooltip-custom">Mensajes</div>
+                        <a class="nav-link" href="{{ route('alumno.silabus') }}" data-page="silabus">
+                           <i class="fas fa-book-open"></i>
+                            <span class="nav-text">Sílabo</span>
+                            <div class="tooltip-custom">Sílabo</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="comprobantes">
+                        <a class="nav-link" href="{{ route('alumno.comprobante') }}" data-page="comprobantes">
+
                             <i class="fas fa-file-invoice"></i>
                             <span class="nav-text">Comprobantes</span>
                             <div class="tooltip-custom">Comprobantes</div>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="tutorial">
-                            <i class="fas fa-play-circle"></i>
-                            <span class="nav-text">Tutorial Aula Virtual</span>
-                            <div class="tooltip-custom">Tutorial Aula Virtual</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="biblioteca">
-                            <i class="fas fa-book-open"></i>
-                            <span class="nav-text">Biblioteca</span>
-                            <div class="tooltip-custom">Biblioteca</div>
-                        </a>
-                    </li>
+                
                 </ul>
             </nav>
             

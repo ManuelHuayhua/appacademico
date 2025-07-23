@@ -13,6 +13,7 @@ use App\Http\Controllers\Profesor\CursoController as ProfesorCursoController;
 use App\Http\Controllers\Alumnos\CalificacionalumnoController;
 use App\Http\Controllers\Admin\CalificacionesController;
 use App\Http\Controllers\Admin\MensajeController;
+use App\Http\Controllers\Alumnos\ComprobanteController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -69,7 +70,15 @@ Route::get('/alumno/calendario', [CursosController::class, 'horario'])
 
 //calificaciones
 
- Route::get('/mis-calificaciones', [CalificacionalumnoController::class, 'index'])->name('alumno.calificaciones.index');
+ Route::get('/mis-calificaciones', [CalificacionalumnoController::class, 'index'])->name('alumno.calificaciones.index')->middleware('usuarioonly');
+
+//comprobante de cursos
+
+ Route::get('/alumno/comprobante', [ComprobanteController::class, 'index'])->name('alumno.comprobante')->middleware('usuarioonly');
+
+ //silbus de cursos matriculados
+
+   Route::get('/alumno/silabus', [App\Http\Controllers\Alumnos\SilaboController::class, 'index'])->name('alumno.silabus')->middleware('usuarioonly');
 
 
 

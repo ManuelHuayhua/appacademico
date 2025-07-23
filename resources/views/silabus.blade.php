@@ -6,7 +6,7 @@
     <title>@yield('title', 'Panel de Estudiante')</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-   <style>
+       <style>
         * {
             margin: 0;
             padding: 0;
@@ -735,235 +735,125 @@
                     </div>
                 </div>
             </nav>
+            
+            <!-- Content -->
+            <div class="content-area">
+            <style>
+    .curso-card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .curso-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .header-section {
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 15px 15px;
+    }
+    .no-courses {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+    .btn-silabus {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-silabus:hover {
+        background: linear-gradient(45deg, #218838, #1ea27c);
+        transform: translateY(-1px);
+    }
+</style>
 
-
-
-              <!-- calendario-->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
-    
-
-<!-- Content Area for Calendar -->
-<div class="content-area">
-    <h2 class="calendar-title">🗓️ Mi Horario Académico</h2>
-    <div id="calendar" class="academic-calendar"></div>
-
-    <!-- Modal para detalles del evento -->
-    <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="eventDetailModalLabel">Detalles de la Clase</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="modal-detail"><strong>📘 Curso:</strong> <span id="modalCourse"></span></p>
-                    <p class="modal-detail"><strong>👨‍🏫 Profesor:</strong> <span id="modalProfessor"></span></p>
-                    <p class="modal-detail"><strong>📆 Fecha:</strong> <span id="modalDate"></span></p>
-                    <p class="modal-detail"><strong>🕐 Hora:</strong> <span id="modalTime"></span></p>
-                    <p class="modal-detail"><strong>🔗 Enlace de clase:</strong></p>
-                    <a id="modalUrl" class="btn btn-primary mb-2" target="_blank">Ir al enlace</a>
-                    <p id="noLinkMsg" class="text-muted mb-2" style="display: none;">Sin enlace disponible</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
+<div class="header-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-6 mb-2">
+                    <i class="fas fa-book-open me-3"></i>
+                    Mis Sílabos
+                </h1>
+                <p class="lead mb-0">Accede a los sílabos actuales de tus cursos matriculados</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <i class="fas fa-graduation-cap fa-3x opacity-75"></i>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Custom CSS for Calendar and Modal -->
-<style>
-    body {
-        background: linear-gradient(to right, #e0f2fe, #f0f9ff);
-        font-family: 'Inter', sans-serif;
-    }
-
-    .academic-calendar {
-        background: white;
-        border-radius: 24px;
-        padding: 35px;
-        max-width: 1200px;
-        margin: 50px auto;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
-
-    .calendar-title {
-        text-align: center;
-        font-size: 2.8rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 30px;
-    }
-
-    .fc .fc-toolbar {
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding-bottom: 20px;
-    }
-
-    .fc .fc-toolbar-title {
-        font-size: 1.6rem;
-        color: #1e293b;
-        font-weight: 600;
-    }
-
-    .fc .fc-button-primary {
-        background-color: #2563eb;
-        border: none;
-        border-radius: 12px;
-        padding: 8px 16px;
-        font-size: 1rem;
-        font-weight: 500;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        transition: 0.3s ease;
-    }
-
-    .fc .fc-button-primary:hover {
-        background-color: #1d4ed8;
-        transform: scale(1.05);
-    }
-
-    .fc .fc-col-header-cell-cushion {
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        color: #334155;
-        padding: 12px;
-    }
-
-    .fc-event {
-        background: linear-gradient(145deg, #6366f1, #818cf8);
-        border-left: 6px solid #4f46e5;
-        color: white;
-        border-radius: 12px;
-        padding: 6px 8px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        box-shadow: 0 6px 12px rgba(99, 102, 241, 0.25);
-        transition: all 0.2s ease-in-out;
-    }
-
-    .fc-event:hover {
-        transform: scale(1.03);
-        background: #4f46e5;
-    }
-
-    .fc-day-today {
-        background-color: #f0f9ff !important;
-    }
-
-    .fc-timegrid-slot {
-        height: 50px;
-        border-color: #e2e8f0;
-    }
-
-    /* Modal personalizado */
-    .modal-content {
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        padding: 15px;
-    }
-
-    .modal-header {
-        border-bottom: none;
-        text-align: center;
-    }
-
-    .modal-title {
-        font-weight: 700;
-        color: #334155;
-    }
-
-    .modal-body {
-        font-size: 1rem;
-        color: #1e293b;
-    }
-
-    .modal-detail {
-        margin-bottom: 10px;
-    }
-
-    @media (max-width: 768px) {
-        .academic-calendar {
-            padding: 20px;
-            margin: 20px;
-        }
-
-        .calendar-title {
-            font-size: 2rem;
-        }
-
-        .fc .fc-toolbar-title {
-            font-size: 1.3rem;
-        }
-
-        .fc-event {
-            font-size: 0.75rem;
-        }
-    }
-</style>
-
-
-<!-- FullCalendar JS and Custom Script -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const calendarEl = document.getElementById('calendar');
-        const eventDetailModal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
-
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
-            locale: 'es',
-            allDaySlot: false,
-            slotMinTime: "07:00:00",
-            slotMaxTime: "22:00:00",
-            slotEventOverlap: false,
-            eventOverlap: false,
-            height: 'auto',
-            nowIndicator: true,
-            headerToolbar: {
-    left: 'prev,next today',
-    center: 'title',
-    right: 'timeGridWeek,timeGridDay'
-},
-            events: {!! $eventosJson !!},
-            eventClick: function(info) {
-                // Populate modal with event data
-                document.getElementById('modalCourse').textContent = info.event.title;
-                document.getElementById('modalProfessor').textContent = info.event.extendedProps.profesor || 'N/A';
-                document.getElementById('modalDate').textContent = info.event.start.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                document.getElementById('modalTime').textContent = info.event.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                const urlBtn = document.getElementById('modalUrl');
-                const noLinkMsg = document.getElementById('noLinkMsg');
-
-                if (info.event.extendedProps.url) {
-                    urlBtn.href = info.event.extendedProps.url;
-                    urlBtn.classList.remove('disabled');
-                    urlBtn.style.display = 'inline-block';
-
-                    noLinkMsg.style.display = 'none';
-                } else {
-                    urlBtn.href = '#';
-                    urlBtn.classList.add('disabled');
-                    urlBtn.style.display = 'none';
-
-                    noLinkMsg.style.display = 'block';
-                }
-
-                // Show the modal
-                eventDetailModal.show();
-            }
-        });
-        calendar.render();
-    });
-</script>
-
-
-            
+<div class="container pb-5">
+    @if($cursosUnicos->count())
+        <div class="row">
+            @foreach($cursosUnicos as $curso)
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card curso-card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                                    <i class="fas fa-book text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="card-title mb-1">{{ $curso->nombre }}</h5>
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        Curso 
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-auto">
+                                @if($curso->silabus_url)
+                                    <a href="{{ $curso->silabus_url }}" 
+                                       target="_blank" 
+                                       class="btn btn-silabus btn-sm w-100">
+                                        <i class="fas fa-external-link-alt me-2"></i>
+                                        Ver Sílabus
+                                    </a>
+                                @else
+                                    <div class="alert alert-light border-start border-warning border-4 mb-0">
+                                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                        <small>Sílabus no disponible</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        
+        <div class="text-center mt-4">
+            <small class="text-muted">
+                <i class="fas fa-info-circle me-1"></i>
+                Total de cursos: {{ $cursosUnicos->count() }}
+            </small>
+        </div>
+    @else
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body no-courses">
+                        <i class="fas fa-inbox fa-4x mb-4 text-muted"></i>
+                        <h4 class="mb-3">No hay cursos matriculados</h4>
+                        <p class="mb-4">Actualmente no estás matriculado en ningún curso. Contacta con tu coordinador académico para más información.</p>
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-phone me-2"></i>
+                            Contactar Soporte
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+</div>
+            <!-- aqui agrega -->
 </div>
 
 
@@ -1082,4 +972,5 @@
     </form>
 </body>
 </html>
+
 

@@ -52,7 +52,13 @@ class CalificacionalumnoController extends Controller
                 'profesores.name as profesor',
                 'calificaciones.*'
             )
-            ->get();
+            ->get()
+        ->map(function ($cal) {
+            if (!($cal->pago_realizado && $cal->califica_profesor)) {
+                $cal->codigo_certificado = null; // 🔐 Seguridad aquí
+            }
+            return $cal;
+        });
     }
 
     return view('calificaciones', [

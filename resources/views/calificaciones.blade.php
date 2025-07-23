@@ -642,7 +642,7 @@
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('home') }}" data-page="general">
+                        <a class="nav-link active" href="{{ route('home') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">General</span>
                             <div class="tooltip-custom">General</div>
@@ -664,7 +664,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('alumno.calificaciones.index') }}"  data-page="calificaciones">
+                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}"  data-page="calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
@@ -678,33 +678,21 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="mensajes">
-                            <i class="fas fa-envelope"></i>
-                            <span class="nav-text">Mensajes</span>
-                            <div class="tooltip-custom">Mensajes</div>
+                        <a class="nav-link" href="{{ route('alumno.silabus') }}" data-page="silabus">
+                           <i class="fas fa-book-open"></i>
+                            <span class="nav-text">Sílabo</span>
+                            <div class="tooltip-custom">Sílabo</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="comprobantes">
+                        <a class="nav-link" href="{{ route('alumno.comprobante') }}" data-page="comprobantes">
+
                             <i class="fas fa-file-invoice"></i>
                             <span class="nav-text">Comprobantes</span>
                             <div class="tooltip-custom">Comprobantes</div>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="tutorial">
-                            <i class="fas fa-play-circle"></i>
-                            <span class="nav-text">Tutorial Aula Virtual</span>
-                            <div class="tooltip-custom">Tutorial Aula Virtual</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="biblioteca">
-                            <i class="fas fa-book-open"></i>
-                            <span class="nav-text">Biblioteca</span>
-                            <div class="tooltip-custom">Biblioteca</div>
-                        </a>
-                    </li>
+                
                 </ul>
             </nav>
             
@@ -751,81 +739,737 @@
             <!-- Content -->
             <div class="content-area">
 
-            <div class="container">
-    <h2 class="mb-4">📊 Mis Calificaciones</h2>
+        <style>
+             /* Estilos personalizados para un toque extra */
+       :root {
+        --primary-blue-start: #0249BB;
+        --primary-blue-end: #003bb1;
+        --primary-blue-light: #e3f2fd;
+        --accent-green: #10b981;
+        --accent-green-light: #d1fae5;
+        --accent-red: #ef4444;
+        --accent-red-light: #fee2e2;
+        --accent-orange: #f59e0b;
+        --accent-orange-light: #fef3c7;
+        --text-dark: #1f2937;
+        --text-medium: #4b5563;
+        --text-muted: #6b7280;
+        --text-light: #9ca3af;
+        --bg-primary: #f8fafc;
+        --bg-secondary: #f1f5f9;
+        --card-bg: #ffffff;
+        --border-light: #e2e8f0;
+        --border-medium: #cbd5e1;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+    }
+        .container {
+        max-width: 1200px;
+        padding: 0 1rem;
+    }
+
+    /* Título principal mejorado */
+    .main-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        color: var(--text-dark);
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+        letter-spacing: -0.025em;
+    }
+
+    .main-title::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4rem;
+        height: 0.25rem;
+        background: linear-gradient(90deg, var(--primary-blue-start), var(--primary-blue-end));
+        border-radius: 2px;
+    }
+
+    .main-title .fas {
+        color: var(--primary-blue-start);
+        margin-right: 0.75rem;
+        font-size: 0.9em;
+    }
+
+    /* Formulario de período mejorado */
+    .period-form {
+        background: var(--card-bg);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg);
+        padding: 2rem;
+        margin-bottom: 3rem;
+        border: 1px solid var(--border-light);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .period-form::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-blue-start), var(--primary-blue-end));
+    }
+
+    .period-form-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+        .period-form-content {
+            flex-direction: row;
+            justify-content: center;
+        }
+    }
+
+    .period-form label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-medium);
+        display: flex;
+        align-items: center;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    .period-form .form-select {
+        border-radius: var(--radius-md);
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--border-light);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s ease;
+        font-size: 0.95rem;
+        font-weight: 500;
+        min-width: 200px;
+        background-color: var(--card-bg);
+    }
+
+    .period-form .form-select:focus {
+        border-color: var(--primary-blue-end);
+        box-shadow: 0 0 0 3px rgba(2, 73, 187, 0.1);
+        outline: none;
+    }
+
+    /* Alerta informativa mejorada */
+    .info-alert {
+        background: linear-gradient(135deg, var(--primary-blue-light) 0%, #f0f9ff 100%);
+        color: var(--primary-blue-end);
+        border: 1px solid rgba(2, 73, 187, 0.2);
+        border-left: 4px solid var(--primary-blue-start);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        padding: 2rem;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-alert::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(2, 73, 187, 0.1) 0%, transparent 70%);
+        transform: translate(30px, -30px);
+    }
+
+    .info-alert .alert-heading {
+        color: var(--primary-blue-end);
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .info-alert p {
+        font-size: 1rem;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    /* Grid responsivo mejorado */
+    .grades-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 400px) {
+        .grades-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+    }
+
+    /* Tarjetas mejoradas */
+    .grade-card {
+        background: var(--card-bg);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        position: relative;
+        height: fit-content;
+    }
+
+    .grade-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-xl);
+    }
+
+    /* Header de tarjeta mejorado */
+    .card-header-custom {
+        background: linear-gradient(135deg, var(--primary-blue-start) 0%, var(--primary-blue-end) 100%);
+        color: white;
+        padding: 2rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-header-custom::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="diagonal-stripe" patternUnits="userSpaceOnUse" width="8" height="8"><path d="M-2,2 l4,-4 M0,8 l8,-8 M6,10 l4,-4" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23diagonal-stripe)"/></svg>') repeat;
+        opacity: 0.6;
+    }
+
+    .card-header-custom > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .card-title-course {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        line-height: 1.3;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .card-subtitle-details {
+        font-size: 0.875rem;
+        opacity: 0.9;
+        line-height: 1.5;
+        font-weight: 500;
+    }
+
+    .card-subtitle-details .fas {
+        margin-right: 0.5rem;
+        width: 1rem;
+        text-align: center;
+    }
+
+    /* Sección de calificaciones mejorada */
+    .grade-section {
+        padding: 2rem 1.5rem;
+        background: var(--card-bg);
+    }
+
+    .final-grade-display {
+        background: linear-gradient(135deg, var(--primary-blue-light) 0%, #f8fafc 100%);
+        border: 2px solid rgba(2, 73, 187, 0.1);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .final-grade-display::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-blue-start), var(--primary-blue-end));
+    }
+
+    .final-grade-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-medium);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .final-grade-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-blue-start);
+        line-height: 1;
+        letter-spacing: -0.02em;
+    }
+
+    /* Botón de colapso mejorado */
+    .btn-collapse-toggle {
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid var(--primary-blue-end);
+        color: var(--primary-blue-end);
+        background: transparent;
+        transition: all 0.2s ease;
+        font-size: 0.875rem;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-collapse-toggle::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(2, 73, 187, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-collapse-toggle:hover {
+        background: var(--primary-blue-end);
+        color: white;
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+    }
+
+    .btn-collapse-toggle:hover::before {
+        left: 100%;
+    }
+
+    .btn-collapse-toggle .fas {
+        transition: transform 0.3s ease;
+        margin-left: 0.5rem;
+    }
+
+    .btn-collapse-toggle[aria-expanded="true"] .fas {
+        transform: rotate(180deg);
+    }
+
+    /* Detalles de calificaciones mejorados */
+    .grades-details {
+        margin-top: 1.5rem;
+    }
+
+    .grade-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-light);
+        transition: background-color 0.2s ease;
+    }
+
+    .grade-item:hover {
+        background-color: var(--bg-primary);
+        margin: 0 -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        border-radius: var(--radius-sm);
+    }
+
+    .grade-item:last-of-type {
+        border-bottom: none;
+    }
+
+    .grade-label {
+        font-weight: 600;
+        color: var(--text-medium);
+        font-size: 0.875rem;
+        flex: 1;
+    }
+
+    .grade-value {
+        font-weight: 700;
+        color: var(--text-dark);
+        font-size: 1rem;
+        text-align: right;
+    }
+
+    /* Lista de orales mejorada */
+    .orales-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        max-width: 200px;
+    }
+
+    .orales-list span {
+        background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 0.75rem;
+        border: 1px solid var(--border-light);
+        color: var(--text-dark);
+        transition: all 0.2s ease;
+    }
+
+    .orales-list span:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* Badges de estado mejorados */
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-md);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        transition: all 0.2s ease;
+    }
+
+    .status-badge.bg-success {
+        background: linear-gradient(135deg, var(--accent-green) 0%, #059669 100%) !important;
+        color: white;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+    }
+
+    .status-badge.bg-danger {
+        background: linear-gradient(135deg, var(--accent-red) 0%, #dc2626 100%) !important;
+        color: white;
+        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+    }
+
+    .status-badge:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* Botón de descarga mejorado */
+    .btn-download {
+        background: linear-gradient(135deg, var(--accent-green) 0%, #059669 100%);
+        border: none;
+        font-weight: 700;
+        padding: 1rem 2rem;
+        border-radius: var(--radius-md);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        font-size: 1rem;
+        color: white;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-download::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        color: white;
+    }
+
+    .btn-download:hover::before {
+        left: 100%;
+    }
+
+    .card-footer-custom {
+        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        border-top: 1px solid var(--border-light);
+        padding: 1.5rem;
+    }
+
+    /* Separador mejorado */
+    .section-divider {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--border-medium), transparent);
+        margin: 2rem 0;
+    }
+
+    /* Animaciones */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .grade-card {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .grade-card:nth-child(2) { animation-delay: 0.1s; }
+    .grade-card:nth-child(3) { animation-delay: 0.2s; }
+    .grade-card:nth-child(4) { animation-delay: 0.3s; }
+
+    /* Mejoras para dispositivos móviles */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 0.75rem;
+        }
+
+        .main-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .period-form {
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grade-section {
+            padding: 1.5rem 1rem;
+        }
+
+        .final-grade-display {
+            padding: 1rem;
+        }
+
+        .final-grade-value {
+            font-size: 2rem;
+        }
+
+        .orales-list {
+            max-width: none;
+            justify-content: flex-start;
+        }
+
+        .grade-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.75rem 0;
+        }
+
+        .grade-value {
+            text-align: left;
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Estados de carga */
+    .loading-shimmer {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+</style>
+      <div class="container py-5">
+    <h1 class="main-title">
+        <i class="fas fa-graduation-cap"></i>
+        Mis Calificaciones
+    </h1>
 
     {{-- Formulario para seleccionar el periodo --}}
     @if($periodos->isNotEmpty())
-        <form method="GET" action="{{ route('alumno.calificaciones.index') }}" class="mb-4">
-            <label for="periodo_id">📆 Ver calificaciones del periodo:</label>
-            <select name="periodo_id" id="periodo_id" class="form-control w-auto d-inline" onchange="this.form.submit()">
-                @foreach($periodos as $p)
-                    <option value="{{ $p->id }}" {{ isset($periodoSeleccionado) && $periodoSeleccionado->id == $p->id ? 'selected' : '' }}>
-                        {{ $p->nombre }}
-                    </option>
-                @endforeach
-            </select>
-        </form>
+        <div class="period-form">
+            <form method="GET" action="{{ route('alumno.calificaciones.index') }}" class="period-form-content">
+                <label for="periodo_id" class="form-label">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Selecciona el período:
+                </label>
+                <select name="periodo_id" id="periodo_id" class="form-select" onchange="this.form.submit()">
+                    @foreach($periodos as $p)
+                        <option value="{{ $p->id }}" {{ isset($periodoSeleccionado) && $periodoSeleccionado->id == $p->id ? 'selected' : '' }}>
+                            {{ $p->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+        </div>
     @endif
 
     {{-- Mostrar mensaje si no hay calificaciones --}}
     @if($calificaciones->isEmpty())
-        <div class="alert alert-info">
-            No tienes calificaciones registradas en este periodo.
+        <div class="info-alert" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-info-circle me-2"></i>
+                ¡Atención!
+            </h4>
+            <p>No tienes calificaciones registradas para este período. ¡Sigue esforzándote!</p>
         </div>
     @else
-        <div class="accordion" id="accordionNotas">
+        {{-- Definir si se debe mostrar la columna del código --}}
+        @php
+            $mostrarCodigo = $calificaciones->contains(function ($cal) {
+                return !empty($cal->codigo_certificado);
+            });
+        @endphp
+
+        <div class="grades-grid">
             @foreach($calificaciones as $index => $cal)
-                <div class="accordion-item mb-2">
-                    <h2 class="accordion-header" id="heading{{ $index }}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $index }}" aria-expanded="false" aria-controls="collapse{{ $index }}">
-                            📘 {{ $cal->curso }} — 👨‍🏫 {{ $cal->profesor ?? 'Sin asignar' }} — 🏫 Sección: {{ $cal->seccion }}
-                        </button>
-                    </h2>
-                    <div id="collapse{{ $index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $index }}" data-bs-parent="#accordionNotas">
-                        <div class="accordion-body">
-                            <table class="table table-sm table-bordered">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>1er Avance</th>
-                                        <th>2do Avance</th>
-                                        <th>Pres. Final</th>
-                                        <th>Prom. Avance</th>
-                                        <th>Orales</th>
-                                        <th>Prom. Orales</th>
-                                        <th>Eval. Perm.</th>
-                                        <th>Ex. Final</th>
-                                        <th><strong>Prom. Final</strong></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{ $cal->primer_avance ?? '-' }}</td>
-                                        <td>{{ $cal->segundo_avance ?? '-' }}</td>
-                                        <td>{{ $cal->presentacion_final ?? '-' }}</td>
-                                        <td>{{ $cal->promedio_avance ?? '-' }}</td>
-                                        <td>
-                                            {{ $cal->oral_1 ?? '-' }} |
-                                            {{ $cal->oral_2 ?? '-' }} |
-                                            {{ $cal->oral_3 ?? '-' }} |
-                                            {{ $cal->oral_4 ?? '-' }} |
-                                            {{ $cal->oral_5 ?? '-' }}
-                                        </td>
-                                        <td>
-                                            @php
-                                                $orales = collect([$cal->oral_1, $cal->oral_2, $cal->oral_3, $cal->oral_4, $cal->oral_5])->filter();
-                                                $promOrales = $orales->isNotEmpty() ? number_format($orales->avg(), 2) : '-';
-                                            @endphp
-                                            {{ $promOrales }}
-                                        </td>
-                                        <td>{{ $cal->promedio_evaluacion_permanente ?? '-' }}</td>
-                                        <td>{{ $cal->examen_final ?? '-' }}</td>
-                                        <td><strong>{{ $cal->promedio_final ?? '-' }}</strong></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <div class="grade-card">
+                    <div class="card-header-custom">
+                        <h2 class="card-title-course">
+                            <i class="fas fa-book-open"></i>
+                            <span>{{ $cal->curso }}</span>
+                        </h2>
+                        <div class="card-subtitle-details">
+                            <div class="mb-1">
+                                <i class="fas fa-user-tie"></i>
+                                {{ $cal->profesor ?? 'Sin asignar' }}
+                            </div>
+                            <div>
+                                <i class="fas fa-building"></i>
+                                Sección: {{ $cal->seccion }}
+                            </div>
                         </div>
                     </div>
+
+                    <div class="grade-section">
+                        {{-- Promedio Final destacado --}}
+                        <div class="final-grade-display">
+                            <div class="final-grade-label">Promedio Final</div>
+                            <div class="final-grade-value">{{ $cal->promedio_final ?? '-' }}</div>
+                        </div>
+
+                        {{-- Botón para mostrar detalles --}}
+                        <button class="btn btn-collapse-toggle" type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#collapseGrades{{ $index }}" 
+                                aria-expanded="false" 
+                                aria-controls="collapseGrades{{ $index }}">
+                            Ver Detalles Completos
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+
+                        {{-- Detalles colapsables --}}
+                        <div class="collapse grades-details" id="collapseGrades{{ $index }}">
+                            <div class="grade-item">
+                                <span class="grade-label">1er Avance</span>
+                                <span class="grade-value">{{ $cal->primer_avance ?? '-' }}</span>
+                            </div>
+                            <div class="grade-item">
+                                <span class="grade-label">2do Avance</span>
+                                <span class="grade-value">{{ $cal->segundo_avance ?? '-' }}</span>
+                            </div>
+                            <div class="grade-item">
+                                <span class="grade-label">Presentación Final</span>
+                                <span class="grade-value">{{ $cal->presentacion_final ?? '-' }}</span>
+                            </div>
+                            <div class="grade-item">
+                                <span class="grade-label">Promedio Avance</span>
+                                <span class="grade-value">{{ $cal->promedio_avance ?? '-' }}</span>
+                            </div>
+                            <div class="grade-item">
+                                <span class="grade-label">Evaluaciones Orales</span>
+                                <div class="orales-list">
+                                    <span>{{ $cal->oral_1 ?? '-' }}</span>
+                                    <span>{{ $cal->oral_2 ?? '-' }}</span>
+                                    <span>{{ $cal->oral_3 ?? '-' }}</span>
+                                    <span>{{ $cal->oral_4 ?? '-' }}</span>
+                                    <span>{{ $cal->oral_5 ?? '-' }}</span>
+                                </div>
+                            </div>
+                            <div class="grade-item">
+                                <span class="grade-label">Promedio Orales</span>
+                                <span class="grade-value">
+                                    @php
+                                        $orales = collect([$cal->oral_1, $cal->oral_2, $cal->oral_3, $cal->oral_4, $cal->oral_5])->filter();
+                                        $promOrales = $orales->isNotEmpty() ? number_format($orales->avg(), 2) : '-';
+                                    @endphp
+                                    {{ $promOrales }}
+                                </span>
+                            </div>
+                            <div class="grade-item">
+                                <span class="grade-label">Evaluación Permanente</span>
+                                <span class="grade-value">{{ $cal->promedio_evaluacion_permanente ?? '-' }}</span>
+                            </div>
+                            <div class="grade-item">
+                                <span class="grade-label">Examen Final</span>
+                                <span class="grade-value">{{ $cal->examen_final ?? '-' }}</span>
+                            </div>
+
+                            <hr class="section-divider">
+
+                            {{-- Información adicional --}}
+                            @if($mostrarCodigo)
+                                <div class="grade-item">
+                                    <span class="grade-label">Código Certificado</span>
+                                    <span class="grade-value">
+                                        @if($cal->pago_realizado && $cal->califica_profesor)
+                                            {{ $cal->codigo_certificado ?? '-' }}
+                                        @else
+                                            -
+                                        @endif
+                                    </span>
+                                </div>
+                            @endif
+
+                            <div class="grade-item">
+                                <span class="grade-label">Pago Completo</span>
+                                <span class="status-badge {{ $cal->pago_realizado ? 'bg-success' : 'bg-danger' }}">
+                                    <i class="fas {{ $cal->pago_realizado ? 'fa-check' : 'fa-times' }}"></i>
+                                    {{ $cal->pago_realizado ? 'Completado' : 'Pendiente' }}
+                                </span>
+                            </div>
+
+                            <div class="grade-item">
+                                <span class="grade-label">Calificación del Profesor</span>
+                                <span class="status-badge {{ $cal->califica_profesor ? 'bg-success' : 'bg-danger' }}">
+                                    <i class="fas {{ $cal->califica_profesor ? 'fa-check' : 'fa-times' }}"></i>
+                                    {{ $cal->califica_profesor ? 'Completada' : 'Pendiente' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ($cal->codigo_certificado)
+                        <div class="card-footer-custom">
+                            <a href="#" class="btn btn-download w-100">
+                                <i class="fas fa-file-download me-2"></i>
+                                Descargar Certificado
+                            </a>
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </div>

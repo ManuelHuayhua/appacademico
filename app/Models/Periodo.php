@@ -19,4 +19,14 @@ class Periodo extends Model
     {
         return $this->hasMany(Horario::class);
     }
+
+    public function cursoPeriodos()
+{
+    return $this->hasMany(CursoPeriodo::class);
+}
+
+public function matriculas()
+{
+    return $this->hasMany(Matricula::class);
+}
 }

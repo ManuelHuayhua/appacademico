@@ -639,10 +639,10 @@
                 </button>
             </div>
             
-            <nav class="sidebar-nav">
+           <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('home') }}" data-page="general">
+                        <a class="nav-link active" href="{{ route('home') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">General</span>
                             <div class="tooltip-custom">General</div>
@@ -650,7 +650,7 @@
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('alumno.perfil') }}" data-page="perfil">
+                        <a class="nav-link" href="{{ route('alumno.perfil') }}" data-page="perfil">
                             <i class="fas fa-user"></i>
                             <span class="nav-text">Perfil</span>
                             <div class="tooltip-custom">Perfil</div>
@@ -664,47 +664,35 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}" data-page="calificaciones">
+                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}"  data-page="calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"   href="{{ route('alumno.calendario') }}" data-page="calendario">
+                        <a class="nav-link" href="{{ route('alumno.calendario') }}" data-page="calendario">
                             <i class="fas fa-calendar-alt"></i>
                             <span class="nav-text">Calendario</span>
                             <div class="tooltip-custom">Calendario</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="mensajes">
-                            <i class="fas fa-envelope"></i>
-                            <span class="nav-text">Mensajes</span>
-                            <div class="tooltip-custom">Mensajes</div>
+                        <a class="nav-link" href="{{ route('alumno.silabus') }}" data-page="silabus">
+                           <i class="fas fa-book-open"></i>
+                            <span class="nav-text">Sílabo</span>
+                            <div class="tooltip-custom">Sílabo</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="comprobantes">
+                        <a class="nav-link" href="{{ route('alumno.comprobante') }}" data-page="comprobantes">
+
                             <i class="fas fa-file-invoice"></i>
                             <span class="nav-text">Comprobantes</span>
                             <div class="tooltip-custom">Comprobantes</div>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="tutorial">
-                            <i class="fas fa-play-circle"></i>
-                            <span class="nav-text">Tutorial Aula Virtual</span>
-                            <div class="tooltip-custom">Tutorial Aula Virtual</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="biblioteca">
-                            <i class="fas fa-book-open"></i>
-                            <span class="nav-text">Biblioteca</span>
-                            <div class="tooltip-custom">Biblioteca</div>
-                        </a>
-                    </li>
+                
                 </ul>
             </nav>
             

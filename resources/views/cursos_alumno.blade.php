@@ -7,6 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
+
   
      <style>
         * {
@@ -644,7 +645,7 @@
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('home') }}" data-page="general">
+                        <a class="nav-link active" href="{{ route('home') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">General</span>
                             <div class="tooltip-custom">General</div>
@@ -652,21 +653,21 @@
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('alumno.perfil') }}" data-page="perfil">
+                        <a class="nav-link" href="{{ route('alumno.perfil') }}" data-page="perfil">
                             <i class="fas fa-user"></i>
                             <span class="nav-text">Perfil</span>
                             <div class="tooltip-custom">Perfil</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('alumno.cursos') }}" data-page="cursos">
+                        <a class="nav-link" href="{{ route('alumno.cursos') }}"  data-page="cursos">
                             <i class="fas fa-book"></i>
                             <span class="nav-text">Cursos</span>
                             <div class="tooltip-custom">Cursos</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}" data-page="calificaciones">
+                        <a class="nav-link" href="{{ route('alumno.calificaciones.index') }}"  data-page="calificaciones">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
@@ -680,33 +681,21 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="mensajes">
-                            <i class="fas fa-envelope"></i>
-                            <span class="nav-text">Mensajes</span>
-                            <div class="tooltip-custom">Mensajes</div>
+                        <a class="nav-link" href="{{ route('alumno.silabus') }}" data-page="silabus">
+                           <i class="fas fa-book-open"></i>
+                            <span class="nav-text">Sílabo</span>
+                            <div class="tooltip-custom">Sílabo</div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="" data-page="comprobantes">
+                        <a class="nav-link" href="{{ route('alumno.comprobante') }}" data-page="comprobantes">
+
                             <i class="fas fa-file-invoice"></i>
                             <span class="nav-text">Comprobantes</span>
                             <div class="tooltip-custom">Comprobantes</div>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="tutorial">
-                            <i class="fas fa-play-circle"></i>
-                            <span class="nav-text">Tutorial Aula Virtual</span>
-                            <div class="tooltip-custom">Tutorial Aula Virtual</div>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="" data-page="biblioteca">
-                            <i class="fas fa-book-open"></i>
-                            <span class="nav-text">Biblioteca</span>
-                            <div class="tooltip-custom">Biblioteca</div>
-                        </a>
-                    </li>
+                
                 </ul>
             </nav>
             
@@ -753,240 +742,762 @@
             <!-- Content -->
             <div class="content-area">
 
-            <style>
-                .card {
-            border: none;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Sombra sutil */
+           
+<style>
+    :root {
+        --primary-gradient: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+        --primary-light: rgba(2, 73, 187, 0.1);
+        --primary-color: #0249BB;
+        --success-gradient: linear-gradient(120deg, #10b981 0%, #059669 100%);
+        --danger-gradient: linear-gradient(120deg, #ef4444 0%, #dc2626 100%);
+        --warning-gradient: linear-gradient(120deg, #f59e0b 0%, #d97706 100%);
+        --secondary-gradient: linear-gradient(120deg, #6b7280 0%, #4b5563 100%);
+        --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --border-radius: 12px;
+        --border-radius-sm: 8px;
+        --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+   
+
+    .main-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 1.5rem 2rem;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .page-header .content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-title {
+        font-weight: 700;
+        font-size: 1.75rem;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-subtitle {
+        opacity: 0.9;
+        font-weight: 400;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+    }
+
+    .filter-card {
+        background: white;
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        transition: var(--transition);
+        margin: 1.5rem;
+        margin-bottom: 1rem;
+        padding: 1.25rem;
+    }
+
+    .filter-card:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--card-shadow-hover);
+    }
+
+    .form-select {
+        border: 1px solid #e2e8f0;
+        border-radius: var(--border-radius-sm);
+        padding: 0.625rem 0.875rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: var(--transition);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%230249BB' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e");
+    }
+
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--primary-light);
+        outline: none;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .alert-modern {
+        background: linear-gradient(120deg, #dbeafe 0%, #e0e7ff 100%);
+        border: none;
+        border-radius: var(--border-radius);
+        border-left: 4px solid var(--primary-color);
+        box-shadow: var(--card-shadow);
+        margin: 1.5rem;
+        padding: 1.25rem;
+    }
+
+    .table-container {
+        margin: 1.5rem;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        background: white;
+    }
+
+    .table {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.875rem;
+    }
+
+    .table thead th {
+        background: var(--primary-gradient);
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        padding: 1rem 0.875rem;
+        border: none;
+        position: relative;
+    }
+
+    .table tbody tr {
+        transition: var(--transition);
+        border: none;
+    }
+
+    .table tbody tr:hover {
+        background: linear-gradient(120deg, #f8fafc 0%, #f1f5f9 100%);
+        transform: translateX(2px);
+    }
+
+    .table tbody td {
+        padding: 1rem 0.875rem;
+        border-top: 1px solid #f1f5f9;
+        vertical-align: middle;
+        font-weight: 500;
+    }
+
+    .course-name {
+        font-weight: 700;
+        color: #1f2937;
+        font-size: 0.95rem;
+    }
+
+    .badge-modern {
+        padding: 0.375rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .badge-success {
+        background: var(--success-gradient);
+        color: white;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-danger {
+        background: var(--danger-gradient);
+        color: white;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    }
+
+    .badge-secondary {
+        background: var(--secondary-gradient);
+        color: white;
+        box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+    }
+
+    .btn-modern {
+        border-radius: var(--border-radius-sm);
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        transition: var(--transition);
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary-modern {
+        background: var(--primary-gradient);
+        color: white;
+        box-shadow: 0 2px 8px rgba(2, 73, 187, 0.3);
+    }
+
+    .btn-primary-modern:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(2, 73, 187, 0.4);
+        color: white;
+    }
+
+    .btn-outline-modern {
+        background: transparent;
+        border: 1.5px solid var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-outline-modern:hover {
+        background: var(--primary-gradient);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(2, 73, 187, 0.3);
+    }
+
+    .modal-content {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 1.25rem 1.5rem;
+    }
+
+    .modal-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .btn-close {
+        filter: brightness(0) invert(1);
+        opacity: 0.8;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+        background: #fafbfc;
+    }
+
+    .modal-footer {
+        background: white;
+        border: none;
+        padding: 1rem 1.5rem;
+    }
+
+    .attendance-table {
+        background: white;
+        border-radius: var(--border-radius-sm);
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+    }
+
+    .attendance-table .table {
+        font-size: 0.8rem;
+    }
+
+    .attendance-table .table thead th {
+        background: linear-gradient(120deg, #f8fafc 0%, #e2e8f0 100%);
+        color: #374151;
+        font-weight: 600;
+        padding: 0.875rem;
+    }
+
+    .attendance-table .table tbody td {
+        padding: 0.75rem 0.875rem;
+    }
+
+    /* Responsive Design Optimizado */
+    @media (max-width: 1200px) {
+        .main-container {
+            margin: 1rem;
         }
+    }
+
+    @media (max-width: 992px) {
+        .page-title {
+            font-size: 1.5rem;
+        }
+        
         .table thead th {
-            background-color: #e9ecef; /* Fondo ligeramente gris para el encabezado de la tabla */
-            color: #495057; /* Color de texto más oscuro */
-            border-bottom: 2px solid #dee2e6;
+            padding: 0.75rem 0.5rem;
+            font-size: 0.7rem;
         }
-        .table-responsive-custom {
-            border-radius: 0.5rem; /* Bordes redondeados para la tabla responsiva */
-            overflow: hidden; /* Asegura que los bordes redondeados se apliquen al contenido */
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Sombra para la tabla */
+        
+        .table tbody td {
+            padding: 0.875rem 0.5rem;
         }
-        .badge-custom-success {
-            background-color: #d4edda; /* Verde claro */
-            color: #155724; /* Verde oscuro */
+    }
+
+    @media (max-width: 767.98px) {
+        body {
+            font-size: 13px;
         }
-        .badge-custom-danger {
-            background-color: #f8d7da; /* Rojo claro */
-            color: #721c24; /* Rojo oscuro */
+        
+        .page-title {
+            font-size: 1.4rem;
         }
-        .badge-custom-secondary {
-            background-color: #e2e3e5; /* Gris claro */
-            color: #383d41; /* Gris oscuro */
+        
+        .page-subtitle {
+            font-size: 0.8rem;
         }
-        .modal-header {
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
+        
+        .main-container {
+            margin: 0.5rem;
+            border-radius: var(--border-radius-sm);
         }
-        .modal-footer {
-            background-color: #f8f9fa;
-            border-top: 1px solid #dee2e6;
+        
+        .page-header {
+            padding: 1.25rem 1.5rem;
+            border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+        }
+        
+        .filter-card,
+        .table-container,
+        .alert-modern {
+            margin: 1rem;
         }
 
-        /* --- Mejoras de Responsividad para la Tabla --- */
-        @media (max-width: 767.98px) { /* Para pantallas pequeñas (sm y abajo) */
-            .table-responsive-custom {
-                border: none; /* Quitamos el borde de la tabla principal */
-                box-shadow: none; /* Quitamos la sombra de la tabla principal */
-            }
-            .table-responsive-custom table {
-                border: none !important; /* Aseguramos que no haya bordes en la tabla */
-            }
-            .table-responsive-custom thead {
-                display: none; /* Ocultamos el encabezado de la tabla */
-            }
-            .table-responsive-custom tbody,
-            .table-responsive-custom tr,
-            .table-responsive-custom td {
-                display: block; /* Hacemos que las filas y celdas se comporten como bloques */
-                width: 100%; /* Ocupan todo el ancho disponible */
-            }
-            .table-responsive-custom tr {
-                margin-bottom: 1rem; /* Espacio entre cada "tarjeta" de curso */
-                border: 1px solid #dee2e6; /* Borde para cada tarjeta */
-                border-radius: 0.5rem; /* Bordes redondeados */
-                background-color: #fff; /* Fondo blanco */
-                box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Sombra */
-                padding: 1rem; /* Padding interno */
-            }
-            .table-responsive-custom td {
-                text-align: right; /* Alineamos el contenido a la derecha */
-                padding-left: 50%; /* Espacio para la etiqueta */
-                position: relative;
-                border: none; /* Quitamos los bordes de las celdas */
-                padding-top: 0.5rem;
-                padding-bottom: 0.5rem;
-            }
-            .table-responsive-custom td::before {
-                content: attr(data-label); /* Usamos el atributo data-label para la etiqueta */
-                position: absolute;
-                left: 0;
-                width: 45%; /* Ancho de la etiqueta */
-                padding-left: 1rem;
-                font-weight: bold;
-                text-align: left;
-                color: #6c757d; /* Color de la etiqueta */
-            }
-            .table-responsive-custom td:last-child {
-                text-align: center; /* Centramos el botón de asistencias */
-                padding-left: 0;
-            }
-            .table-responsive-custom td:last-child::before {
-                content: none; /* No mostramos etiqueta para el botón */
-            }
+        .filter-card {
+            padding: 1rem;
         }
-            </style>
 
-       <div class="container mt-5 mb-5">
-    <div class="d-flex align-items-center mb-4">
-        <i class="fas fa-book-open fa-2x text-primary me-3"></i>
-        <h2 class="fw-bold text-dark">Mis cursos matriculados</h2>
-    </div>
+        .table-container {
+            border-radius: var(--border-radius-sm);
+            box-shadow: none;
+            background: transparent;
+        }
 
-    {{-- Filtro por periodo --}}
-    <div class="card p-4 mb-4">
-        <form method="GET">
-            <div class="mb-3">
-                <label for="periodo_id" class="form-label fw-semibold text-muted">Filtrar por periodo:</label>
-                <select name="periodo_id" id="periodo_id" class="form-select" onchange="this.form.submit()">
-                    @foreach($periodos as $periodo)
-                        <option value="{{ $periodo->id }}" {{ $periodo->id == $periodoSeleccionadoId ? 'selected' : '' }}>
-                            {{ $periodo->nombre }} ({{ \Carbon\Carbon::parse($periodo->fecha_inicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($periodo->fecha_fin)->format('d/m/Y') }})
-                        </option>
-                    @endforeach
-                </select>
+        .table,
+        .table thead,
+        .table tbody,
+        .table th,
+        .table td,
+        .table tr {
+            display: block;
+        }
+
+        .table thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        .table tbody tr {
+            background: white;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 0.875rem;
+            padding: 1.25rem;
+            position: relative;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .table tbody tr:hover {
+            transform: none;
+            background: white;
+        }
+
+        .table tbody td {
+            border: none;
+            padding: 0.5rem 0;
+            text-align: right;
+            padding-left: 45%;
+            position: relative;
+            font-size: 0.8rem;
+        }
+
+        .table tbody td:before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 40%;
+            padding-right: 10px;
+            white-space: nowrap;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: left;
+            font-size: 0.75rem;
+        }
+
+        .table tbody td:last-child {
+            text-align: center;
+            padding-left: 0;
+            padding-top: 0.875rem;
+            border-top: 1px solid #f1f5f9;
+            margin-top: 0.875rem;
+        }
+
+        .table tbody td:last-child:before {
+            display: none;
+        }
+
+        .btn-modern {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .course-name {
+            font-size: 0.9rem;
+        }
+
+        .badge-modern {
+            font-size: 0.65rem;
+            padding: 0.3rem 0.6rem;
+        }
+
+        .modal-dialog {
+            margin: 1rem;
+        }
+
+        .modal-body {
+            padding: 1.25rem;
+        }
+
+        .attendance-table .table {
+            font-size: 0.75rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .main-container {
+            margin: 0.25rem;
+        }
+        
+        .page-header {
+            padding: 1rem;
+        }
+        
+        .page-title {
+            font-size: 1.25rem;
+        }
+        
+        .filter-card,
+        .table-container,
+        .alert-modern {
+            margin: 0.75rem;
+        }
+
+        .table tbody tr {
+            padding: 1rem;
+        }
+
+        .table tbody td {
+            padding-left: 50%;
+        }
+
+        .table tbody td:before {
+            width: 45%;
+        }
+    }
+
+    /* Animaciones optimizadas */
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .table tbody tr {
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    .table tbody tr:nth-child(2n) {
+        animation-delay: 0.05s;
+    }
+
+    .table tbody tr:nth-child(3n) {
+        animation-delay: 0.1s;
+    }
+
+    /* Mejoras adicionales para UX */
+    .icon-text {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .text-truncate-custom {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 767.98px) {
+        .text-truncate-custom {
+            max-width: none;
+            white-space: normal;
+        }
+    }
+
+    /* Loading states */
+    .btn-modern:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    /* Focus states mejorados */
+    .btn-modern:focus,
+    .form-select:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+</style>
+<div class="container-fluid py-3">
+    <div class="main-container">
+        <!-- Header compacto -->
+        <div class="page-header">
+            <div class="content">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-graduation-cap fa-2x me-3"></i>
+                    <div>
+                        <h1 class="page-title">Mis Cursos</h1>
+                        <p class="page-subtitle mb-0">Gestiona tus cursos matriculados y revisa tu asistencia</p>
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
 
-    @if($cursos->isEmpty())
-        <div class="alert alert-info text-center py-4" role="alert">
-            <i class="fas fa-info-circle me-2"></i> No estás matriculado en ningún curso para este periodo.
+        {{-- Filtro por periodo compacto --}}
+        <div class="filter-card">
+            <form method="GET">
+                <div class="mb-0">
+                    <label for="periodo_id" class="form-label icon-text">
+                        <i class="fas fa-filter"></i>
+                        <span>Filtrar por periodo académico</span>
+                    </label>
+                    <select name="periodo_id" id="periodo_id" class="form-select" onchange="this.form.submit()">
+                        @foreach($periodos as $periodo)
+                            <option value="{{ $periodo->id }}" {{ $periodo->id == $periodoSeleccionadoId ? 'selected' : '' }}>
+                                {{ $periodo->nombre }} ({{ \Carbon\Carbon::parse($periodo->fecha_inicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($periodo->fecha_fin)->format('d/m/Y') }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
         </div>
-    @else
-        <div class="table-responsive-custom"> {{-- Usamos nuestra clase personalizada --}}
-            <table class="table table-hover mb-0">
-                <thead>
-                    <tr>
-                        <th scope="col">Curso</th>
-                        <th scope="col">Descripción</th>
-                        <th scope="col">Periodo</th>
-                        <th scope="col">Sección</th>
-                        <th scope="col">Fecha de matrícula</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col">Asistencias</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($cursos as $curso)
-                        <tr>
-                            <td data-label="Curso" class="fw-bold">{{ $curso->curso }}</td>
-                            <td data-label="Descripción">{{ $curso->descripcion ?? '—' }}</td>
-                            <td data-label="Periodo">{{ $curso->periodo }}</td>
-                            <td data-label="Sección">{{ $curso->seccion }}</td>
-                            <td data-label="Fecha de matrícula">{{ \Carbon\Carbon::parse($curso->fecha_matricula)->format('d/m/Y') }}</td>
-                            <td data-label="Estado">
-                                @php
-                                    $estadoClass = '';
-                                    if ($curso->estado === 'activo') {
-                                        $estadoClass = 'badge-custom-success';
-                                    } elseif ($curso->estado === 'inactivo') {
-                                        $estadoClass = 'badge-custom-danger';
-                                    } else {
-                                        $estadoClass = 'badge-custom-secondary';
-                                    }
-                                @endphp
-                                <span class="badge {{ $estadoClass }}">{{ ucfirst($curso->estado) }}</span>
-                            </td>
-                            <td data-label="Acciones"> {{-- Cambiado a Acciones para el label --}}
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalAsistencia{{ $curso->curso_periodo_id }}">
-                                    <i class="fas fa-eye me-1"></i> Ver Asistencias
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    @endif
+
+        @if($cursos->isEmpty())
+            <div class="alert alert-modern text-center" role="alert">
+                <div class="icon-text justify-content-center mb-2">
+                    <i class="fas fa-info-circle fa-2x" style="color: var(--primary-color);"></i>
+                </div>
+                <h6 class="fw-bold mb-1">No hay cursos matriculados</h6>
+                <p class="mb-0 small">No estás matriculado en ningún curso para este periodo académico.</p>
+            </div>
+        @else
+           <div class="table-responsive">
+    <table class="table mb-0">
+        <thead>
+            <tr>
+                <th scope="col"><i class="fas fa-book"></i><span>Curso</span></th>
+                <th scope="col"><i class="fas fa-align-left"></i><span>Descripción</span></th>
+                <th scope="col"><i class="fas fa-calendar"></i><span>Periodo</span></th>
+                <th scope="col"><i class="fas fa-users"></i><span>Sección</span></th>
+                <th scope="col"><i class="fas fa-calendar-plus"></i><span>Matrícula</span></th>
+                <th scope="col"><i class="fas fa-check-circle"></i><span>Estado</span></th>
+                <th scope="col"><i class="fas fa-eye"></i><span>Asistencias</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($cursos as $curso)
+                <tr>
+                    <td data-label="Curso" class="course-name">
+                        <div class="icon-text">
+                            <i class="fas fa-book-open text-primary"></i>
+                            <span class="text-truncate-custom">{{ $curso->curso }}</span>
+                        </div>
+                    </td>
+                    <td data-label="Descripción">
+                        <span class="text-truncate-custom">{{ $curso->descripcion ?? '—' }}</span>
+                    </td>
+                    <td data-label="Periodo">
+                        <div class="icon-text">
+                            <i class="fas fa-calendar-alt text-muted"></i>
+                            <span>{{ $curso->periodo }}</span>
+                        </div>
+                    </td>
+                    <td data-label="Sección">
+                        <div class="icon-text">
+                            <i class="fas fa-layer-group text-muted"></i>
+                            <span>{{ $curso->seccion }}</span>
+                        </div>
+                    </td>
+                    <td data-label="Fecha de matrícula">
+                        <div class="icon-text">
+                            <i class="fas fa-calendar-check text-muted"></i>
+                            <span>{{ \Carbon\Carbon::parse($curso->fecha_matricula)->format('d/m/Y') }}</span>
+                        </div>
+                    </td>
+                    <td data-label="Estado">
+                        @php
+                            $estadoClass = '';
+                            $icon = '';
+                            if ($curso->estado === 'activo') {
+                                $estadoClass = 'badge-success';
+                                $icon = 'fas fa-check';
+                            } elseif ($curso->estado === 'inactivo') {
+                                $estadoClass = 'badge-danger';
+                                $icon = 'fas fa-times';
+                            } else {
+                                $estadoClass = 'badge-secondary';
+                                $icon = 'fas fa-pause';
+                            }
+                        @endphp
+                        <span class="badge badge-modern {{ $estadoClass }}">
+                            <i class="{{ $icon }} me-1"></i>{{ ucfirst($curso->estado) }}
+                        </span>
+                    </td>
+                    <td data-label="Acciones">
+                        <button class="btn btn-modern btn-outline-modern" data-bs-toggle="modal" data-bs-target="#modalAsistencia{{ $curso->curso_periodo_id }}">
+                            <i class="fas fa-chart-line me-1"></i>Ver Asistencias
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+        @endif
+    </div>
 </div>
 
-{{-- MODALES DE ASISTENCIA --}}
+{{-- MODALES DE ASISTENCIA COMPACTOS --}}
 @foreach($cursos as $curso)
 <div class="modal fade" id="modalAsistencia{{ $curso->curso_periodo_id }}" tabindex="-1" aria-labelledby="label{{ $curso->curso_periodo_id }}" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="label{{ $curso->curso_periodo_id }}">
-            Asistencias - {{ $curso->curso }} (Sección {{ $curso->seccion }})
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        @php
-            $asistencias = DB::table('asistencias')
-                ->where('user_id', auth()->id())
-                ->where('curso_periodo_id', $curso->curso_periodo_id)
-                ->orderBy('fecha')
-                ->get();
-        @endphp
-        @if($asistencias->isEmpty())
-            <p class="text-center text-muted">No hay asistencias registradas para este curso.</p>
-        @else
-            <div class="table-responsive"> {{-- table-responsive de Bootstrap para el modal --}}
-                <table class="table table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Asistencia</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($asistencias as $asistencia)
-                            <tr>
-                                <td>{{ \Carbon\Carbon::parse($asistencia->fecha)->format('d/m/Y') }}</td>
-                                <td>
-                                    @php
-                                        $asistenciaClass = '';
-                                        if (is_null($asistencia->asistio)) {
-                                            $asistenciaClass = 'badge-custom-secondary'; // Pendiente
-                                        } elseif ($asistencia->asistio) {
-                                            $asistenciaClass = 'badge-custom-success'; // Asistió
-                                        } else {
-                                            $asistenciaClass = 'badge-custom-danger'; // Faltó
-                                        }
-                                    @endphp
-                                    <span class="badge {{ $asistenciaClass }}">
-                                        @if(is_null($asistencia->asistio))
-                                            Pendiente
-                                        @elseif($asistencia->asistio)
-                                            Asistió
-                                        @else
-                                            Faltó
-                                        @endif
-                                    </span>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="label{{ $curso->curso_periodo_id }}">
+                    <div class="icon-text">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Asistencias - {{ $curso->curso }}</span>
+                    </div>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-        @endif
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <small class="text-muted icon-text">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Sección {{ $curso->seccion }} - Periodo {{ $curso->periodo }}</span>
+                    </small>
+                </div>
+                
+                @php
+                    $asistencias = DB::table('asistencias')
+                        ->where('user_id', auth()->id())
+                        ->where('curso_periodo_id', $curso->curso_periodo_id)
+                        ->orderBy('fecha')
+                        ->get();
+                @endphp
+                
+                @if($asistencias->isEmpty())
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-times fa-2x text-muted mb-2"></i>
+                        <h6 class="text-muted mb-1">Sin registros de asistencia</h6>
+                        <small class="text-muted">No hay asistencias registradas para este curso.</small>
+                    </div>
+                @else
+                    <div class="attendance-table">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="icon-text">
+                                        <i class="fas fa-calendar"></i><span>Fecha</span>
+                                    </th>
+                                    <th scope="col" class="icon-text">
+                                        <i class="fas fa-user-check"></i><span>Estado</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($asistencias as $asistencia)
+                                    <tr>
+                                        <td>
+                                            <div class="icon-text">
+                                                <i class="fas fa-calendar-day text-primary"></i>
+                                                <span>{{ \Carbon\Carbon::parse($asistencia->fecha)->format('d/m/Y') }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @php
+                                                $asistenciaClass = '';
+                                                $icon = '';
+                                                $text = '';
+                                                if (is_null($asistencia->asistio)) {
+                                                    $asistenciaClass = 'badge-secondary';
+                                                    $icon = 'fas fa-clock';
+                                                    $text = 'Pendiente';
+                                                } elseif ($asistencia->asistio) {
+                                                    $asistenciaClass = 'badge-success';
+                                                    $icon = 'fas fa-check';
+                                                    $text = 'Presente';
+                                                } else {
+                                                    $asistenciaClass = 'badge-danger';
+                                                    $icon = 'fas fa-times';
+                                                    $text = 'Ausente';
+                                                }
+                                            @endphp
+                                            <span class="badge badge-modern {{ $asistenciaClass }}">
+                                                <i class="{{ $icon }} me-1"></i>{{ $text }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-modern btn-outline-modern" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cerrar
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 @endforeach
-            
+
+
+
+
+
+
 </div>
 
 
