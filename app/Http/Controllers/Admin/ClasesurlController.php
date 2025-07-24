@@ -6,44 +6,38 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CursoPeriodo;
 use App\Models\Periodo;
+use App\Models\Facultad;
+use App\Models\Carrera;
 use Carbon\Carbon;
 class ClasesurlController extends Controller
 {
     //muestra las clases virtuales de los cursos por periodo
- public function index(Request $request)
-    {
-        $periodos = Periodo::orderBy('fecha_inicio', 'desc')->get();
-        $hoy = Carbon::now()->toDateString();
+public function index(Request $request)
+{
+    $facultades = Facultad::all();
 
-        // Buscar el periodo actual por fechas
-        $periodoActual = $periodos->first(function ($p) use ($hoy) {
-            return $p->fecha_inicio <= $hoy && $p->fecha_fin >= $hoy;
-        });
+    $facultad_id = $request->get('facultad_id');
+    $carrera_id = $request->get('carrera_id');
+    $periodo_id = $request->get('periodo_id');
 
-        // Verificar si se ha seleccionado un periodo manualmente
-        $periodoSeleccionado = $request->get('periodo_id') ?? ($periodoActual ? $periodoActual->id : null);
+    $carreras = $facultad_id ? Carrera::where('facultad_id', $facultad_id)->get() : collect();
+    $cursosPeriodo = collect();
+    $periodos = Periodo::orderBy('fecha_inicio', 'desc')->get();
 
-        // Si no hay periodo válido, enviar vista sin resultados
-        if (!$periodoSeleccionado) {
-            return view('admin.clasesurl', [
-                'periodos' => $periodos,
-                'cursosPeriodo' => collect(),
-                'periodoSeleccionado' => null,
-                'mensaje' => 'No hay un periodo activo actualmente. Por favor, selecciona uno manualmente.'
-            ]);
-        }
-
+    if ($carrera_id && $periodo_id) {
         $cursosPeriodo = CursoPeriodo::with('curso', 'periodo')
-            ->where('periodo_id', $periodoSeleccionado)
+            ->where('periodo_id', $periodo_id)
+            ->whereHas('curso', function ($q) use ($carrera_id) {
+                $q->where('carrera_id', $carrera_id);
+            })
             ->get();
-
-        return view('admin.clasesurl', [
-            'periodos' => $periodos,
-            'cursosPeriodo' => $cursosPeriodo,
-            'periodoSeleccionado' => $periodoSeleccionado,
-            'mensaje' => null
-        ]);
     }
+
+    return view('admin.clasesurl', compact(
+        'facultades', 'carreras', 'periodos', 'cursosPeriodo',
+        'facultad_id', 'carrera_id', 'periodo_id'
+    ));
+}
 
     //actualiza la url de la clase virtual del curso
   public function update(Request $request)

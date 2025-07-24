@@ -17,4 +17,15 @@ class CalificacionProfesor extends Model
     'pregunta_5',
     'comentario'
 ];
+
+  public function calificacion()
+    {
+        return $this->belongsTo(Calificacion::class, 'calificacion_id');
+    }
+
+    // Relación hacia el profesor (usuario)
+    public function profesor()
+    {
+        return $this->belongsTo(User::class, 'profesor_id');
+    }
 }

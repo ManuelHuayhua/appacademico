@@ -13,4 +13,5 @@ class Facultad extends Model
     {
         return $this->hasMany(Carrera::class);
     }
+    
 }

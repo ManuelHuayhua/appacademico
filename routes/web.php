@@ -17,6 +17,9 @@ use App\Http\Controllers\Alumnos\ComprobanteController;
 use App\Http\Controllers\Admin\PagosController;
 use App\Http\Controllers\Admin\ClasesurlController;
 use App\Http\Controllers\Admin\AdminNotasAsistenciasController;
+use App\Http\Controllers\Admin\CursoSilaboController;
+use App\Http\Controllers\Admin\PeriodoController;
+use App\Http\Controllers\Admin\CalificadoProfesorController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -170,7 +173,28 @@ Route::get('/admin/notas-asistencias/export', [AdminNotasAsistenciasController::
     ->name('admin.notas.exportar');
 
 
+// ruta para ver silabus de cursos
+Route::get('curso-silabo', [CursoSilaboController::class, 'index'])->name('curso_silabo.index');
 
+Route::post('curso-silabo/{id}/update', [CursoSilaboController::class, 'update'])->name('curso_silabo.update');
+
+
+// ruta para ver periodos
+
+// Mostrar todos los periodos
+Route::get('admin/periodos', [PeriodoController::class, 'index'])->name('admin.periodos.index');
+
+// Guardar nuevo periodo (desde modal)
+Route::post('admin/periodos', [PeriodoController::class, 'store'])->name('admin.periodos.store');
+
+// Actualizar periodo (desde modal)
+Route::put('admin/periodos/{id}', [PeriodoController::class, 'update'])->name('admin.periodos.update');
+
+// Eliminar periodo
+Route::delete('admin/periodos/{id}', [PeriodoController::class, 'destroy'])->name('admin.periodos.destroy');
+
+// ruta para ver calificaciones de profesor
+Route::get('/admin/calificado-profesor', [CalificadoProfesorController::class, 'index'])->name('admin.calificado_profesor.index');
 
 
  // ruta para profesor

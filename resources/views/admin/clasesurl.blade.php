@@ -5,17 +5,48 @@
 
     {{-- Filtro por periodo --}}
     <form method="GET" class="mb-4">
-        <label for="periodo_id">Filtrar por Periodo:</label>
-        <select name="periodo_id" id="periodo_id" class="form-control w-25 d-inline-block">
-            <option value="">-- Todos los periodos --</option>
-            @foreach ($periodos as $periodo)
-                <option value="{{ $periodo->id }}" {{ $periodoSeleccionado == $periodo->id ? 'selected' : '' }}>
-                    {{ $periodo->nombre }}
-                </option>
-            @endforeach
-        </select>
-        <button type="submit" class="btn btn-primary ml-2">Filtrar</button>
-    </form>
+    <div class="row">
+        <div class="col-md-3">
+            <label>Facultad:</label>
+            <select name="facultad_id" class="form-control" onchange="this.form.submit()">
+                <option value="">-- Seleccione Facultad --</option>
+                @foreach($facultades as $facultad)
+                    <option value="{{ $facultad->id }}" {{ $facultad_id == $facultad->id ? 'selected' : '' }}>
+                        {{ $facultad->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label>Carrera:</label>
+            <select name="carrera_id" class="form-control" onchange="this.form.submit()">
+                <option value="">-- Seleccione Carrera --</option>
+                @foreach($carreras as $carrera)
+                    <option value="{{ $carrera->id }}" {{ $carrera_id == $carrera->id ? 'selected' : '' }}>
+                        {{ $carrera->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label>Periodo:</label>
+            <select name="periodo_id" class="form-control">
+                <option value="">-- Seleccione Periodo --</option>
+                @foreach($periodos as $periodo)
+                    <option value="{{ $periodo->id }}" {{ $periodo_id == $periodo->id ? 'selected' : '' }}>
+                        {{ $periodo->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </div>
+    </div>
+</form>
 
     {{-- Mensaje si no hay periodo activo --}}
     @if(isset($mensaje))
