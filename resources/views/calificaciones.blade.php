@@ -1725,9 +1725,7 @@
                                 <i class="fas fa-star"></i>
                                 Evaluar Desempeño Docente
                             </h5>
-                            <div class="professor-info">
-                                <small><i class="fas fa-user me-2"></i>Profesor: {{ $cal->profesor->nombre ?? 'Profesor' }} - {{ $cal->materia->nombre ?? 'Materia' }}</small>
-                            </div>
+                           
                         </div>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>

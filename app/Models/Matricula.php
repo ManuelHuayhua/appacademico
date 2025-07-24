@@ -18,7 +18,10 @@ class Matricula extends Model
     ];
 
     // Relaciones
-
+ public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function alumno()
     {
         return $this->belongsTo(User::class, 'user_id');

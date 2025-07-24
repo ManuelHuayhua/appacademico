@@ -85,4 +85,15 @@ public function matriculas()
     return $this->hasMany(Matricula::class, 'user_id');
 }
 
+public function calificaciones()
+{
+    return $this->hasMany(Calificacion::class);
+}
+
+public function asistencias()
+{
+    return $this->hasMany(Asistencia::class);
+}
+
+
 }

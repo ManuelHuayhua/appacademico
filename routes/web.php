@@ -14,6 +14,9 @@ use App\Http\Controllers\Alumnos\CalificacionalumnoController;
 use App\Http\Controllers\Admin\CalificacionesController;
 use App\Http\Controllers\Admin\MensajeController;
 use App\Http\Controllers\Alumnos\ComprobanteController;
+use App\Http\Controllers\Admin\PagosController;
+use App\Http\Controllers\Admin\ClasesurlController;
+use App\Http\Controllers\Admin\AdminNotasAsistenciasController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -147,6 +150,25 @@ Route::get('/admin/calificaciones', [CalificacionesController::class, 'index'])-
 //enviar mensaje
 Route::get('/admin/mensajes/crear', [MensajeController::class, 'crear'])->name('admin.mensajes.crear');
 Route::post('/admin/mensajes/enviar', [MensajeController::class, 'enviar'])->name('admin.mensajes.enviar');
+
+
+// Ver pagos
+Route::get('/pagos', [PagosController::class, 'index'])->name('admin.pagos');
+Route::post('/pagos', [PagosController::class, 'filtrarPagos'])->name('admin.pagos.post');
+Route::post('/admin/registrar-pago', [PagosController::class, 'registrarPago'])->name('admin.registrarPago');
+
+//ingresar URL
+Route::get('/admin/clases-url', [ClasesurlController::class, 'index'])->name('admin.clasesurl.index');
+Route::post('/admin/clases-url/update', [ClasesurlController::class, 'update'])->name('admin.clasesurl.update');
+
+// ruta para ver notas y asistencias
+Route::get('admin/notas-y-asistencias', [AdminNotasAsistenciasController::class, 'index'])
+    ->name('admin.notas_y_asistencias');
+Route::put('/admin/notas/{calificacion}', [AdminNotasAsistenciasController::class, 'actualizar'])->name('admin.notas.actualizar');
+// ruta para exportar notas y asistencias a Excel
+Route::get('/admin/notas-asistencias/export', [AdminNotasAsistenciasController::class, 'exportExcel'])
+    ->name('admin.notas.exportar');
+
 
 
 

@@ -1078,35 +1078,35 @@
                                                         <td class="fw-semibold">{{ $alumno->name }}</td>
                                                         <td>
                                                             <div class="btn-group btn-group-asistencia" role="group">
-                                                                <input type="radio" class="btn-check"
-                                                                    name="asistencias[{{ $alumno->id }}]"
-                                                                    id="asistio_{{ $alumno->id }}_{{ $index }}"
-                                                                    value="1"
-                                                                    {{ optional($registro)->asistio === 1 ? 'checked' : '' }}>
-                                                                <label class="btn btn-outline-success"
-                                                                    for="asistio_{{ $alumno->id }}_{{ $index }}">
-                                                                    <i class="fas fa-check me-1"></i>Asistió
-                                                                </label>
+                                                               <input type="radio" class="btn-check"
+    name="asistencias[{{ $alumno->id }}]"
+    id="asistio_{{ $alumno->id }}_{{ $curso->curso_periodo_id }}_{{ $index }}"
+    value="1"
+    {{ optional($registro)->asistio === 1 ? 'checked' : '' }}>
+<label class="btn btn-outline-success"
+    for="asistio_{{ $alumno->id }}_{{ $curso->curso_periodo_id }}_{{ $index }}">
+    <i class="fas fa-check me-1"></i>Asistió
+</label>
 
-                                                                <input type="radio" class="btn-check"
-                                                                    name="asistencias[{{ $alumno->id }}]"
-                                                                    id="falto_{{ $alumno->id }}_{{ $index }}"
-                                                                    value="0"
-                                                                    {{ optional($registro)->asistio === 0 ? 'checked' : '' }}>
-                                                                <label class="btn btn-outline-danger"
-                                                                    for="falto_{{ $alumno->id }}_{{ $index }}">
-                                                                    <i class="fas fa-times me-1"></i>Faltó
-                                                                </label>
+<input type="radio" class="btn-check"
+    name="asistencias[{{ $alumno->id }}]"
+    id="falto_{{ $alumno->id }}_{{ $curso->curso_periodo_id }}_{{ $index }}"
+    value="0"
+    {{ optional($registro)->asistio === 0 ? 'checked' : '' }}>
+<label class="btn btn-outline-danger"
+    for="falto_{{ $alumno->id }}_{{ $curso->curso_periodo_id }}_{{ $index }}">
+    <i class="fas fa-times me-1"></i>Faltó
+</label>
 
-                                                                <input type="radio" class="btn-check"
-                                                                    name="asistencias[{{ $alumno->id }}]"
-                                                                    id="pendiente_{{ $alumno->id }}_{{ $index }}"
-                                                                    value=""
-                                                                    {{ is_null(optional($registro)->asistio) ? 'checked' : '' }}>
-                                                                <label class="btn btn-outline-secondary"
-                                                                    for="pendiente_{{ $alumno->id }}_{{ $index }}">
-                                                                    <i class="fas fa-clock me-1"></i>Pendiente
-                                                                </label>
+<input type="radio" class="btn-check"
+    name="asistencias[{{ $alumno->id }}]"
+    id="pendiente_{{ $alumno->id }}_{{ $curso->curso_periodo_id }}_{{ $index }}"
+    value=""
+    {{ is_null(optional($registro)->asistio) ? 'checked' : '' }}>
+<label class="btn btn-outline-secondary"
+    for="pendiente_{{ $alumno->id }}_{{ $curso->curso_periodo_id }}_{{ $index }}">
+    <i class="fas fa-clock me-1"></i>Pendiente
+</label>
                                                             </div>
                                                         </td>
                                                     </tr>

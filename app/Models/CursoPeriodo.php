@@ -47,5 +47,10 @@ public function matriculas()
 {
     return $this->hasMany(Matricula::class);
 }
-    
+
+public function calificaciones()
+{
+    return $this->hasMany(Calificacion::class);
+}
+
 }
