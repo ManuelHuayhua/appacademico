@@ -20,6 +20,9 @@ use App\Http\Controllers\Admin\AdminNotasAsistenciasController;
 use App\Http\Controllers\Admin\CursoSilaboController;
 use App\Http\Controllers\Admin\PeriodoController;
 use App\Http\Controllers\Admin\CalificadoProfesorController;
+use App\Http\Controllers\Admin\Librearnotas;
+use App\Http\Controllers\CertificadoController;
+use App\Http\Controllers\Admin\EstadisticasController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -92,9 +95,9 @@ Route::post('/alumno/calificar-profesor/{id}', [CalificacionalumnoController::cl
 
 
 // ruta para admin
-           Route::view('/admin', 'admin.admin')
-          ->name('admin.dashboard')
-          ->middleware('adminonly');
+          Route::get('/admin', [EstadisticasController::class, 'index'])
+    ->name('admin.dashboard')
+    ->middleware('adminonly');
 
 // ruta para crear usuarios admin
 Route::get('/admin/usuarios/crear', [UserController::class, 'create'])->name('admin.usuarios.create')->middleware('adminonly');
@@ -196,6 +199,10 @@ Route::delete('admin/periodos/{id}', [PeriodoController::class, 'destroy'])->nam
 // ruta para ver calificaciones de profesor
 Route::get('/admin/calificado-profesor', [CalificadoProfesorController::class, 'index'])->name('admin.calificado_profesor.index');
 
+//librear notas
+Route::get('admin/librerarnotas', [Librearnotas::class, 'index'])->name('admin.librerarnotas.index');
+Route::post('admin/librerarnotas/cambiar-permiso-curso', [Librearnotas::class, 'cambiarPermisoCurso'])->name('admin.librerarnotas.cambiarPermisoCurso');
+
 
  // ruta para profesor
 
@@ -219,3 +226,10 @@ Route::get('/admin/calificado-profesor', [CalificadoProfesorController::class, '
     Route::get('/calendario', [App\Http\Controllers\Profesor\CalendarioController::class, 'index'])->name('calendario');
 });
 
+
+
+
+//ruta para el certificado 
+Route::get('/ver-certificado', [CertificadoController::class, 'formulario'])->name('certificados.formulario');
+Route::post('/ver-certificado', [CertificadoController::class, 'buscar'])->name('certificados.buscar');
+Route::get('/certificados/{codigo}', [CertificadoController::class, 'mostrar'])->name('certificados.mostrar');

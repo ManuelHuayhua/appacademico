@@ -47,4 +47,8 @@ class Calificacion extends Model
     {
         return $this->belongsTo(User::class, 'profesor_id');
     }
+    public function carrera()
+{
+    return $this->belongsTo(Carrera::class);
+}
 }

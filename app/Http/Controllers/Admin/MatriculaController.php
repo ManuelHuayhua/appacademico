@@ -7,15 +7,30 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\CursoPeriodo;
 use Illuminate\Support\Facades\DB;
+use App\Models\Periodo;
 class MatriculaController extends Controller
 
 {
-    public function create()
-    {
-        $alumnos = User::where('usuario', true)->get();
-        $cursos = CursoPeriodo::with('curso', 'periodo')->get();
+    // Mostrar formulario de matrícula
+   public function create()
+{
+    $alumnos = User::where('usuario', true)->get();
+    $hoy = now(); // fecha actual
 
-       // Obtener las matrículas actuales
+    // Obtener el periodo actual
+    $periodoActual = Periodo::where('fecha_inicio', '<=', $hoy)
+                             ->where('fecha_fin', '>=', $hoy)
+                             ->first();
+
+    // Si hay periodo actual, obtener cursos solo de ese periodo
+    $cursos = collect();
+    if ($periodoActual) {
+        $cursos = CursoPeriodo::with('curso', 'periodo')
+                    ->where('periodo_id', $periodoActual->id)
+                    ->get();
+    }
+
+    // Obtener las matrículas actuales
     $matriculas = DB::table('matriculas')
         ->join('users', 'matriculas.user_id', '=', 'users.id')
         ->join('curso_periodo', 'matriculas.curso_periodo_id', '=', 'curso_periodo.id')
@@ -34,10 +49,10 @@ class MatriculaController extends Controller
         ->get();
 
     return view('admin.matricula', compact('alumnos', 'cursos', 'matriculas'));
-    }
+}
 
 
-
+// Procesar matrícula
 public function store(Request $request)
 {
     $request->validate([
@@ -152,17 +167,37 @@ public function store(Request $request)
     //eliminar matricula
 public function destroy($id)
 {
-    // Buscar la matrícula primero
+    // Buscar la matrícula
     $matricula = DB::table('matriculas')->where('id', $id)->first();
 
     if ($matricula) {
-        // Eliminar asistencias relacionadas
+        // Obtener el periodo desde curso_periodo
+        $cursoPeriodo = DB::table('curso_periodo')->where('id', $matricula->curso_periodo_id)->first();
+        $periodoId = $cursoPeriodo->periodo_id ?? null;
+
+        // Validación de seguridad extra
+        if (!$periodoId) {
+            return back()->with('error', 'No se pudo determinar el periodo del curso.');
+        }
+
+        // Registrar retiro
+        DB::table('retiros')->insert([
+            'user_id' => $matricula->user_id,
+            'curso_periodo_id' => $matricula->curso_periodo_id,
+            'periodo_id' => $periodoId,
+            'matricula_id' => $matricula->id,
+            'fecha_retiro' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Eliminar asistencias
         DB::table('asistencias')
             ->where('user_id', $matricula->user_id)
             ->where('curso_periodo_id', $matricula->curso_periodo_id)
             ->delete();
 
-        // Eliminar calificación relacionada
+        // Eliminar calificaciones
         DB::table('calificaciones')
             ->where('user_id', $matricula->user_id)
             ->where('curso_periodo_id', $matricula->curso_periodo_id)
@@ -171,7 +206,7 @@ public function destroy($id)
         // Eliminar matrícula
         DB::table('matriculas')->where('id', $id)->delete();
 
-        return back()->with('success', 'Matrícula, asistencias y calificación eliminadas correctamente.');
+        return back()->with('success', 'Alumno retirado y datos registrados correctamente.');
     }
 
     return back()->with('error', 'La matrícula no fue encontrada.');

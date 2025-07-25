@@ -30,6 +30,9 @@ class Asistencia extends Model
 {
     return $this->hasMany(Asistencia::class);
 }
-
+public function cursoPeriodo()
+{
+    return $this->belongsTo(CursoPeriodo::class);
+}
 
 }

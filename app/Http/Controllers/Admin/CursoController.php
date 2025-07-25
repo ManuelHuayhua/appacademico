@@ -16,18 +16,49 @@ class CursoController extends Controller
 {
 
     
-
-public function create()
+// ruta para crear cursos
+public function create(Request $request)
 {
-       $profesores = User::where('profesor', true)->get();
-    $periodos = Periodo::all();
+    $profesores = User::where('profesor', true)->get();
+    $hoy = now();
+
+    // ➤ Periodo actual (para crear cursos nuevos)
+    $periodoActual = Periodo::where('fecha_inicio', '<=', $hoy)
+                             ->where('fecha_fin', '>=', $hoy)
+                             ->first();
+
+    // ➤ Todos los periodos (para filtrar cursos ya creados)
+    $periodos = Periodo::orderBy('fecha_inicio', 'desc')->get();
+
+    // ➤ Periodo seleccionado desde filtro o por defecto el actual
+    $periodoSeleccionado = $request->input('periodo_id') ?? $periodoActual?->id;
+
     $facultades = Facultad::all();
     $carreras = Carrera::all();
-    $cursos = Curso::with(['carrera.facultad', 'cursoPeriodos.horarios.profesor', 'cursoPeriodos.periodo'])->get();
 
-    return view('admin.crearcurso', compact('profesores', 'periodos', 'cursos','facultades', 'carreras'));
+    // ➤ Cursos filtrados por periodo seleccionado
+    $cursos = Curso::with([
+        'carrera.facultad',
+        'cursoPeriodos' => function ($q) use ($periodoSeleccionado) {
+            $q->where('periodo_id', $periodoSeleccionado)
+              ->with(['horarios.profesor', 'periodo']);
+        }
+    ])->get();
+
+    return view('admin.crearcurso', compact(
+        'profesores',
+        'periodos',
+        'periodoActual',
+        'periodoSeleccionado',
+        'cursos',
+        'facultades',
+        'carreras'
+    ));
 }
 
+
+
+// ruta para almacenar cursos
 public function store(Request $request)
 {
     $request->validate([

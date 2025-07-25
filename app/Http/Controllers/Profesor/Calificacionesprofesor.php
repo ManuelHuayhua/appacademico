@@ -83,13 +83,19 @@ public function guardar(Request $request)
         }
 
         // Campos que puede editar según permiso
-        $camposPermitidos = match ($permiso) {
-            '1' => ['primer_avance', 'segundo_avance', 'presentacion_final'],
-            '2' => ['oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5'],
-            '3' => ['examen_final'],
-            'editable' => ['primer_avance', 'segundo_avance', 'presentacion_final', 'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'],
-            default => []
-        };
+       $camposPermitidos = match ($permiso) {
+    '1' => ['primer_avance'],
+    '2' => ['segundo_avance'],
+    '3' => ['presentacion_final'],
+    '4' => ['oral_1'],
+    '5' => ['oral_2'],
+    '6' => ['oral_3'],
+    '7' => ['oral_4'],
+    '8' => ['oral_5'],
+    '9' => ['examen_final'],
+    'editable' => ['primer_avance', 'segundo_avance', 'presentacion_final', 'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'],
+    default => []
+};
 
         // Validar si hay campos permitidos
         if (empty($camposPermitidos)) {

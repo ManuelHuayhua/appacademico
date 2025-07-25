@@ -851,13 +851,17 @@ $(document).ready(function () {
 </script>
 
 
+
 <h3>Periodo académico</h3>
-    <select name="periodo_id" required>
-        <option value="">-- Selecciona un periodo --</option>
-        @foreach ($periodos as $periodo)
-            <option value="{{ $periodo->id }}">{{ $periodo->nombre }} ({{ $periodo->fecha_inicio }} al {{ $periodo->fecha_fin }})</option>
-        @endforeach
-    </select>
+<select name="periodo_id" required>
+    @if ($periodoActual)
+        <option value="{{ $periodoActual->id }}">
+            {{ $periodoActual->nombre }} ({{ $periodoActual->fecha_inicio }} al {{ $periodoActual->fecha_fin }})
+        </option>
+    @else
+        <option value="">No hay periodo académico activo</option>
+    @endif
+</select>
 
 <h3>Cursos</h3>
 <div id="cursos-container">
@@ -1066,6 +1070,19 @@ function agregarHorario(button) {
 </script>
 
 <hr>
+
+<form method="GET" action="{{ route('admin.cursos.create') }}">
+    <label><strong>Filtrar por periodo:</strong></label>
+    <select name="periodo_id" onchange="this.form.submit()">
+        @foreach($periodos as $periodo)
+            <option value="{{ $periodo->id }}"
+                {{ $periodo->id == $periodoSeleccionado ? 'selected' : '' }}>
+                {{ $periodo->nombre }} ({{ $periodo->fecha_inicio }} - {{ $periodo->fecha_fin }})
+            </option>
+        @endforeach
+    </select>
+</form>
+
 <h2>📋 Cursos ya creados</h2>
 
 @if ($cursos->isEmpty())

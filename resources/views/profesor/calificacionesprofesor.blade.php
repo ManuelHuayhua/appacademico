@@ -756,12 +756,18 @@
     @php
         $permiso = $alumno->permiso ?? 'denegado'; // valor por defecto
         $editable = match($permiso) {
-            '1' => ['primer_avance', 'segundo_avance', 'presentacion_final'],
-            '2' => ['oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5'],
-            '3' => ['examen_final'],
-            'editable' => ['primer_avance', 'segundo_avance', 'presentacion_final', 'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'],
-            default => []
-        };
+    '1' => ['primer_avance'],
+    '2' => ['segundo_avance'],
+    '3' => ['presentacion_final'],
+    '4' => ['oral_1'],
+    '5' => ['oral_2'],
+    '6' => ['oral_3'],
+    '7' => ['oral_4'],
+    '8' => ['oral_5'],
+    '9' => ['examen_final'],
+    'editable' => ['primer_avance', 'segundo_avance', 'presentacion_final', 'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'],
+    default => []
+};
     @endphp
 
     <form method="POST" action="{{ route('profesor.calificaciones.guardar') }}" class="mb-4 border rounded p-3">
@@ -795,6 +801,13 @@
         @else
             <div class="text-danger mt-2">⚠️ Edición no permitida</div>
         @endif
+
+        @if(count($editable) === 1)
+    <div class="text-info mt-2">
+        🛠️ Solo puedes editar: <strong>{{ ucwords(str_replace('_', ' ', $editable[0])) }}</strong>
+    </div>
+@endif
+
     </form>
 @endforeach
     @elseif($cursoSeleccionado)

@@ -730,6 +730,116 @@
             
             <!-- Content -->
             <div class="content-area">
+
+            <div class="container">
+
+
+    <h2 class="mb-4">📊 Panel Estadístico del Sistema Académico</h2>
+
+    {{-- Filtro de periodo --}}
+    <form method="GET" action="{{ route('admin.dashboard') }}" class="mb-4">
+        <label for="periodo_id">Periodo:</label>
+        <select name="periodo_id" id="periodo_id" class="form-control w-25 d-inline-block" onchange="this.form.submit()">
+            @foreach($periodos as $periodo)
+                <option value="{{ $periodo->id }}" {{ $periodoId == $periodo->id ? 'selected' : '' }}>
+                    {{ $periodo->nombre }}
+                </option>
+            @endforeach
+        </select>
+    </form>
+
+    {{-- Cards resumen --}}
+    <div class="row text-white mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary">
+                <div class="card-body">
+                    <h5>Total Matriculados</h5>
+                    <h3>{{ $totalMatriculas }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success">
+                <div class="card-body">
+                    <h5>Total Cursos</h5>
+                    <h3>{{ $totalCursos }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning">
+                <div class="card-body">
+                    <h5>Total Profesores</h5>
+                    <h3>{{ $totalProfesores }}</h3>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    {{-- Distribución por género --}}
+    <div class="mb-4">
+        <h4>Distribución por género</h4>
+        <ul>
+            @foreach($generos as $genero => $total)
+                <li><strong>{{ ucfirst($genero) }}</strong>: {{ $total }} alumnos</li>
+            @endforeach
+        </ul>
+    </div>
+
+    {{-- Top cursos con más alumnos --}}
+    <div class="mb-4">
+        <h4>Top 5 cursos más matriculados</h4>
+        <ul>
+            @foreach($topCursos as $tc)
+                <li>{{ $tc->curso->nombre }} (Sección {{ $tc->seccion }}) - {{ $tc->matriculas_count }} alumnos</li>
+            @endforeach
+        </ul>
+    </div>
+
+    {{-- Detalle por Facultad → Carrera → Curso --}}
+    @foreach($facultades as $facultad)
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <strong>{{ $facultad->nombre }}</strong>
+            </div>
+            <div class="card-body">
+                @foreach($facultad->carreras as $carrera)
+                    <h5>{{ $carrera->nombre }}</h5>
+                    @php $totalCarrera = 0; @endphp
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>Curso</th>
+                                <th>Sección</th>
+                                <th>Matriculados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($carrera->cursos as $curso)
+                                @foreach($curso->cursoPeriodos as $cp)
+                                    <tr>
+                                        <td>{{ $curso->nombre }}</td>
+                                        <td>{{ $cp->seccion }}</td>
+                                        <td>{{ $cp->matriculas_count }}</td>
+                                        @php $totalCarrera += $cp->matriculas_count; @endphp
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-success">
+                                <td colspan="2" class="text-right"><strong>Total carrera:</strong></td>
+                                <td><strong>{{ $totalCarrera }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                @endforeach
+            </div>
+        </div>
+    @endforeach
+
+</div>
             
 </div>
 

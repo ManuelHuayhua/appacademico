@@ -1490,7 +1490,7 @@
 
                     @if ($cal->codigo_certificado)
                         <div class="card-footer-custom">
-                            <a href="#" class="btn btn-download w-100">
+                            <a href="{{ route('certificados.mostrar', ['codigo' => $cal->codigo_certificado]) }}" class="btn btn-download w-100">
                                 <i class="fas fa-file-download me-2"></i>
                                 Descargar Certificado
                             </a>
