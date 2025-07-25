@@ -104,6 +104,13 @@ Route::get('/admin/usuarios/crear', [UserController::class, 'create'])->name('ad
     Route::post('/admin/usuarios', [UserController::class, 'store'])->name('admin.usuarios.store')
      ->middleware('adminonly');
 
+Route::get('/admin/usuarios/{id}', [UserController::class, 'show']);
+Route::put('/admin/usuarios/{id}', [UserController::class, 'update']);
+Route::put('/admin/usuarios/{id}/password', [UserController::class, 'updatePassword']);
+Route::delete('/admin/usuarios/{id}', [UserController::class, 'destroy'])->name('admin.usuarios.destroy');
+
+
+
 // ruta para crear cursos y asignar horarios y profesores // condicional de periodo que sea del año actual
 
 Route::get('/admin/cursos/crear', [CursoController::class, 'create'])->name('admin.cursos.create'); // GET
@@ -156,8 +163,10 @@ Route::get('/admin/calificaciones', [CalificacionesController::class, 'index'])-
 //enviar mensaje
 Route::get('/admin/mensajes/crear', [MensajeController::class, 'crear'])->name('admin.mensajes.crear');
 Route::post('/admin/mensajes/enviar', [MensajeController::class, 'enviar'])->name('admin.mensajes.enviar');
+Route::put('/admin/mensajes/{mensaje}', [MensajeController::class, 'update'])
+    ->name('admin.mensajes.update');
 
-
+    
 // Ver pagos
 Route::get('/pagos', [PagosController::class, 'index'])->name('admin.pagos');
 Route::post('/pagos', [PagosController::class, 'filtrarPagos'])->name('admin.pagos.post');
@@ -202,6 +211,9 @@ Route::get('/admin/calificado-profesor', [CalificadoProfesorController::class, '
 //librear notas
 Route::get('admin/librerarnotas', [Librearnotas::class, 'index'])->name('admin.librerarnotas.index');
 Route::post('admin/librerarnotas/cambiar-permiso-curso', [Librearnotas::class, 'cambiarPermisoCurso'])->name('admin.librerarnotas.cambiarPermisoCurso');
+
+
+
 
 
  // ruta para profesor

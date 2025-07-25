@@ -53,9 +53,11 @@ class UserController extends Controller
         $user->telefono = $request->telefono;
 
         // Asignar roles
-        $user->admin = $request->has('admin');
-        $user->profesor = $request->has('profesor');
-        $user->usuario = $request->has('usuario');
+        $tipo = $request->input('tipo_usuario');
+
+$user->admin = $tipo === 'admin';
+$user->profesor = $tipo === 'profesor';
+$user->usuario = $tipo === 'usuario';
 
         // Contraseña igual al DNI (encriptada)
         $user->password = Hash::make($request->dni);
@@ -64,4 +66,51 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Usuario creado correctamente.');
     }
+
+    public function show($id)
+{
+    return User::findOrFail($id);
+}
+
+public function update(Request $request, $id)
+{
+    $user = User::findOrFail($id);
+
+    $tipo = $request->input('tipo_usuario');
+
+$user->update([
+    'name' => $request->name,
+    'apellido_p' => $request->apellido_p,
+    'apellido_m' => $request->apellido_m,
+    'dni' => $request->dni,
+    'email' => $request->email,
+    'fecha_nacimiento' => $request->fecha_nacimiento,
+    'genero' => $request->genero,
+    'telefono' => $request->telefono,
+    'admin' => $tipo === 'admin',
+    'profesor' => $tipo === 'profesor',
+    'usuario' => $tipo === 'usuario',
+]);
+
+    return redirect()->back()->with('success', 'Usuario actualizado.');
+}
+
+public function updatePassword(Request $request, $id)
+{
+    $request->validate(['password' => 'required|min:6']);
+    $user = User::findOrFail($id);
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    return redirect()->back()->with('success', 'Contraseña actualizada.');
+}
+
+public function destroy($id)
+{
+    $user = User::findOrFail($id);
+    $user->delete();
+
+    return redirect()->back()->with('success', 'Usuario eliminado.');
+}
+
 }

@@ -17,7 +17,16 @@ class EstadisticasController extends Controller
 public function index(Request $request)
     {
         $periodos = Periodo::orderBy('fecha_inicio', 'desc')->get();
-        $periodoId = $request->input('periodo_id') ?? $periodos->first()?->id;
+        $hoy = now();
+
+    $periodos = Periodo::orderBy('fecha_inicio', 'desc')->get();
+
+    // Buscar periodo actual
+    $periodoActual = $periodos->firstWhere(function ($p) use ($hoy) {
+        return $p->fecha_inicio <= $hoy && $p->fecha_fin >= $hoy;
+    });
+
+    $periodoId = $request->input('periodo_id') ?? $periodoActual?->id ?? $periodos->first()?->id;
 
         // Facultades con relaciones
         $facultades = Facultad::with([

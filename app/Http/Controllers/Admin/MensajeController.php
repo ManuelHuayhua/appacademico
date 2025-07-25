@@ -9,15 +9,44 @@ use App\Models\CursoPeriodo;
 use App\Models\Matricula;
 use App\Models\Mensaje;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Periodo;
 
 class MensajeController extends Controller
 {
-    public function crear()
+ public function crear()
 {
-    $cursos = CursoPeriodo::with('curso')->get();
+    $hoy = now();
+
+    $periodoActual = Periodo::where('fecha_inicio', '<=', $hoy)
+                             ->where('fecha_fin', '>=', $hoy)
+                             ->first();
+
+    if (!$periodoActual) {
+        return back()->with('error', 'No hay un período activo actualmente.');
+    }
+
+    $cursos = CursoPeriodo::with('curso', 'periodo')
+                ->where('periodo_id', $periodoActual->id)
+                ->get();
+
     $alumnos = User::where('usuario', true)->get();
 
-    return view('admin.mensaje', compact('cursos', 'alumnos'));
+    // 🔽 IMPORTANTE: Asegúrate que aquí estés usando 'destinatario'
+   $mensajes = Mensaje::with(['destinatario', 'cursoPeriodo.curso', 'cursoPeriodo.periodo'])
+    ->where('remitente_id', Auth::id())
+    ->where(function ($query) use ($periodoActual) {
+        $query->whereHas('cursoPeriodo', function ($q) use ($periodoActual) {
+            $q->where('periodo_id', $periodoActual->id);
+        })
+        ->orWhereNull('curso_periodo_id'); // Incluye mensajes individuales
+    })
+    ->latest()
+    ->get()
+    ->groupBy(function ($mensaje) {
+        return $mensaje->curso_periodo_id ? 'curso' : 'individual';
+    });
+
+    return view('admin.mensaje', compact('cursos', 'alumnos', 'periodoActual', 'mensajes'));
 }
 
   public function enviar(Request $request)
@@ -60,4 +89,39 @@ class MensajeController extends Controller
 
     return back()->with('success', 'Mensaje(s) enviado(s) correctamente.');
 }
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'titulo' => 'required',
+        'contenido' => 'required',
+        'fecha_inicio' => 'required|date',
+        'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+    ]);
+
+    $mensaje = Mensaje::findOrFail($id);
+
+    if (!is_null($mensaje->curso_periodo_id)) {
+        // Solo actualiza los mensajes que fueron creados al mismo tiempo (mismo envío)
+        Mensaje::where('curso_periodo_id', $mensaje->curso_periodo_id)
+            ->where('created_at', $mensaje->created_at)
+            ->update([
+                'titulo' => $request->titulo,
+                'contenido' => $request->contenido,
+                'fecha_inicio' => $request->fecha_inicio,
+                'fecha_fin' => $request->fecha_fin,
+            ]);
+    } else {
+        // Mensaje individual
+        $mensaje->update([
+            'titulo' => $request->titulo,
+            'contenido' => $request->contenido,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Mensaje actualizado correctamente.');
+}
+
 }

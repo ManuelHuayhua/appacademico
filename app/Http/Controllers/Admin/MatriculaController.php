@@ -12,17 +12,17 @@ class MatriculaController extends Controller
 
 {
     // Mostrar formulario de matrícula
-   public function create()
+public function create(Request $request)
 {
     $alumnos = User::where('usuario', true)->get();
-    $hoy = now(); // fecha actual
+    $hoy = now();
 
-    // Obtener el periodo actual
+    // Obtener el periodo actual (para cursos)
     $periodoActual = Periodo::where('fecha_inicio', '<=', $hoy)
                              ->where('fecha_fin', '>=', $hoy)
                              ->first();
 
-    // Si hay periodo actual, obtener cursos solo de ese periodo
+    // Cursos del periodo actual para matricular
     $cursos = collect();
     if ($periodoActual) {
         $cursos = CursoPeriodo::with('curso', 'periodo')
@@ -30,25 +30,36 @@ class MatriculaController extends Controller
                     ->get();
     }
 
-    // Obtener las matrículas actuales
-    $matriculas = DB::table('matriculas')
-        ->join('users', 'matriculas.user_id', '=', 'users.id')
-        ->join('curso_periodo', 'matriculas.curso_periodo_id', '=', 'curso_periodo.id')
-        ->join('cursos', 'curso_periodo.curso_id', '=', 'cursos.id')
-        ->join('periodos', 'curso_periodo.periodo_id', '=', 'periodos.id')
-        ->select(
-            'matriculas.id',
-            'users.name as alumno',
-            'cursos.nombre as curso',
-            'periodos.nombre as periodo',
-            'curso_periodo.seccion',
-            'matriculas.fecha_matricula',
-            'matriculas.estado'
-        )
-        ->orderBy('matriculas.fecha_matricula', 'desc')
-        ->get();
+    // Obtener todos los periodos para el filtro de la tabla
+    $periodos = Periodo::orderBy('fecha_inicio', 'desc')->get();
 
-    return view('admin.matricula', compact('alumnos', 'cursos', 'matriculas'));
+    // Periodo seleccionado en el filtro, si no hay, usar el actual
+    $periodoSeleccionado = $request->input('periodo_id') ?? $periodoActual?->id;
+
+    // Matriculas filtradas por el periodo seleccionado
+    $matriculas = DB::table('matriculas')
+    ->join('users', 'matriculas.user_id', '=', 'users.id')
+    ->join('curso_periodo', 'matriculas.curso_periodo_id', '=', 'curso_periodo.id')
+    ->join('cursos', 'curso_periodo.curso_id', '=', 'cursos.id')
+    ->join('periodos', 'curso_periodo.periodo_id', '=', 'periodos.id')
+    ->when($periodoSeleccionado, function ($query, $periodoSeleccionado) {
+        return $query->where('curso_periodo.periodo_id', $periodoSeleccionado);
+    })
+    ->select(
+        'matriculas.id',
+        'users.name',
+        'users.apellido_p',
+        'users.apellido_m',
+        'cursos.nombre as curso',
+        'periodos.nombre as periodo',
+        'curso_periodo.seccion',
+        'matriculas.fecha_matricula',
+        'matriculas.estado'
+    )
+    ->orderBy('matriculas.fecha_matricula', 'desc')
+    ->get();
+
+    return view('admin.matricula', compact('alumnos', 'cursos', 'matriculas', 'periodos', 'periodoSeleccionado'));
 }
 
 

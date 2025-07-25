@@ -729,124 +729,716 @@
             
             <!-- Content -->
             <div class="content-area">
-            <h2>📊 Reporte de Calificaciones</h2>
+<style>
+  
+    .main-container {
+        padding: 0 2rem 3rem 2rem; /* Sin padding-top */
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .gradient-header {
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+        color: white;
+        border-radius: 0 0 20px 20px; /* Solo bordes inferiores redondeados */
+        padding: 2rem 2.5rem 3rem 2.5rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 15px 40px rgba(2, 73, 187, 0.3);
+        position: relative;
+        overflow: hidden;
+        margin-left: -2rem;
+        margin-right: -2rem;
+    }
+    
+    .gradient-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+    }
+    
+    .gradient-header h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .gradient-header p {
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .filter-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        border: none;
+        transition: all 0.3s ease;
+        margin-bottom: 3rem;
+        padding: 1rem;
+    }
+    
+    .filter-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    }
+    
+    .filter-card .card-body {
+        padding: 2.5rem !important;
+    }
+    
+    .form-select {
+        border-radius: 12px;
+        border: 2px solid #e9ecef;
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: #fafbfc;
+        min-height: 50px;
+    }
+    
+    .form-select:focus {
+        border-color: #0249BB;
+        box-shadow: 0 0 0 0.25rem rgba(2, 73, 187, 0.15);
+        background-color: white;
+    }
+    
+    .form-select:hover {
+        border-color: #0249BB;
+        background-color: white;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .results-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        border: none;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+    
+    .results-card .card-header {
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+        color: white;
+        padding: 2rem 2.5rem !important;
+        border: none;
+    }
+    
+    .results-card .card-body {
+        padding: 0 !important;
+    }
+    
+    /* Tabla con scroll horizontal mejorado */
+    .table-container {
+        margin: 1.5rem;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        position: relative;
+    }
+    
+    .table-responsive {
+        max-height: 70vh;
+        overflow-x: auto;
+        overflow-y: auto;
+        border-radius: 15px;
+    }
+    
+    /* Scrollbar personalizado */
+    .table-responsive::-webkit-scrollbar {
+        height: 12px;
+        width: 12px;
+    }
+    
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+        border-radius: 10px;
+    }
+    
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(120deg, #003bb1 0%, #0249BB 100%);
+    }
+    
+    .table {
+        margin-bottom: 0;
+        font-size: 0.95rem;
+        min-width: 1200px; /* Ancho mínimo para forzar scroll horizontal */
+    }
+    
+    .table thead th {
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+        color: white;
+        border: none;
+        font-weight: 600;
+        text-align: center;
+        vertical-align: middle;
+        padding: 1.25rem 1rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .table tbody td {
+        vertical-align: middle;
+        padding: 1rem 0.75rem;
+        border-color: #e9ecef;
+        text-align: center;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+    
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+    
+    .table tbody tr:hover {
+        background: linear-gradient(90deg, rgba(2, 73, 187, 0.05) 0%, rgba(0, 59, 177, 0.05) 100%);
+    }
+    
+    .student-name {
+        font-weight: 600;
+        color: #2c3e50;
+        text-align: left !important;
+        padding-left: 1.5rem !important;
+        min-width: 200px;
+        max-width: 250px;
+        white-space: normal !important;
+        word-wrap: break-word;
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 5;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    
+    .table tbody tr:hover .student-name {
+        background: linear-gradient(90deg, rgba(2, 73, 187, 0.05) 0%, rgba(0, 59, 177, 0.05) 100%);
+    }
+    
+    .grade-cell {
+        font-weight: 600;
+        color: #495057;
+        font-size: 1rem;
+        min-width: 80px;
+    }
+    
+    .final-grade {
+        background: linear-gradient(120deg, #28a745 0%, #20c997 100%);
+        color: white;
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        display: inline-block;
+        min-width: 60px;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .oral-grades {
+        min-width: 150px;
+    }
+    
+    .oral-grades .badge {
+        margin: 0.125rem;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+        border-radius: 6px;
+        background: linear-gradient(120deg, #6c757d 0%, #495057 100%) !important;
+        color: white !important;
+        font-weight: 500;
+        display: inline-block;
+    }
+    
+    .section-title {
+        color: #2c3e50;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.25rem;
+    }
+    
+    .section-title.white {
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.3;
+        color: #0249BB;
+    }
+    
+    .empty-state h5 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #2c3e50;
+    }
+    
+    .stats-badge {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+    
+    .icon-primary { color: #0249BB; }
+    .icon-success { color: #28a745; }
+    .icon-warning { color: #ffc107; }
+    .icon-info { color: #17a2b8; }
+    .icon-danger { color: #dc3545; }
+    
+    /* Indicador de scroll */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        background: rgba(2, 73, 187, 0.8);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        z-index: 20;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 0.7; }
+        50% { opacity: 1; }
+        100% { opacity: 0.7; }
+    }
+    
+    /* Responsive Design Mejorado */
+    @media (max-width: 1200px) {
+        .main-container {
+            padding: 0 1.5rem 2rem 1.5rem;
+        }
+        
+        .gradient-header {
+            margin-left: -1.5rem;
+            margin-right: -1.5rem;
+            padding: 1.5rem 2rem 2.5rem 2rem;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .gradient-header h2 {
+            font-size: 2rem;
+        }
+        
+        .filter-card .card-body {
+            padding: 2rem !important;
+        }
+        
+        .table-container {
+            margin: 1rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .main-container {
+            padding: 0 1rem 1.5rem 1rem;
+        }
+        
+        .gradient-header {
+            margin-left: -1rem;
+            margin-right: -1rem;
+            padding: 1rem 1.5rem 2rem 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .gradient-header h2 {
+            font-size: 1.75rem;
+        }
+        
+        .gradient-header p {
+            font-size: 1rem;
+        }
+        
+        .filter-card .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        .results-card .card-header {
+            padding: 1.5rem !important;
+        }
+        
+        .table-container {
+            margin: 0.5rem;
+        }
+        
+        .table {
+            font-size: 0.85rem;
+        }
+        
+        .table thead th {
+            font-size: 0.8rem;
+            padding: 1rem 0.5rem;
+        }
+        
+        .table tbody td {
+            padding: 0.75rem 0.5rem;
+        }
+        
+        .student-name {
+            min-width: 150px;
+            max-width: 180px;
+            padding-left: 1rem !important;
+        }
+        
+        .oral-grades .badge {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.5rem;
+            margin: 0.1rem;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+        }
+        
+        .form-select {
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .scroll-indicator {
+            bottom: 5px;
+            right: 10px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.7rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .gradient-header h2 {
+            font-size: 1.5rem;
+        }
+        
+        .gradient-header p {
+            font-size: 0.9rem;
+        }
+        
+        .filter-card .card-body {
+            padding: 1rem !important;
+        }
+        
+        .form-select {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.85rem;
+            min-height: 45px;
+        }
+        
+        .form-label {
+            font-size: 0.9rem;
+        }
+        
+        .table {
+            font-size: 0.8rem;
+        }
+        
+        .student-name {
+            min-width: 120px;
+            max-width: 150px;
+            font-size: 0.8rem;
+        }
+        
+        .grade-cell {
+            font-size: 0.85rem;
+        }
+        
+        .final-grade {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+        }
+    }
+    
+    @media (max-width: 400px) {
+        .gradient-header {
+            padding: 1rem;
+        }
+        
+        .gradient-header h2 {
+            font-size: 1.3rem;
+        }
+        
+        .table-container {
+            margin: 0.25rem;
+        }
+        
+        .student-name {
+            min-width: 100px;
+            max-width: 120px;
+        }
+    }
+</style>
 
-<form method="GET" action="{{ route('admin.calificaciones.index') }}">
-    <div class="row mb-3">
-        {{-- Facultad --}}
-        <div class="col-md-3">
-            <label>Facultad:</label>
-            <select name="facultad_id" class="form-control" onchange="this.form.submit()">
-                <option value="">-- Seleccionar --</option>
-                @foreach($facultades as $fac)
-                    <option value="{{ $fac->id }}" {{ $request->facultad_id == $fac->id ? 'selected' : '' }}>
-                        {{ $fac->nombre }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
 
-        {{-- Carrera --}}
-        @if($carreras->isNotEmpty())
-        <div class="col-md-3">
-            <label>Carrera:</label>
-            <select name="carrera_id" class="form-control" onchange="this.form.submit()">
-                <option value="">-- Seleccionar --</option>
-                @foreach($carreras as $carr)
-                    <option value="{{ $carr->id }}" {{ $request->carrera_id == $carr->id ? 'selected' : '' }}>
-                        {{ $carr->nombre }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        @endif
-
-        {{-- Periodo --}}
-        @if($periodos->isNotEmpty() && $request->filled('carrera_id'))
-        <div class="col-md-3">
-            <label>Periodo:</label>
-            <select name="periodo_id" class="form-control" onchange="this.form.submit()">
-                <option value="">-- Seleccionar --</option>
-                @foreach($periodos as $periodo)
-                    <option value="{{ $periodo->id }}" {{ $request->periodo_id == $periodo->id ? 'selected' : '' }}>
-                        {{ $periodo->nombre }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        @endif
-
-        {{-- Curso --}}
-        @if($cursos->isNotEmpty())
-        <div class="col-md-3">
-            <label>Curso:</label>
-            <select name="curso_periodo_id" class="form-control" onchange="this.form.submit()">
-                <option value="">-- Seleccionar --</option>
-                @foreach($cursos as $curso)
-                    <option value="{{ $curso->id }}" {{ $request->curso_periodo_id == $curso->id ? 'selected' : '' }}>
-                        {{ $curso->nombre }} (Sección {{ $curso->seccion }})
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        @endif
-
-        {{-- Profesor --}}
-        @if($profesores->isNotEmpty())
-        <div class="col-md-3 mt-2">
-            <label>Profesor:</label>
-            <select name="profesor_id" class="form-control" onchange="this.form.submit()">
-                <option value="">-- Seleccionar --</option>
-                @foreach($profesores as $prof)
-                    <option value="{{ $prof->id }}" {{ $request->profesor_id == $prof->id ? 'selected' : '' }}>
-                        {{ $prof->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        @endif
+ <div class="main-container">
+    <!-- Header -->
+    <div class="gradient-header">
+        <h2 class="mb-0">
+            <i class="fas fa-chart-bar me-3"></i>
+            Reporte de Calificaciones
+        </h2>
+        <p class="mb-0 mt-2 opacity-90">Sistema integral de consulta y análisis de calificaciones académicas</p>
     </div>
-</form>
 
-{{-- Tabla de calificaciones --}}
-@if($calificaciones->isNotEmpty() && $request->filled('profesor_id'))
-    <hr>
-    <h4>🧑‍🎓 Calificaciones del curso</h4>
-    <table class="table table-bordered table-sm">
-        <thead>
-            <tr>
-                <th>Alumno</th>
-                <th>1er Avance</th>
-                <th>2do Avance</th>
-                <th>Presentación Final</th>
-                <th>Prom. Avance</th>
-                <th>Orales</th>
-                <th>Promedio</th>
-                <th>Eval. Permanente</th>
-                <th>Examen Final</th>
-                <th>Prom. Final</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($calificaciones as $cal)
-                <tr>
-                    <td>{{ $cal->alumno }}</td>
-                    <td>{{ $cal->primer_avance }}</td>
-                    <td>{{ $cal->segundo_avance }}</td>
-                    <td>{{ $cal->presentacion_final }}</td>
-                    <td>{{ $cal->promedio_avance }}</td>
-                    <td>
-                        {{ $cal->oral_1 }} | {{ $cal->oral_2 }} | {{ $cal->oral_3 }} | {{ $cal->oral_4 }} | {{ $cal->oral_5 }}
-                    </td>
-                    <td>{{ $cal->promedio }}</td>
-                    <td>{{ $cal->promedio_evaluacion_permanente }}</td>
-                    <td>{{ $cal->examen_final }}</td>
-                    <td><strong>{{ $cal->promedio_final }}</strong></td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-@endif
+    <!-- Filtros -->
+    <div class="card filter-card">
+        <div class="card-body">
+            <h5 class="section-title">
+                <i class="fas fa-filter icon-primary"></i>
+                Filtros de Búsqueda
+            </h5>
+            
+            <form method="GET" action="{{ route('admin.calificaciones.index') }}">
+                <div class="row g-4">
+                    <!-- Facultad -->
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-university icon-primary"></i>
+                            Facultad
+                        </label>
+                        <select name="facultad_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">-- Seleccionar Facultad --</option>
+                            @foreach($facultades as $fac)
+                                <option value="{{ $fac->id }}" {{ $request->facultad_id == $fac->id ? 'selected' : '' }}>
+                                    {{ $fac->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Carrera -->
+                    @if($carreras->isNotEmpty())
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-graduation-cap icon-success"></i>
+                            Carrera
+                        </label>
+                        <select name="carrera_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">-- Seleccionar Carrera --</option>
+                            @foreach($carreras as $carr)
+                                <option value="{{ $carr->id }}" {{ $request->carrera_id == $carr->id ? 'selected' : '' }}>
+                                    {{ $carr->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
+                    <!-- Periodo -->
+                    @if($periodos->isNotEmpty() && $request->filled('carrera_id'))
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-calendar-alt icon-warning"></i>
+                            Periodo Académico
+                        </label>
+                        <select name="periodo_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">-- Seleccionar Periodo --</option>
+                            @foreach($periodos as $periodo)
+                                <option value="{{ $periodo->id }}" {{ $request->periodo_id == $periodo->id ? 'selected' : '' }}>
+                                    {{ $periodo->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
+                    <!-- Curso -->
+                    @if($cursos->isNotEmpty())
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-book icon-info"></i>
+                            Curso y Sección
+                        </label>
+                        <select name="curso_periodo_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">-- Seleccionar Curso --</option>
+                            @foreach($cursos as $curso)
+                                <option value="{{ $curso->id }}" {{ $request->curso_periodo_id == $curso->id ? 'selected' : '' }}>
+                                    {{ $curso->nombre }} (Sección {{ $curso->seccion }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
+                    <!-- Profesor -->
+                    @if($profesores->isNotEmpty())
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-chalkboard-teacher icon-danger"></i>
+                            Profesor Asignado
+                        </label>
+                        <select name="profesor_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">-- Seleccionar Profesor --</option>
+                            @foreach($profesores as $prof)
+                                <option value="{{ $prof->id }}" {{ $request->profesor_id == $prof->id ? 'selected' : '' }}>
+                                    {{ $prof->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Resultados -->
+    @if($calificaciones->isNotEmpty() && $request->filled('profesor_id'))
+        <div class="card results-card">
+            <div class="card-header">
+                <h5 class="section-title white mb-0">
+                    <i class="fas fa-user-graduate"></i>
+                    Registro de Calificaciones del Curso
+                </h5>
+                <div class="stats-badge">
+                    <i class="fas fa-users me-2"></i>
+                    Total de estudiantes: {{ $calificaciones->count() }}
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="table-container">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="student-name">
+                                        <i class="fas fa-user me-2"></i>
+                                        Estudiante
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-clipboard-check me-1"></i>
+                                        1er Avance
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-clipboard-check me-1"></i>
+                                        2do Avance
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-presentation me-1"></i>
+                                        Presentación Final
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-calculator me-1"></i>
+                                        Prom. Avance
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-microphone me-1"></i>
+                                        Evaluaciones Orales
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-chart-line me-1"></i>
+                                        Promedio
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-tasks me-1"></i>
+                                        Eval. Permanente
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-file-alt me-1"></i>
+                                        Examen Final
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-trophy me-1"></i>
+                                        Promedio Final
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($calificaciones as $cal)
+                                    <tr>
+                                        <td class="student-name">
+                                            <i class="fas fa-user-circle me-2 icon-primary"></i>
+                                            {{ $cal->alumno }}
+                                        </td>
+                                        <td class="grade-cell">{{ $cal->primer_avance ?: '-' }}</td>
+                                        <td class="grade-cell">{{ $cal->segundo_avance ?: '-' }}</td>
+                                        <td class="grade-cell">{{ $cal->presentacion_final ?: '-' }}</td>
+                                        <td class="grade-cell">{{ $cal->promedio_avance ?: '-' }}</td>
+                                        <td class="oral-grades">
+                                            <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                                <span class="badge">{{ $cal->oral_1 ?: '-' }}</span>
+                                                <span class="badge">{{ $cal->oral_2 ?: '-' }}</span>
+                                                <span class="badge">{{ $cal->oral_3 ?: '-' }}</span>
+                                                <span class="badge">{{ $cal->oral_4 ?: '-' }}</span>
+                                                <span class="badge">{{ $cal->oral_5 ?: '-' }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="grade-cell">{{ $cal->promedio ?: '-' }}</td>
+                                        <td class="grade-cell">{{ $cal->promedio_evaluacion_permanente ?: '-' }}</td>
+                                        <td class="grade-cell">{{ $cal->examen_final ?: '-' }}</td>
+                                        <td>
+                                            <div class="final-grade">
+                                                <i class="fas fa-star me-1"></i>
+                                                {{ $cal->promedio_final ?: '-' }}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="scroll-indicator">
+                        <i class="fas fa-arrows-alt-h me-1"></i>
+                        Desliza para ver más
+                    </div>
+                </div>
+            </div>
+        </div>
+    @else
+        <div class="card results-card">
+            <div class="card-body">
+                <div class="empty-state">
+                    <i class="fas fa-search-plus"></i>
+                    <h5>No hay calificaciones disponibles</h5>
+                    <p class="text-muted">Completa todos los filtros necesarios para visualizar las calificaciones del curso seleccionado.</p>
+                </div>
+            </div>
+        </div>
+    @endif
+</div>
+
+
 
 </div>
 

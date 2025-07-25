@@ -730,113 +730,759 @@
             <!-- Content -->
             <div class="content-area">
 
-            <!-- Mostrar mensaje de éxito -->
-@if (session('success'))
-    <div style="color: green; font-weight: bold;">
-        {{ session('success') }}
-    </div>
-@endif
-
-<!-- Mostrar errores de validación -->
-@if ($errors->any())
-    <div style="color: red;">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-<!-- Formulario de creación de usuario -->
-<form action="{{ route('admin.usuarios.store') }}" method="POST">
-    @csrf
-
-    <h3>➕ Crear nuevo usuario</h3>
-
-    <label>Nombre:</label>
-    <input type="text" name="name" required>
-
-    <label>Apellido paterno:</label>
-    <input type="text" name="apellido_p" required>
-
-    <label>Apellido materno:</label>
-    <input type="text" name="apellido_m" required>
-
-    <label>DNI:</label>
-    <input type="text" name="dni" required>
-
-    <label>Email:</label>
-    <input type="email" name="email">
-
-    <label>Fecha de nacimiento:</label>
-    <input type="date" name="fecha_nacimiento">
-
-    <label>Género:</label>
-    <select name="genero">
-        <option value="masculino">Masculino</option>
-        <option value="femenino">Femenino</option>
-        <option value="otro">Otro</option>
-    </select>
-
-    <label>Teléfono:</label>
-    <input type="text" name="telefono">
-
-    <label>Tipo de usuario:</label><br>
-    <input type="checkbox" name="admin"> Admin<br>
-    <input type="checkbox" name="profesor"> Profesor<br>
-    <input type="checkbox" name="usuario"> Alumno<br>
-
-    <br>
-    <button type="submit">Crear usuario</button>
-</form>
-
-<hr>
-
-<!-- Filtro por tipo -->
-<h3>🔎 Filtrar usuarios por rol</h3>
-<form method="GET" action="{{ route('admin.usuarios.create') }}">
-    <label for="filtro">Filtrar:</label>
-    <select name="filtro" onchange="this.form.submit()">
-        <option value="">Todos</option>
-        <option value="admin" {{ request('filtro') == 'admin' ? 'selected' : '' }}>Admin</option>
-        <option value="profesor" {{ request('filtro') == 'profesor' ? 'selected' : '' }}>Profesor</option>
-        <option value="usuario" {{ request('filtro') == 'usuario' ? 'selected' : '' }}>Alumno</option>
-    </select>
-</form>
-
-<!-- Tabla de usuarios -->
-<h3 style="margin-top: 20px;">📋 Lista de usuarios registrados</h3>
-
-@if($usuarios->isNotEmpty())
-<table border="1" cellpadding="6" cellspacing="0" style="margin-top: 10px; width: 100%;">
-    <thead style="background-color: #f0f0f0;">
-        <tr>
-            <th>Nombre completo</th>
-            <th>DNI</th>
-            <th>Email</th>
-            <th>Tipo(s)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($usuarios as $user)
-            <tr>
-                <td>{{ $user->name }} {{ $user->apellido_p }} {{ $user->apellido_m }}</td>
-                <td>{{ $user->dni }}</td>
-                <td>{{ $user->email }}</td>
-                <td>
-                    @if($user->admin) 🛠️ Admin @endif
-                    @if($user->profesor) 👨‍🏫 Profesor @endif
-                    @if($user->usuario) 🎓 Alumno @endif
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
-@else
-    <p>No hay usuarios que coincidan con el filtro seleccionado.</p>
-@endif
+        <style>
+        .user-conteiner {
+            background: #ffffff;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+        
+        .container-fluid {
+            padding: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            border: 1px solid #e2e6ea;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(2, 73, 187, 0.08);
+            background: #ffffff;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            color: white;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 1rem 1.25rem;
+            border: none;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            height: auto;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #0249BB;
+            box-shadow: 0 0 0 0.15rem rgba(2, 73, 187, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(2, 73, 187, 0.3);
+            background: linear-gradient(120deg, #003bb1 0%, #002a8a 100%);
+        }
+        
+        .btn-success {
+            background: linear-gradient(120deg, #28a745 0%, #20923a 100%);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(120deg, #ffc107 0%, #e0a800 100%);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            color: #333;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(120deg, #dc3545 0%, #c82333 100%);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(120deg, #6c757d 0%, #5a6268 100%);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            font-size: 0.9rem;
+        }
+        
+        .table thead th {
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem;
+            font-size: 0.85rem;
+        }
+        
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(2, 73, 187, 0.03);
+        }
+        
+        .table tbody td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-color: #e9ecef;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.3rem;
+        }
+        
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        
+        .radio-item input[type="radio"] {
+            transform: scale(1.1);
+        }
+        
+        .radio-item label {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+        
+        .badge {
+            padding: 0.35rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            margin-right: 0.2rem;
+            font-weight: 500;
+        }
+        
+        .badge-admin {
+            background: linear-gradient(120deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        
+        .badge-profesor {
+            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            color: white;
+        }
+        
+        .badge-alumno {
+            background: linear-gradient(120deg, #28a745 0%, #20923a 100%);
+            color: white;
+        }
+        
+        .filter-section {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #e9ecef;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .search-box input {
+            padding-left: 35px;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+        }
+        
+        .alert-success {
+            background: linear-gradient(120deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(120deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .btn-group .btn {
+            margin-right: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #dee2e6;
+        }
+        
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 0.5rem;
+            }
             
+            .radio-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .btn-group {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn-group .btn {
+                margin-right: 0;
+                margin-bottom: 0.25rem;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+            
+            .card-header .btn {
+                align-self: center;
+            }
+            
+            .filter-section .row {
+                gap: 0.5rem;
+            }
+            
+            .filter-section .col-md-3,
+            .filter-section .col-md-4,
+            .filter-section .col-md-2 {
+                margin-bottom: 0.5rem;
+            }
+            
+            .table-responsive {
+                font-size: 0.8rem;
+            }
+            
+            .badge {
+                font-size: 0.7rem;
+                padding: 0.25rem 0.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .d-flex.justify-content-between {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .d-flex.justify-content-between .btn {
+                width: 100%;
+            }
+        }
+        
+        .btn-light {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(2, 73, 187, 0.2);
+            color: #0249BB;
+            font-weight: 600;
+        }
+        
+        .btn-light:hover {
+            background: rgba(2, 73, 187, 0.1);
+            border-color: #0249BB;
+            color: #003bb1;
+        }
+    </style>
+
+<section class="user-conteiner">
+    <div class="container-fluid">
+        <!-- Mostrar mensaje de éxito -->
+        @if (session('success'))
+            <div class="alert alert-success d-flex align-items-center">
+                <i class="fas fa-check-circle me-2"></i>
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Mostrar errores de validación -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Por favor corrige los siguientes errores:</strong>
+                <ul class="mb-0 mt-2">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <!-- Formulario de creación de usuario -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3><i class="fas fa-user-plus"></i> Crear nuevo usuario</h3>
+                <button type="button" class="btn btn-light btn-sm" onclick="toggleCreateForm()" id="toggleBtn">
+                    <i class="fas fa-plus me-1"></i>Crear
+                </button>
+            </div>
+            <div class="card-body" id="createForm" style="display: none;">
+                <form action="{{ route('admin.usuarios.store') }}" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Nombre:</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Apellido paterno:</label>
+                                <input type="text" name="apellido_p" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Apellido materno:</label>
+                                <input type="text" name="apellido_m" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">DNI:</label>
+                                <input type="text" name="dni" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Email:</label>
+                                <input type="email" name="email" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Teléfono:</label>
+                                <input type="text" name="telefono" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Fecha de nacimiento:</label>
+                                <input type="date" name="fecha_nacimiento" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Género:</label>
+                                <select name="genero" class="form-select">
+                                    <option value="masculino">Masculino</option>
+                                    <option value="femenino">Femenino</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Tipo de usuario:</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" name="tipo_usuario" value="admin" id="admin">
+                                        <label for="admin">Admin</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" name="tipo_usuario" value="profesor" id="profesor">
+                                        <label for="profesor">Profesor</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" name="tipo_usuario" value="usuario" id="usuario">
+                                        <label for="usuario">Alumno</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn btn-secondary" onclick="toggleCreateForm()">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Crear usuario
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sección de filtros -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-users"></i> Lista de usuarios registrados</h3>
+            </div>
+            <div class="card-body">
+                <div class="filter-section">
+                    <div class="row align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label">Filtrar por rol:</label>
+                            <form method="GET" action="{{ route('admin.usuarios.create') }}">
+                                <select name="filtro" class="form-select" onchange="this.form.submit()">
+                                    <option value="">Todos</option>
+                                    <option value="admin" {{ request('filtro') == 'admin' ? 'selected' : '' }}>Admin</option>
+                                    <option value="profesor" {{ request('filtro') == 'profesor' ? 'selected' : '' }}>Profesor</option>
+                                    <option value="usuario" {{ request('filtro') == 'usuario' ? 'selected' : '' }}>Alumno</option>
+                                </select>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Buscar por nombre:</label>
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchName" class="form-control" placeholder="Buscar por nombre completo...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Buscar por DNI:</label>
+                            <div class="search-box">
+                                <i class="fas fa-id-card"></i>
+                                <input type="text" id="searchDNI" class="form-control" placeholder="Buscar por DNI...">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-secondary w-100" onclick="clearFilters()">
+                                <i class="fas fa-times me-1"></i>Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                @if($usuarios->isNotEmpty())
+                <div class="table-responsive">
+                    <table class="table table-hover" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Nombre completo</th>
+                                <th>DNI</th>
+                                <th>Email</th>
+                                <th>Tipo(s)</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($usuarios as $user)
+                            <tr>
+                                <td><strong>{{ $user->name }} {{ $user->apellido_p }} {{ $user->apellido_m }}</strong></td>
+                                <td>{{ $user->dni }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>
+                                    @if($user->admin) <span class="badge badge-admin"><i class="fas fa-cog me-1"></i>Admin</span> @endif
+                                    @if($user->profesor) <span class="badge badge-profesor"><i class="fas fa-chalkboard-teacher me-1"></i>Profesor</span> @endif
+                                    @if($user->usuario) <span class="badge badge-alumno"><i class="fas fa-graduation-cap me-1"></i>Alumno</span> @endif
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-success btn-sm" onclick="abrirEditar({{ $user->id }})">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                        <button type="button" class="btn btn-warning btn-sm" onclick="abrirPassword({{ $user->id }})">
+                                            <i class="fas fa-key"></i> Contraseña
+                                        </button>
+                                        <form method="POST" action="{{ route('admin.usuarios.destroy', $user->id) }}" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar al usuario?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @else
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No hay usuarios que coincidan con el filtro seleccionado.</p>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Usuario -->
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="formEditar" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header" style="background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%); color: white; border-radius: 0;">
+                        <h5 class="modal-title" id="modalEditarLabel"><i class="fas fa-edit me-2"></i>Editar usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" style="filter: invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="editar_id">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Nombre:</label>
+                                    <input type="text" name="name" id="editar_name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Apellido paterno:</label>
+                                    <input type="text" name="apellido_p" id="editar_apellido_p" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Apellido materno:</label>
+                                    <input type="text" name="apellido_m" id="editar_apellido_m" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">DNI:</label>
+                                    <input type="text" name="dni" id="editar_dni" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Email:</label>
+                                    <input type="email" name="email" id="editar_email" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Fecha de nacimiento:</label>
+                                    <input type="date" name="fecha_nacimiento" id="editar_fecha_nacimiento" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Género:</label>
+                                    <select name="genero" id="editar_genero" class="form-select">
+                                        <option value="masculino">Masculino</option>
+                                        <option value="femenino">Femenino</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">Teléfono:</label>
+                                    <input type="text" name="telefono" id="editar_telefono" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tipo de usuario:</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="tipo_usuario" value="admin" id="editar_admin_radio">
+                                    <label for="editar_admin_radio">Admin</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="tipo_usuario" value="profesor" id="editar_profesor_radio">
+                                    <label for="editar_profesor_radio">Profesor</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="tipo_usuario" value="usuario" id="editar_usuario_radio">
+                                    <label for="editar_usuario_radio">Alumno</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Guardar cambios</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cambiar Contraseña -->
+    <div class="modal fade" id="modalPassword" tabindex="-1" aria-labelledby="modalPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formPassword" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header" style="background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%); color: white; border-radius: 0;">
+                        <h5 class="modal-title" id="modalPasswordLabel"><i class="fas fa-key me-2"></i>Cambiar contraseña</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" style="filter: invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">Nueva contraseña:</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-sync-alt me-2"></i>Actualizar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Función para mostrar/ocultar formulario de creación
+        function toggleCreateForm() {
+            const form = document.getElementById('createForm');
+            const btn = document.getElementById('toggleBtn');
+            
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-minus me-1"></i>Ocultar';
+                btn.classList.remove('btn-light');
+                btn.classList.add('btn-secondary');
+            } else {
+                form.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-plus me-1"></i>Crear';
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-light');
+            }
+        }
+
+        function abrirEditar(id) {
+            fetch(`/admin/usuarios/${id}`)
+                .then(response => response.json())
+                .then(user => {
+                    document.getElementById('formEditar').action = `/admin/usuarios/${id}`;
+                    document.getElementById('editar_id').value = user.id;
+                    document.getElementById('editar_name').value = user.name;
+                    document.getElementById('editar_apellido_p').value = user.apellido_p;
+                    document.getElementById('editar_apellido_m').value = user.apellido_m;
+                    document.getElementById('editar_dni').value = user.dni;
+                    document.getElementById('editar_email').value = user.email;
+                    document.getElementById('editar_fecha_nacimiento').value = user.fecha_nacimiento;
+                    document.getElementById('editar_genero').value = user.genero;
+                    document.getElementById('editar_telefono').value = user.telefono;
+                    
+                    if (user.admin) {
+                        document.getElementById('editar_admin_radio').checked = true;
+                    } else if (user.profesor) {
+                        document.getElementById('editar_profesor_radio').checked = true;
+                    } else if (user.usuario) {
+                        document.getElementById('editar_usuario_radio').checked = true;
+                    }
+
+                    const modal = new bootstrap.Modal(document.getElementById('modalEditar'));
+                    modal.show();
+                });
+        }
+
+        function abrirPassword(id) {
+            document.getElementById('formPassword').action = `/admin/usuarios/${id}/password`;
+            const modal = new bootstrap.Modal(document.getElementById('modalPassword'));
+            modal.show();
+        }
+
+        // Funcionalidad de filtrado
+        function filterTable() {
+            const nameFilter = document.getElementById('searchName').value.toLowerCase();
+            const dniFilter = document.getElementById('searchDNI').value.toLowerCase();
+            const rows = document.querySelectorAll('#usersTable tbody tr');
+
+            rows.forEach(row => {
+                const name = row.cells[0].textContent.toLowerCase();
+                const dni = row.cells[1].textContent.toLowerCase();
+                
+                const nameMatch = name.includes(nameFilter);
+                const dniMatch = dni.includes(dniFilter);
+                
+                if (nameMatch && dniMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function clearFilters() {
+            document.getElementById('searchName').value = '';
+            document.getElementById('searchDNI').value = '';
+            filterTable();
+        }
+
+        // Event listeners para los filtros
+        document.getElementById('searchName').addEventListener('input', filterTable);
+        document.getElementById('searchDNI').addEventListener('input', filterTable);
+    </script>
+
+</section>
 </div>
 
 

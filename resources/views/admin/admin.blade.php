@@ -731,115 +731,908 @@
             <!-- Content -->
             <div class="content-area">
 
-            <div class="container">
 
+        <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
 
-    <h2 class="mb-4">📊 Panel Estadístico del Sistema Académico</h2>
+      
 
-    {{-- Filtro de periodo --}}
-    <form method="GET" action="{{ route('admin.dashboard') }}" class="mb-4">
-        <label for="periodo_id">Periodo:</label>
-        <select name="periodo_id" id="periodo_id" class="form-control w-25 d-inline-block" onchange="this.form.submit()">
-            @foreach($periodos as $periodo)
-                <option value="{{ $periodo->id }}" {{ $periodoId == $periodo->id ? 'selected' : '' }}>
-                    {{ $periodo->nombre }}
-                </option>
-            @endforeach
-        </select>
-    </form>
+        .main-container {
+            padding: 1rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
 
-    {{-- Cards resumen --}}
-    <div class="row text-white mb-4">
-        <div class="col-md-3">
-            <div class="card bg-primary">
-                <div class="card-body">
-                    <h5>Total Matriculados</h5>
-                    <h3>{{ $totalMatriculas }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-success">
-                <div class="card-body">
-                    <h5>Total Cursos</h5>
-                    <h3>{{ $totalCursos }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-warning">
-                <div class="card-body">
-                    <h5>Total Profesores</h5>
-                    <h3>{{ $totalProfesores }}</h3>
-                </div>
-            </div>
-        </div>
-        
-    </div>
+        /* Responsive padding */
+        @media (min-width: 768px) {
+            .main-container {
+                padding: 2rem;
+            }
+        }
 
-    {{-- Distribución por género --}}
-    <div class="mb-4">
-        <h4>Distribución por género</h4>
-        <ul>
-            @foreach($generos as $genero => $total)
-                <li><strong>{{ ucfirst($genero) }}</strong>: {{ $total }} alumnos</li>
-            @endforeach
-        </ul>
-    </div>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    {{-- Top cursos con más alumnos --}}
-    <div class="mb-4">
-        <h4>Top 5 cursos más matriculados</h4>
-        <ul>
-            @foreach($topCursos as $tc)
-                <li>{{ $tc->curso->nombre }} (Sección {{ $tc->seccion }}) - {{ $tc->matriculas_count }} alumnos</li>
-            @endforeach
-        </ul>
-    </div>
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
 
-    {{-- Detalle por Facultad → Carrera → Curso --}}
-    @foreach($facultades as $facultad)
-        <div class="card mb-4">
-            <div class="card-header bg-dark text-white">
-                <strong>{{ $facultad->nombre }}</strong>
-            </div>
-            <div class="card-body">
-                @foreach($facultad->carreras as $carrera)
-                    <h5>{{ $carrera->nombre }}</h5>
-                    @php $totalCarrera = 0; @endphp
-                    <table class="table table-bordered table-sm">
-                        <thead>
-                            <tr>
-                                <th>Curso</th>
-                                <th>Sección</th>
-                                <th>Matriculados</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($carrera->cursos as $curso)
-                                @foreach($curso->cursoPeriodos as $cp)
-                                    <tr>
-                                        <td>{{ $curso->nombre }}</td>
-                                        <td>{{ $cp->seccion }}</td>
-                                        <td>{{ $cp->matriculas_count }}</td>
-                                        @php $totalCarrera += $cp->matriculas_count; @endphp
-                                    </tr>
-                                @endforeach
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .page-title {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            animation: slideInLeft 1s ease-out;
+            line-height: 1.2;
+        }
+
+        /* Responsive title */
+        @media (min-width: 768px) {
+            .page-title {
+                font-size: 2.5rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        .filter-section {
+            background: white;
+            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        @media (min-width: 768px) {
+            .filter-section {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        .stats-card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: bounceIn 0.8s ease-out;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            height: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .stats-card {
+                margin-bottom: 1.5rem;
+            }
+            
+            .stats-card:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            }
+        }
+
+        .stats-card.primary {
+            background: var(--primary-gradient);
+        }
+
+        .stats-card.success {
+            background: var(--success-gradient);
+        }
+
+        .stats-card.warning {
+            background: var(--warning-gradient);
+        }
+
+        .stats-card.info {
+            background: var(--info-gradient);
+        }
+
+        .stats-card .card-body {
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .stats-card .card-body {
+                padding: 2rem;
+            }
+        }
+
+        .stats-card .card-body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .stats-card:hover .card-body::before {
+                top: -25%;
+                right: -25%;
+            }
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: countUp 1s ease-out 0.5s both;
+        }
+
+        @media (min-width: 768px) {
+            .stats-number {
+                font-size: 3rem;
+            }
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .stats-icon {
+            font-size: 2rem;
+            opacity: 0.3;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .stats-icon {
+                font-size: 3rem;
+            }
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .section-card {
+                margin-bottom: 2rem;
+            }
+            
+            .section-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            }
+        }
+
+        .section-header {
+            background: var(--dark-gradient);
+            color: white;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .section-header {
+                padding: 1.5rem;
+                font-size: 1.2rem;
+            }
+        }
+
+        .gender-distribution {
+            padding: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .gender-distribution {
+                padding: 2rem;
+            }
+        }
+
+        .gender-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .gender-item:hover {
+                transform: translateX(10px);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            }
+        }
+
+        .gender-icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+            width: 50px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 768px) {
+            .gender-icon {
+                font-size: 2rem;
+                margin-right: 1rem;
+                width: 60px;
+            }
+        }
+
+        .gender-male { color: #007bff; }
+        .gender-female { color: #e91e63; }
+        .gender-other { color: #6f42c1; }
+
+        .progress-bar-custom {
+            height: 6px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            animation: progressFill 1.5s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .progress-bar-custom {
+                height: 8px;
+            }
+        }
+
+        @keyframes progressFill {
+            from { width: 0%; }
+            to { width: var(--progress-width); }
+        }
+
+        .top-courses {
+            padding: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .top-courses {
+                padding: 2rem;
+            }
+        }
+
+        .course-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.6s ease-out;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .course-item {
+                padding: 1.5rem;
+                flex-wrap: nowrap;
+                gap: 0;
+            }
+            
+            .course-item:hover {
+                transform: translateX(10px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            }
+        }
+
+        .course-item:nth-child(1) { border-left-color: #ffd700; }
+        .course-item:nth-child(2) { border-left-color: #c0c0c0; }
+        .course-item:nth-child(3) { border-left-color: #cd7f32; }
+        .course-item:nth-child(4) { border-left-color: #4facfe; }
+        .course-item:nth-child(5) { border-left-color: #fa709a; }
+
+        .course-rank {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-right: 0.75rem;
+            opacity: 0.7;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 768px) {
+            .course-rank {
+                font-size: 2rem;
+                margin-right: 1rem;
+            }
+        }
+
+        .course-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .course-info h6 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        @media (min-width: 768px) {
+            .course-info h6 {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        .course-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 768px) {
+            .course-badge {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        .faculty-card {
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .faculty-card {
+                margin-bottom: 2rem;
+            }
+        }
+
+        .table-container {
+            padding: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .table-container {
+                padding: 2rem;
+            }
+        }
+
+        .table-modern {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .table-modern {
+                font-size: 1rem;
+            }
+        }
+
+        .table-modern thead th {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 0.5rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        @media (min-width: 768px) {
+            .table-modern thead th {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        .table-modern tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .table-modern tbody tr:hover {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                transform: scale(1.01);
+            }
+        }
+
+        .table-modern tbody td {
+            padding: 0.75rem 0.5rem;
+            border: none;
+            border-bottom: 1px solid #dee2e6;
+            word-break: break-word;
+        }
+
+        @media (min-width: 768px) {
+            .table-modern tbody td {
+                padding: 1rem;
+            }
+        }
+
+        .total-row {
+            background: var(--success-gradient) !important;
+            color: white;
+            font-weight: 700;
+        }
+
+        .loading-animation {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .select-modern {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: white;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .select-modern {
+                font-size: 1rem;
+                width: auto;
+            }
+        }
+
+        .select-modern:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            outline: none;
+        }
+
+        /* Mejoras específicas para móviles */
+        @media (max-width: 767px) {
+            .stats-card .card-body {
+                text-align: center;
+            }
+            
+            .stats-icon {
+                position: static;
+                display: block;
+                margin: 0 auto 0.5rem auto;
+                opacity: 0.6;
+            }
+            
+            .gender-item {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem 1rem;
+            }
+            
+            .gender-icon {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+                width: auto;
+            }
+            
+            .course-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .course-rank {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+            
+            .table-responsive {
+                border-radius: 15px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            
+            .table-modern {
+                margin-bottom: 0;
+            }
+            
+            .table-modern thead th {
+                white-space: nowrap;
+            }
+            
+            .page-title {
+                padding: 0 1rem;
+            }
+            
+            .page-title i {
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Mejoras para tablets */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .stats-card .card-body {
+                padding: 1.5rem;
+            }
+            
+            .stats-number {
+                font-size: 2.5rem;
+            }
+            
+            .stats-icon {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Grid responsivo para las cards de estadísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 576px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 992px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        /* Animaciones de entrada escalonadas */
+        .stats-card:nth-child(1) { animation-delay: 0.1s; }
+        .stats-card:nth-child(2) { animation-delay: 0.2s; }
+        .stats-card:nth-child(3) { animation-delay: 0.3s; }
+        .stats-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .gender-item:nth-child(1) { animation-delay: 0.1s; }
+        .gender-item:nth-child(2) { animation-delay: 0.2s; }
+        .gender-item:nth-child(3) { animation-delay: 0.3s; }
+
+        .course-item:nth-child(1) { animation-delay: 0.1s; }
+        .course-item:nth-child(2) { animation-delay: 0.2s; }
+        .course-item:nth-child(3) { animation-delay: 0.3s; }
+        .course-item:nth-child(4) { animation-delay: 0.4s; }
+        .course-item:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Ocultar efectos hover en dispositivos táctiles */
+        @media (hover: none) {
+            .stats-card:hover,
+            .section-card:hover,
+            .gender-item:hover,
+            .course-item:hover,
+            .table-modern tbody tr:hover {
+                transform: none;
+                box-shadow: inherit;
+            }
+        }
+    </style>
+
+   <div class="container-fluid main-container">
+        <h2 class="page-title">
+            <i class="fas fa-chart-line"></i>
+            <span>Panel Estadístico del Sistema Académico</span>
+        </h2>
+
+        <!-- Filtro de periodo mejorado -->
+        <div class="filter-section">
+            <form method="GET" action="{{ route('admin.dashboard') }}">
+                <div class="row align-items-center g-3">
+                    <div class="col-12 col-md-auto">
+                        <label for="periodo_id" class="form-label fw-bold mb-2 mb-md-0">
+                            <i class="fas fa-calendar-alt me-2"></i>Seleccionar Periodo:
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <select name="periodo_id" id="periodo_id" class="form-control select-modern" onchange="this.form.submit()">
+                            @foreach($periodos as $periodo)
+                                <option value="{{ $periodo->id }}" {{ $periodoId == $periodo->id ? 'selected' : '' }}>
+                                    {{ $periodo->nombre }}
+                                </option>
                             @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr class="table-success">
-                                <td colspan="2" class="text-right"><strong>Total carrera:</strong></td>
-                                <td><strong>{{ $totalCarrera }}</strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-auto">
+                        <i class="fas fa-sync-alt loading-animation text-primary" style="display: none;"></i>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Cards de estadísticas con grid responsivo -->
+        <div class="stats-grid mb-4">
+            <div class="card stats-card primary">
+                <div class="card-body text-white">
+                    <i class="fas fa-user-graduate stats-icon"></i>
+                    <h5 class="mb-3">Total Matriculados</h5>
+                    <h3 class="stats-number">{{ $totalMatriculas }}</h3>
+                </div>
+            </div>
+            <div class="card stats-card success">
+                <div class="card-body text-white">
+                    <i class="fas fa-book stats-icon"></i>
+                    <h5 class="mb-3">Total Cursos</h5>
+                    <h3 class="stats-number">{{ $totalCursos }}</h3>
+                </div>
+            </div>
+            <div class="card stats-card warning">
+                <div class="card-body text-white">
+                    <i class="fas fa-chalkboard-teacher stats-icon"></i>
+                    <h5 class="mb-3">Total Profesores</h5>
+                    <h3 class="stats-number">{{ $totalProfesores }}</h3>
+                </div>
+            </div>
+            <div class="card stats-card info">
+                <div class="card-body text-white">
+                    <i class="fas fa-university stats-icon"></i>
+                    <h5 class="mb-3">Facultades Activas</h5>
+                    <h3 class="stats-number">{{ count($facultades) }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Distribución por género mejorada -->
+        <div class="section-card">
+            <div class="section-header">
+                <i class="fas fa-venus-mars me-2"></i>
+                Distribución por Género
+            </div>
+            <div class="gender-distribution">
+                @foreach($generos as $genero => $total)
+                    <div class="gender-item">
+                        <div class="gender-icon gender-{{ strtolower($genero) }}">
+                            @if(strtolower($genero) == 'masculino')
+                                <i class="fas fa-mars"></i>
+                            @elseif(strtolower($genero) == 'femenino')
+                                <i class="fas fa-venus"></i>
+                            @else
+                                <i class="fas fa-genderless"></i>
+                            @endif
+                        </div>
+                        <div class="flex-grow-1 w-100">
+                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                                <strong class="fs-5">{{ ucfirst($genero) }}</strong>
+                                <span class="badge bg-primary fs-6">{{ $total }} estudiantes</span>
+                            </div>
+                            <div class="progress mb-2" style="height: 6px;">
+                                <div class="progress-bar progress-bar-custom" 
+                                     style="--progress-width: {{ ($total / $totalMatriculas) * 100 }}%; width: {{ ($total / $totalMatriculas) * 100 }}%;">
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ number_format(($total / $totalMatriculas) * 100, 1) }}% del total</small>
+                        </div>
+                    </div>
                 @endforeach
             </div>
         </div>
-    @endforeach
 
-</div>
+        <!-- Top cursos mejorado -->
+        <div class="section-card">
+            <div class="section-header">
+                <i class="fas fa-trophy me-2"></i>
+                Top 5 Cursos Más Matriculados
+            </div>
+            <div class="top-courses">
+                @foreach($topCursos as $index => $tc)
+                    <div class="course-item">
+                        <div class="d-flex align-items-center">
+                            <div class="course-rank">{{ $index + 1 }}</div>
+                            <div class="course-info">
+                                <h6 class="mb-1 fw-bold">{{ $tc->curso->nombre }}</h6>
+                                <small class="text-muted">Sección {{ $tc->seccion }}</small>
+                            </div>
+                        </div>
+                        <div class="course-badge">
+                            {{ $tc->matriculas_count }} estudiantes
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Detalle por Facultad mejorado -->
+        @foreach($facultades as $facultad)
+            <div class="section-card faculty-card">
+                <div class="section-header">
+                    <i class="fas fa-building me-2"></i>
+                    {{ $facultad->nombre }}
+                </div>
+                <div class="table-container">
+                    @foreach($facultad->carreras as $carrera)
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="fas fa-graduation-cap me-2 text-primary"></i>
+                                {{ $carrera->nombre }}
+                            </h5>
+                            @php $totalCarrera = 0; @endphp
+                            <div class="table-responsive">
+                                <table class="table table-modern mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <i class="fas fa-book me-1 d-none d-md-inline"></i>
+                                                Curso
+                                            </th>
+                                            <th>
+                                                <i class="fas fa-layer-group me-1 d-none d-md-inline"></i>
+                                                Sección
+                                            </th>
+                                            <th>
+                                                <i class="fas fa-users me-1 d-none d-md-inline"></i>
+                                                Matriculados
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($carrera->cursos as $curso)
+                                            @foreach($curso->cursoPeriodos as $cp)
+                                                <tr>
+                                                    <td class="fw-semibold">{{ $curso->nombre }}</td>
+                                                    <td>
+                                                        <span class="badge bg-secondary">{{ $cp->seccion }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-primary">{{ $cp->matriculas_count }}</span>
+                                                    </td>
+                                                    @php $totalCarrera += $cp->matriculas_count; @endphp
+                                                </tr>
+                                            @endforeach
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="total-row">
+                                            <td colspan="2" class="text-end fw-bold">
+                                                <i class="fas fa-calculator me-2 d-none d-md-inline"></i>
+                                                Total carrera:
+                                            </td>
+                                            <td class="fw-bold">{{ $totalCarrera }}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+  <script>
+        // Animación de números contadores
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stats-number');
+            numbers.forEach(number => {
+                const target = parseInt(number.textContent);
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    number.textContent = Math.floor(current);
+                }, 30);
+            });
+        }
+
+        // Mostrar loading al cambiar periodo
+        document.getElementById('periodo_id').addEventListener('change', function() {
+            document.querySelector('.loading-animation').style.display = 'inline-block';
+        });
+
+        // Inicializar animaciones cuando la página carga
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(animateNumbers, 500);
+        });
+
+        // Detectar dispositivos táctiles y ajustar comportamiento
+        function isTouchDevice() {
+            return (('ontouchstart' in window) ||
+                   (navigator.maxTouchPoints > 0) ||
+                   (navigator.msMaxTouchPoints > 0));
+        }
+
+        if (isTouchDevice()) {
+            document.body.classList.add('touch-device');
+        }
+
+        // Optimización para scroll en móviles
+        let ticking = false;
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.page-title');
+            if (parallax && window.innerWidth > 768) {
+                const speed = scrolled * 0.3;
+                parallax.style.transform = `translateY(${speed}px)`;
+            }
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        });
+
+        // Mejorar rendimiento en dispositivos móviles
+        if (window.innerWidth <= 768) {
+            // Reducir animaciones en móviles
+            const style = document.createElement('style');
+            style.textContent = `
+                * {
+                    animation-duration: 0.3s !important;
+                    transition-duration: 0.2s !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+
             
 </div>
 
