@@ -718,117 +718,605 @@
             <!-- Content -->
             <div class="content-area">
            
+<style>
+        :root {
+            --primary-gradient: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            --primary-color: #0249BB;
+            --secondary-color: #003bb1;
+        }
 
+        .inicio-prof {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.9rem;
+        }
 
-<div class="container">
-    <h2 class="mb-4">Panel del Profesor</h2>
+        .main-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1.2rem 0;
+            margin-bottom: 1.5rem;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 3px 15px rgba(2, 73, 187, 0.2);
+        }
 
-    <!-- Filtro de Periodo -->
-    <form method="GET" action="{{ route('profesor.dashboard') }}" class="mb-4">
+        .main-header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-card .card-body {
+            padding: 1rem 1.25rem;
+        }
+
+        .custom-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .custom-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .card-header-gradient {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.25rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .card-header-success {
+            background: linear-gradient(120deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.25rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .card-header-info {
+            background: linear-gradient(120deg, #17a2b8 0%, #6f42c1 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.25rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+        }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .stats-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0.3rem 0;
+            line-height: 1;
+        }
+
+        .stats-icon {
+            font-size: 1.8rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-title {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .list-group-item {
+            border: none;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 0.8rem 1.25rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+
+        .badge-custom {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .badge-outline {
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-left: 3px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transform: translateX(3px);
+        }
+
+        .course-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .progress-custom {
+            height: 6px;
+            border-radius: 10px;
+            background-color: #e9ecef;
+        }
+
+        .progress-bar-custom {
+            background: var(--primary-gradient);
+            border-radius: 10px;
+        }
+
+        .form-select {
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 0.5rem 0.8rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.15rem rgba(2, 73, 187, 0.15);
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #495057;
+            margin-bottom: 0.4rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            opacity: 0.4;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .class-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .class-info h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .class-meta {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 0.2rem;
+        }
+
+        .gender-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .gender-item:last-child {
+            border-bottom: none;
+        }
+
+        .gender-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .gender-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .gender-icon.male {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+        }
+
+        .gender-icon.female {
+            background: linear-gradient(45deg, #e83e8c, #c2185b);
+            color: white;
+        }
+
+        .gender-icon.other {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+        }
+
+        .course-stats {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 1rem 1.25rem;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 1rem 0;
+                margin-bottom: 1rem;
+            }
+            
+            .main-header h2 {
+                font-size: 1.3rem;
+            }
+            
+            .stats-number {
+                font-size: 1.8rem;
+            }
+            
+            .stats-icon {
+                font-size: 1.5rem;
+            }
+
+            .class-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .course-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .stat-item {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                text-align: left;
+            }
+
+            .gender-item {
+                padding: 0.8rem 0;
+            }
+
+            .course-card {
+                padding: 0.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 0.8rem;
+            }
+
+            .stats-card {
+                padding: 1rem;
+            }
+
+            .card-body {
+                padding: 0.8rem 1rem;
+            }
+
+            .filter-card .card-body {
+                padding: 0.8rem 1rem;
+            }
+        }
+    </style>
+
+    <section class="inicio-prof">
+            
+ <div class="main-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2><i class="fas fa-chalkboard-teacher me-2"></i>Panel del Profesor</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Filtro de Periodo -->
+        <div class="card filter-card">
+            <div class="card-body">
+                <form method="GET" action="{{ route('profesor.dashboard') }}">
+                    <div class="row align-items-end">
+                        <div class="col-md-4">
+                            <label for="periodo_id" class="form-label">
+                                <i class="fas fa-calendar-alt me-1"></i>Periodo Académico
+                            </label>
+                            <select name="periodo_id" id="periodo_id" class="form-select" onchange="this.form.submit()">
+                                @foreach ($periodos as $periodo)
+                                    <option value="{{ $periodo->id }}" {{ $periodo->id == $periodo_id ? 'selected' : '' }}>
+                                        {{ $periodo->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="row">
-            <div class="col-md-4">
-                <label for="periodo_id" class="form-label">Periodo Académico</label>
-                <select name="periodo_id" id="periodo_id" class="form-select" onchange="this.form.submit()">
-                    @foreach ($periodos as $periodo)
-                        <option value="{{ $periodo->id }}" {{ $periodo->id == $periodo_id ? 'selected' : '' }}>
-                            {{ $periodo->nombre }}
-                        </option>
-                    @endforeach
-                </select>
+            <!-- Clases del Día -->
+            <div class="col-lg-6">
+                <div class="card custom-card">
+                    <div class="card-header card-header-success">
+                        <i class="fas fa-clock me-2"></i>
+                        <strong>Hoy ({{ \Carbon\Carbon::now()->locale('es')->isoFormat('dddd') }})</strong>
+                    </div>
+                    <div class="card-body">
+                        @if(count($clasesHoy) > 0)
+                            <div class="list-group list-group-flush">
+                                @foreach ($clasesHoy as $clase)
+                                    <div class="list-group-item">
+                                        <div class="class-item">
+                                            <div class="class-info">
+                                                <h6 class="text-primary">
+                                                    <i class="fas fa-book me-1"></i>{{ $clase->nombre }}
+                                                </h6>
+                                                <div class="class-meta">
+                                                    <i class="fas fa-users me-1"></i>Sección {{ $clase->seccion }}
+                                                </div>
+                                            </div>
+                                            <span class="badge badge-custom">
+                                                <i class="fas fa-clock me-1"></i>
+                                                {{ \Carbon\Carbon::parse($clase->hora_inicio)->format('H:i') }} - {{ \Carbon\Carbon::parse($clase->hora_fin)->format('H:i') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-times"></i>
+                                <p>No hay clases programadas para hoy</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
-        </div>
-    </form>
 
-    <!-- Clases del Día -->
-    <div class="card mb-4">
-        <div class="card-header bg-success text-white">
-            <strong>Clases para Hoy ({{ \Carbon\Carbon::now()->locale('es')->isoFormat('dddd') }})</strong>
-        </div>
-        <div class="card-body">
-            @if(count($clasesHoy) > 0)
-                <ul class="list-group">
-                    @foreach ($clasesHoy as $clase)
-                        <li class="list-group-item">
-                            <strong>{{ $clase->nombre }} - Sección {{ $clase->seccion }}</strong><br>
-                            Hora: {{ \Carbon\Carbon::parse($clase->hora_inicio)->format('H:i') }} - {{ \Carbon\Carbon::parse($clase->hora_fin)->format('H:i') }}
-                        </li>
-                    @endforeach
-                </ul>
-            @else
-                <p class="text-muted">No tienes clases programadas para hoy.</p>
-            @endif
-        </div>
-    </div>
-
-    <!-- Clases de esta semana -->
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-        <strong>Clases de esta semana</strong>
-    </div>
-    <div class="card-body">
-        @if(count($clasesSemana) > 0)
-            <ul class="list-group">
-                @foreach ($clasesSemana as $clase)
-                    <li class="list-group-item">
-                        <strong>{{ $clase->nombre }} - Sección {{ $clase->seccion }}</strong><br>
-                        Día: {{ \Carbon\Carbon::create()->startOfWeek()->addDays($clase->dia_semana - 1)->locale('es')->isoFormat('dddd') }}<br>
-                        Hora: {{ \Carbon\Carbon::parse($clase->hora_inicio)->format('H:i') }} - {{ \Carbon\Carbon::parse($clase->hora_fin)->format('H:i') }}
-                    </li>
-                @endforeach
-            </ul>
-        @else
-            <p class="text-muted">No tienes clases esta semana.</p>
-        @endif
-    </div>
-</div>
-
-    <!-- Resumen General -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card border-primary">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Total de Alumnos</h5>
-                    <h2 class="card-text">{{ $totalAlumnos }}</h2>
+            <!-- Clases de esta semana -->
+            <div class="col-lg-6">
+                <div class="card custom-card">
+                    <div class="card-header card-header-gradient">
+                        <i class="fas fa-calendar-week me-2"></i>
+                        <strong>Esta Semana</strong>
+                    </div>
+                    <div class="card-body">
+                        @if(count($clasesSemana) > 0)
+                            <div class="list-group list-group-flush">
+                                @foreach ($clasesSemana as $clase)
+                                    <div class="list-group-item">
+                                        <div class="class-item">
+                                            <div class="class-info">
+                                                <h6 class="text-primary">
+                                                    <i class="fas fa-book me-1"></i>{{ $clase->nombre }}
+                                                </h6>
+                                                <div class="class-meta">
+                                                    <i class="fas fa-calendar-day me-1"></i>
+                                                    {{ \Carbon\Carbon::create()->startOfWeek()->addDays($clase->dia_semana - 1)->locale('es')->isoFormat('dddd') }}
+                                                    <span class="ms-2">
+                                                        <i class="fas fa-users me-1"></i>Sec. {{ $clase->seccion }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <span class="badge badge-outline">
+                                                <i class="fas fa-clock me-1"></i>
+                                                {{ \Carbon\Carbon::parse($clase->hora_inicio)->format('H:i') }} - {{ \Carbon\Carbon::parse($clase->hora_fin)->format('H:i') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-times"></i>
+                                <p>No hay clases esta semana</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Género -->
-        <div class="col-md-8">
-            <div class="card border-info">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Distribución por Género</h5>
-                    <ul class="list-group list-group-flush">
+        <!-- Resumen General -->
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stats-title">Total Alumnos</div>
+                    <div class="stats-number">{{ $totalAlumnos }}</div>
+                </div>
+            </div>
+            
+            <!-- Distribución por Género -->
+            <div class="col-lg-9 col-md-6 mb-3">
+                <div class="card custom-card h-100">
+                    <div class="card-header card-header-info">
+                        <i class="fas fa-chart-pie me-2"></i>
+                        <strong>Distribución por Género</strong>
+                    </div>
+                    <div class="card-body">
                         @foreach ($generos as $genero => $total)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ ucfirst($genero ?? 'No especificado') }}
-                                <span class="badge bg-info text-dark">{{ $total }}</span>
-                            </li>
+                            <div class="gender-item">
+                                <div class="gender-info">
+                                    <div class="gender-icon {{ $genero == 'masculino' ? 'male' : ($genero == 'femenino' ? 'female' : 'other') }}">
+                                        <i class="fas fa-{{ $genero == 'masculino' ? 'mars' : ($genero == 'femenino' ? 'venus' : 'question') }}"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">{{ ucfirst($genero ?? 'No especificado') }}</div>
+                                        <small class="text-muted">
+                                            {{ $totalAlumnos > 0 ? round(($total / $totalAlumnos) * 100, 1) : 0 }}% del total
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="progress progress-custom" style="width: 60px;">
+                                        <div class="progress-bar progress-bar-custom" style="width: {{ $totalAlumnos > 0 ? ($total / $totalAlumnos) * 100 : 0 }}%"></div>
+                                    </div>
+                                    <span class="badge badge-custom">{{ $total }}</span>
+                                </div>
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Lista de Cursos y Vacantes -->
-    <div class="card">
-        <div class="card-header bg-secondary text-white">
-            <strong>Resumen de Cursos</strong>
-        </div>
-        <div class="card-body">
-            @foreach ($cursos as $curso)
-                <div class="mb-3">
-                    <h5>{{ $curso->nombre }} - Sección {{ $curso->seccion }}</h5>
-                    <p><strong>Alumnos matriculados:</strong> {{ $conteoAlumnos[$curso->nombre . ' - ' . $curso->seccion] ?? 0 }}</p>
-                    <p><strong>Vacantes disponibles:</strong> {{ $vacantesPorCurso[$curso->nombre . ' - ' . $curso->seccion]['disponibles'] }}</p>
-                    <hr>
-                </div>
-            @endforeach
+        <!-- Lista de Cursos y Vacantes -->
+        <div class="card custom-card">
+            <div class="card-header card-header-gradient">
+                <i class="fas fa-graduation-cap me-2"></i>
+                <strong>Resumen de Cursos</strong>
+            </div>
+            <div class="card-body">
+                @foreach ($cursos as $curso)
+                    <div class="course-card">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-md-12 mb-2 mb-lg-0">
+                                <h6 class="text-primary mb-1">
+                                    <i class="fas fa-book-open me-2"></i>
+                                    {{ $curso->nombre }}
+                                </h6>
+                                <small class="text-muted">
+                                    <i class="fas fa-layer-group me-1"></i>Sección {{ $curso->seccion }}
+                                </small>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="course-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-number text-success">{{ $conteoAlumnos[$curso->nombre . ' - ' . $curso->seccion] ?? 0 }}</div>
+                                        <div class="stat-label">
+                                            <i class="fas fa-user-check me-1"></i>Matriculados
+                                        </div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number text-info">{{ $vacantesPorCurso[$curso->nombre . ' - ' . $curso->seccion]['disponibles'] }}</div>
+                                        <div class="stat-label">
+                                            <i class="fas fa-user-plus me-1"></i>Disponibles
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
-</div>
-
+</section>
 
 
 </div>

@@ -717,102 +717,467 @@
             
             <!-- Content -->
            <div class="content-area">
-    <h2>📝 Evaluación de Alumnos</h2>
 
-    {{-- Mensaje de éxito --}}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+        --primary-color: #0249BB;
+        --secondary-color: #003bb1;
+    }
+
+    .main-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    .header-section {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 1.5rem 0;
+        margin: -15px -15px 1.5rem -15px;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 3px 10px rgba(2, 73, 187, 0.3);
+    }
+
+    .header-title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 0;
+        text-align: center;
+    }
+
+    .filters-section {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .search-container {
+        margin-bottom: 1rem;
+    }
+
+    .search-input {
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        padding: 8px 40px 8px 15px;
+        font-size: 0.9rem;
+        height: 40px;
+    }
+
+    .search-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.15rem rgba(2, 73, 187, 0.2);
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary-color);
+        font-size: 0.9rem;
+    }
+
+    .form-select {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        height: 40px;
+    }
+
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.15rem rgba(2, 73, 187, 0.2);
+    }
+
+    .student-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e9ecef;
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+
+    .student-header {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .student-body {
+        padding: 1rem;
+    }
+
+    .grades-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .grade-item {
+        text-align: center;
+    }
+
+    .grade-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.3rem;
+        display: block;
+        line-height: 1.2;
+    }
+
+    .grade-input {
+        width: 100%;
+        height: 35px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0 5px;
+    }
+
+    .grade-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.15rem rgba(2, 73, 187, 0.2);
+        background-color: #f8f9ff;
+    }
+
+    .grade-input[readonly] {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        border-color: #e9ecef;
+    }
+
+    .actions-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding-top: 0.8rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-save {
+        background: var(--primary-gradient);
+        border: none;
+        border-radius: 20px;
+        padding: 6px 16px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: white;
+        transition: all 0.2s ease;
+    }
+
+    .btn-save:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(2, 73, 187, 0.3);
+    }
+
+    .permission-info {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .permission-allowed {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .permission-denied {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .alert-custom {
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .no-students {
+        text-align: center;
+        padding: 2rem 1rem;
+        background: #fff3cd;
+        border-radius: 12px;
+        color: #856404;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .main-container {
+            padding: 0 10px;
+        }
+        
+        .header-section {
+            margin: -10px -10px 1rem -10px;
+            padding: 1rem 0;
+        }
+        
+        .header-title {
+            font-size: 1.3rem;
+        }
+        
+        .filters-section {
+            padding: 1rem;
+        }
+        
+        .grades-grid {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.6rem;
+        }
+        
+        .grade-label {
+            font-size: 0.7rem;
+        }
+        
+        .grade-input {
+            height: 32px;
+            font-size: 0.85rem;
+        }
+        
+        .student-header {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .student-body {
+            padding: 0.8rem;
+        }
+        
+        .actions-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.8rem;
+        }
+        
+        .btn-save {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .grades-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .grade-label {
+            font-size: 0.65rem;
+        }
+        
+        .grade-input {
+            height: 30px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+
+  <div class="main-container">
+    <!-- Header -->
+    <div class="header-section">
+        <h2 class="header-title">
+            <i class="fas fa-clipboard-list me-2"></i>
+            Evaluación de Alumnos
+        </h2>
+    </div>
+
+    <!-- Success Message -->
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success alert-custom">
+            <i class="fas fa-check-circle me-2"></i>
+            {{ session('success') }}
+        </div>
     @endif
 
-    {{-- Filtro por periodo --}}
-    <form method="GET" action="{{ route('profesor.calificaciones') }}" class="row g-3 mb-3">
-        <div class="col-md-4">
-            <label>Periodo:</label>
-            <select name="periodo_id" onchange="this.form.submit()" class="form-select">
-                @foreach($periodos as $periodo)
-                    <option value="{{ $periodo->id }}" {{ $periodoSeleccionado == $periodo->id ? 'selected' : '' }}>
-                        {{ $periodo->nombre }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+    <!-- Filters -->
+    <div class="filters-section">
+        <form method="GET" action="{{ route('profesor.calificaciones') }}" class="row g-2 mb-3">
+            <div class="col-md-5">
+                <label class="form-label small">
+                    <i class="fas fa-calendar-alt me-1"></i>Periodo:
+                </label>
+                <select name="periodo_id" onchange="this.form.submit()" class="form-select">
+                    @foreach($periodos as $periodo)
+                        <option value="{{ $periodo->id }}" {{ $periodoSeleccionado == $periodo->id ? 'selected' : '' }}>
+                            {{ $periodo->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-7">
+                <label class="form-label small">
+                    <i class="fas fa-book me-1"></i>Curso:
+                </label>
+                <select name="curso_periodo_id" onchange="this.form.submit()" class="form-select">
+                    <option value="">-- Selecciona Curso --</option>
+                    @foreach($cursos->unique('curso_periodo_id') as $c)
+                        <option value="{{ $c->curso_periodo_id }}" {{ $cursoSeleccionado == $c->curso_periodo_id ? 'selected' : '' }}>
+                            {{ $c->cursoPeriodo->curso->nombre }} - Sección {{ $c->cursoPeriodo->seccion }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </form>
 
-        <div class="col-md-6">
-            <label>Curso:</label>
-            <select name="curso_periodo_id" onchange="this.form.submit()" class="form-select">
-                <option value="">-- Selecciona Curso --</option>
-                @foreach($cursos->unique('curso_periodo_id') as $c)
-                    <option value="{{ $c->curso_periodo_id }}" {{ $cursoSeleccionado == $c->curso_periodo_id ? 'selected' : '' }}>
-                        {{ $c->cursoPeriodo->curso->nombre }} - Sección {{ $c->cursoPeriodo->seccion }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    </form>
+        <!-- Search -->
+        @if($alumnos && count($alumnos))
+            <div class="search-container position-relative">
+                <input type="text" id="searchStudent" class="form-control search-input" 
+                       placeholder="Buscar alumno...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        @endif
+    </div>
 
-    {{-- Formulario por alumno --}}
+    <!-- Students List -->
     @if($alumnos && count($alumnos))
-        @foreach($alumnos as $alumno)
-    @php
-        $permiso = $alumno->permiso ?? 'denegado'; // valor por defecto
-        $editable = match($permiso) {
-    '1' => ['primer_avance'],
-    '2' => ['segundo_avance'],
-    '3' => ['presentacion_final'],
-    '4' => ['oral_1'],
-    '5' => ['oral_2'],
-    '6' => ['oral_3'],
-    '7' => ['oral_4'],
-    '8' => ['oral_5'],
-    '9' => ['examen_final'],
-    'editable' => ['primer_avance', 'segundo_avance', 'presentacion_final', 'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'],
-    default => []
-};
-    @endphp
-
-    <form method="POST" action="{{ route('profesor.calificaciones.guardar') }}" class="mb-4 border rounded p-3">
-        @csrf
-        <input type="hidden" name="curso_periodo_id" value="{{ $cursoSeleccionado }}">
-        <input type="hidden" name="notas[{{ $alumno->id }}][user_id]" value="{{ $alumno->id }}">
-
-        <h5 class="mb-3">{{ $alumno->name }} {{ $alumno->apellido_p }} {{ $alumno->apellido_m }}</h5>
-
-        <div class="row g-2">
-            @foreach([
-                'primer_avance', 'segundo_avance', 'presentacion_final',
-                'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5',
-                'examen_final'
-            ] as $campo)
-                <div class="col-md-2">
-                    <label class="form-label">{{ ucwords(str_replace('_', ' ', $campo)) }}</label>
-                    <input type="number" step="0.01"
-                        name="notas[{{ $alumno->id }}][{{ $campo }}]"
-                        class="form-control"
-                        value="{{ $alumno->$campo }}"
-                        {{ in_array($campo, $editable) ? '' : 'readonly' }}>
+        <div id="studentsList">
+            @foreach($alumnos as $alumno)
+                @php
+                    $permiso = $alumno->permiso ?? 'denegado';
+                    $editable = match($permiso) {
+                        '1' => ['primer_avance'],
+                        '2' => ['segundo_avance'],
+                        '3' => ['presentacion_final'],
+                        '4' => ['oral_1'],
+                        '5' => ['oral_2'],
+                        '6' => ['oral_3'],
+                        '7' => ['oral_4'],
+                        '8' => ['oral_5'],
+                        '9' => ['examen_final'],
+                        'editable' => ['primer_avance', 'segundo_avance', 'presentacion_final', 'oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5', 'examen_final'],
+                        default => []
+                    };
+                @endphp
+                
+                <div class="student-card" data-student-name="{{ strtolower($alumno->name . ' ' . $alumno->apellido_p . ' ' . $alumno->apellido_m) }}">
+                    <form method="POST" action="{{ route('profesor.calificaciones.guardar') }}">
+                        @csrf
+                        <input type="hidden" name="curso_periodo_id" value="{{ $cursoSeleccionado }}">
+                        <input type="hidden" name="notas[{{ $alumno->id }}][user_id]" value="{{ $alumno->id }}">
+                        
+                        <div class="student-header">
+                            <span>
+                                <i class="fas fa-user-graduate me-2"></i>
+                                {{ $alumno->name }} {{ $alumno->apellido_p }} {{ $alumno->apellido_m }}
+                            </span>
+                        </div>
+                        
+                        <div class="student-body">
+                            <div class="grades-grid">
+                                @foreach([
+                                    'primer_avance' => '1er Avance',
+                                    'segundo_avance' => '2do Avance', 
+                                    'presentacion_final' => 'Presentación',
+                                    'oral_1' => 'Oral 1',
+                                    'oral_2' => 'Oral 2',
+                                    'oral_3' => 'Oral 3',
+                                    'oral_4' => 'Oral 4',
+                                    'oral_5' => 'Oral 5',
+                                    'examen_final' => 'Examen Final'
+                                ] as $campo => $label)
+                                    <div class="grade-item">
+                                        <label class="grade-label">{{ $label }}</label>
+                                        <input type="number" step="0.01"
+                                            name="notas[{{ $alumno->id }}][{{ $campo }}]"
+                                            class="form-control grade-input"
+                                            value="{{ $alumno->$campo }}"
+                                            {{ in_array($campo, $editable) ? '' : 'readonly' }}
+                                            min="0" max="100">
+                                    </div>
+                                @endforeach
+                            </div>
+                            
+                            <div class="actions-row">
+                                @if($editable)
+                                    <button type="submit" class="btn btn-save">
+                                        <i class="fas fa-save me-1"></i>
+                                        Guardar
+                                    </button>
+                                @else
+                                    <div class="permission-info permission-denied">
+                                        <i class="fas fa-lock me-1"></i>
+                                        Sin permisos
+                                    </div>
+                                @endif
+                                
+                                @if(count($editable) === 1)
+                                    <div class="permission-info permission-allowed">
+                                        <i class="fas fa-edit me-1"></i>
+                                        Solo: {{ str_replace(['1er', '2do'], ['Primer', 'Segundo'], ucwords(str_replace('_', ' ', $editable[0]))) }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </form>
                 </div>
             @endforeach
         </div>
-
-        @if($editable)
-            <div class="mt-3">
-                <button type="submit" class="btn btn-success btn-sm">💾 Guardar Calificaciones</button>
-            </div>
-        @else
-            <div class="text-danger mt-2">⚠️ Edición no permitida</div>
-        @endif
-
-        @if(count($editable) === 1)
-    <div class="text-info mt-2">
-        🛠️ Solo puedes editar: <strong>{{ ucwords(str_replace('_', ' ', $editable[0])) }}</strong>
-    </div>
-@endif
-
-    </form>
-@endforeach
     @elseif($cursoSeleccionado)
-        <div class="alert alert-warning">No hay alumnos matriculados en este curso.</div>
+        <div class="no-students">
+            <i class="fas fa-users-slash fa-2x mb-2"></i>
+            <h6>No hay alumnos matriculados en este curso</h6>
+        </div>
     @endif
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchStudent');
+    const studentsList = document.getElementById('studentsList');
+    
+    if (searchInput && studentsList) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            const studentCards = studentsList.querySelectorAll('.student-card');
+            let visibleCount = 0;
+            
+            studentCards.forEach(card => {
+                const studentName = card.getAttribute('data-student-name');
+                if (studentName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show/hide no results message
+            let noResultsMsg = document.getElementById('noResultsMessage');
+            if (visibleCount === 0 && searchTerm !== '') {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.id = 'noResultsMessage';
+                    noResultsMsg.className = 'alert alert-info alert-custom text-center';
+                    noResultsMsg.innerHTML = '<i class="fas fa-search me-2"></i>No se encontraron coincidencias';
+                    studentsList.appendChild(noResultsMsg);
+                }
+            } else if (noResultsMsg) {
+                noResultsMsg.remove();
+            }
+        });
+    }
+});
+</script>
+
 </div>
 
 

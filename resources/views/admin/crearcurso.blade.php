@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Panel de Estudiante')</title>
+
+
+     <title>Gestión de Cursos</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
        <style>
         * {
             margin: 0;
@@ -639,7 +644,7 @@
                 </button>
             </div>
             
-            <nav class="sidebar-nav">
+          <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                    <li class="nav-item">
                         <a class="nav-link " href="{{ route('admin.dashboard') }}" data-page="general">
@@ -671,7 +676,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('admin.calificaciones.index') }}" data-page="calendario">
+                        <a class="nav-link" href="{{ route('admin.calificaciones.index') }}" data-page="calendario">
                             <i class="fas fa-chart-line"></i>
                             <span class="nav-text">Calificaciones</span>
                             <div class="tooltip-custom">Calificaciones</div>
@@ -731,423 +736,1212 @@
             <!-- Content -->
             <div class="content-area">
             
-{{-- CSS de Select2 --}}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
-
-@if (session('success'))
-    <div class="alert alert-success">
-        <ul>
-            @foreach (session('success') as $msg)
-                <li>{{ $msg }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-@if (session('warning'))
-    <div class="alert alert-warning">
-        <ul>
-            @foreach (session('warning') as $msg)
-                <li>{{ $msg }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-@endif
-
-<form action="{{ route('admin.cursos.store') }}" method="POST">
-    @csrf
-
-<h3>Facultad</h3>
-<select class="facultad-select" name="facultad_nombre" style="width: 100%;">
-    <option value="">-- Escribe o selecciona una facultad --</option>
-    @foreach($facultades as $facultad)
-        <option value="{{ $facultad->nombre }}">{{ $facultad->nombre }}</option>
-    @endforeach
-</select>
-
-<h3>Carrera</h3>
-<select class="carrera-select" name="carrera_nombre" style="width: 100%;">
-    <option value="">-- Escribe o selecciona una carrera --</option>
-    {{-- Se llenará dinámicamente --}}
-</select>
-
-<script>
-$(document).ready(function () {
-
- 
-    $('.curso-select').select2({
-    tags: true,
-    placeholder: 'Escribe o selecciona un curso',
-    allowClear: true
-});
-
-
-
-    $('.carrera-select').on('change', function () {
-    const carreraNombre = $(this).val();
-    const $cursoSelect = $('#cursos-container .curso').first().find('.curso-select');
-
-    $cursoSelect.empty().append('<option value="">-- Escribe o selecciona un curso --</option>');
-
-    if (carreraNombre) {
-        fetch(`/admin/cursos-por-nombre-carrera/${carreraNombre}`)
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(curso => {
-                    const option = new Option(curso.nombre, curso.nombre, false, false);
-                    $cursoSelect.append(option);
-                });
-                $cursoSelect.val(null).trigger('change');
-            });
-    }
-});
-
-    // Inicializa Select2 con opción de ingresar nuevo texto
-    $('.facultad-select').select2({
-        tags: true,
-        placeholder: 'Escribe o selecciona una facultad',
-        allowClear: true
-    });
-
-    $('.carrera-select').select2({
-        tags: true,
-        placeholder: 'Escribe o selecciona una carrera',
-        allowClear: true
-    });
-
-    
-    
-    // Al cambiar la facultad, cargar las carreras relacionadas
-    $('.facultad-select').on('change', function () {
-        const facultadNombre = $(this).val();
-        const $carreraSelect = $('.carrera-select');
-
-        // Limpiar carreras anteriores
-        $carreraSelect.empty().append('<option value="">-- Escribe o selecciona una carrera --</option>');
-
-        if (facultadNombre) {
-            fetch(`/admin/carreras-por-nombre-facultad/${facultadNombre}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(carrera => {
-                        const option = new Option(carrera.nombre, carrera.nombre, false, false);
-                        $carreraSelect.append(option);
-                    });
-                });
+  <style>
+        :root {
+            --primary-gradient: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            --primary-color: #0249BB;
+            --secondary-color: #003bb1;
+            --light-bg: #f8f9fa;
+            --border-radius: 8px;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
-        
 
-        $carreraSelect.val(null).trigger('change'); // Reiniciar selección
-    });
-});
-</script>
+        .main-curs{
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
 
+        .main-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin: 15px auto;
+            max-width: 1400px;
+            overflow: hidden;
+        }
 
+        .header-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
 
-<h3>Periodo académico</h3>
-<select name="periodo_id" required>
-    @if ($periodoActual)
-        <option value="{{ $periodoActual->id }}">
-            {{ $periodoActual->nombre }} ({{ $periodoActual->fecha_inicio }} al {{ $periodoActual->fecha_fin }})
-        </option>
-    @else
-        <option value="">No hay periodo académico activo</option>
-    @endif
-</select>
+        .header-section h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 300;
+        }
 
-<h3>Cursos</h3>
-<div id="cursos-container">
-    <div class="curso">
-        <select class="curso-select" name="cursos[0][nombre]" required style="width: 100%;">
-    <option value="">-- Escribe o selecciona un curso --</option>
-    {{-- antes tenía todos los cursos, ahora debe estar vacío --}}
-</select>
+        .content-section {
+            padding: 1.5rem;
+        }
 
+        .create-button-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-            <textarea name="cursos[0][descripcion]" placeholder="Descripción del curso"></textarea>
+        .btn-create-main {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
 
-            {{-- PROFESOR DEL CURSO (solo uno) --}}
-            <label>Profesor:</label>
-            <select class="profesor-select" name="cursos[0][profesor_id]" required style="width: 100%;">
-    <option value="">-- Selecciona un profesor --</option>
-    @foreach ($profesores as $profesor)
-        <option value="{{ $profesor->id }}">{{ $profesor->name }}</option>
-    @endforeach
-</select>
-<script>
-    $('.profesor-select').select2({
-    placeholder: 'Selecciona un profesor',
-    allowClear: true
-});
-</script>
+        .btn-create-main:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            color: white;
+        }
 
-            <label>Turno:</label>
-<select name="cursos[0][turno]" required>
-    <option value="">-- Selecciona un turno --</option>
-    <option value="mañana">Mañana</option>
-    <option value="tarde">Tarde</option>
-    <option value="noche">Noche</option>
-</select>
+        .form-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
 
-            <h4>Sección</h4>
-<input type="text" name="cursos[0][seccion]" required placeholder="Ej: A">
+        .card-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
 
-<h4>Vacantes</h4>
-<input type="number" name="cursos[0][vacantes]" required min="1">
+        .card-body {
+            padding: 1rem;
+        }
 
-<h4>Fechas de matrícula</h4>
-<input type="date" name="cursos[0][fecha_apertura_matricula]" required>
-<input type="date" name="cursos[0][fecha_cierre_matricula]" required>
+        .form-group {
+            margin-bottom: 1rem;
+        }
 
-<h4>Fechas de clases</h4>
-<input type="date" name="cursos[0][fecha_inicio_clases]" required>
-<input type="date" name="cursos[0][fecha_fin_clases]" required>
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+            display: block;
+            font-size: 0.9rem;
+        }
 
+        .form-control, .form-select {
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
 
-            <h4>Horarios</h4>
-            <div class="horarios-container">
-                <div class="horario">
-                    <select name="cursos[0][horarios][0][dia_semana]">
-                        <option value="1">Lunes</option>
-                        <option value="2">Martes</option>
-                        <option value="3">Miércoles</option>
-                        <option value="4">Jueves</option>
-                        <option value="5">Viernes</option>
-                        <option value="6">Sábado</option>
-                        <option value="7">Domingo</option>
-                    </select>
-                    <input type="time" name="cursos[0][horarios][0][hora_inicio]" required>
-                    <input type="time" name="cursos[0][horarios][0][hora_fin]" required>
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.15rem rgba(2, 73, 187, 0.25);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .btn-success {
+            background: linear-gradient(120deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(120deg, #dc3545 0%, #c82333 100%);
+            border: none;
+            border-radius: 6px;
+            padding: 0.4rem 0.8rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .btn-outline-primary {
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .curso-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .horario-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .horario-item .form-control,
+        .horario-item .form-select {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .alert {
+            border-radius: var(--border-radius);
+            border: none;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Filtros compactos */
+        .filters-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            font-size: 0.85rem;
+            padding: 0.4rem;
+        }
+
+        /* Cursos existentes compactos */
+        .curso-existente {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .curso-existente:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow);
+        }
+
+        .curso-existente-header {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .curso-existente-body {
+            padding: 1rem;
+        }
+
+        .info-compact {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .info-compact-item {
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .info-compact-item strong {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .facultad-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        .carrera-title {
+            color: #20c997;
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0.75rem 0 0.5rem 1rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            height: 38px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                border-radius: 0;
+            }
+
+            .header-section {
+                padding: 1rem;
+            }
+
+            .header-section h1 {
+                font-size: 1.5rem;
+            }
+
+            .content-section {
+                padding: 1rem;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                min-width: auto;
+            }
+
+            .horario-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .info-compact {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .facultad-section {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .facultad-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .facultad-header:hover {
+            background: linear-gradient(120deg, #003bb1 0%, #0249BB 100%);
+        }
+
+        .facultad-content {
+            padding: 1.5rem;
+            background: #fafbfc;
+        }
+
+        .carrera-section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+        }
+
+        .carrera-header {
+            background: linear-gradient(90deg, #20c997 0%, #17a2b8 100%);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .carrera-content {
+            padding: 1rem;
+        }
+
+        .facultad-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+    </style>
+
+<section class="main-curs">
+              <div class="main-container">
+        <div class="header-section">
+            <h1><i class="fas fa-graduation-cap"></i> Gestión de Cursos Académicos</h1>
+            <p class="mb-0">Sistema de administración de cursos y horarios</p>
+        </div>
+
+        <div class="content-section">
+            {{-- Mensajes de alerta --}}
+            @if (session('success'))
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <ul class="mb-0">
+                        @foreach (session('success') as $msg)
+                            <li>{{ $msg }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (session('warning'))
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <ul class="mb-0">
+                        @foreach (session('warning') as $msg)
+                            <li>{{ $msg }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    <i class="fas fa-times-circle me-2"></i>
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            {{-- Botón principal para crear --}}
+            <div class="create-button-container">
+                <button class="btn btn-create-main" type="button" data-bs-toggle="collapse" data-bs-target="#formCrearCurso" aria-expanded="false">
+                    <i class="fas fa-plus me-2"></i>Crear o Agregar Curso
+                </button>
+            </div>
+
+            {{-- Formulario colapsable --}}
+            <div class="collapse" id="formCrearCurso">
+                <form action="{{ route('admin.cursos.store') }}" method="POST">
+                    @csrf
+                    
+                    {{-- Información Académica --}}
+                    <div class="form-card">
+                        <div class="card-header">
+                            <i class="fas fa-university me-2"></i>Información Académica
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <i class="fas fa-building me-1"></i>Facultad
+                                        </label>
+                                        <select class="facultad-select form-control" name="facultad_nombre" style="width: 100%;">
+                                            <option value="">-- Escribe o selecciona una facultad --</option>
+                                            @foreach($facultades as $facultad)
+                                                <option value="{{ $facultad->nombre }}">{{ $facultad->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <i class="fas fa-graduation-cap me-1"></i>Carrera
+                                        </label>
+                                        <select class="carrera-select form-control" name="carrera_nombre" style="width: 100%;">
+                                            <option value="">-- Escribe o selecciona una carrera --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Período Académico --}}
+                    <div class="form-card">
+                        <div class="card-header">
+                            <i class="fas fa-calendar-alt me-2"></i>Período Académico
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <select class="form-select" name="periodo_id" required>
+                                    @if ($periodoActual)
+                                        <option value="{{ $periodoActual->id }}">
+                                            {{ $periodoActual->nombre }} ({{ $periodoActual->fecha_inicio }} al {{ $periodoActual->fecha_fin }})
+                                        </option>
+                                    @else
+                                        <option value="">No hay periodo académico activo</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Configuración de Cursos --}}
+                    <div class="form-card">
+                        <div class="card-header">
+                            <i class="fas fa-book me-2"></i>Configuración de Cursos
+                        </div>
+                        <div class="card-body">
+                            <div id="cursos-container">
+                                <div class="curso curso-item">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <i class="fas fa-book-open me-1"></i>Curso
+                                                </label>
+                                                <select class="curso-select form-control" name="cursos[0][nombre]" required style="width: 100%;">
+                                                    <option value="">-- Escribe o selecciona un curso --</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <i class="fas fa-tag me-1"></i>Sección
+                                                </label>
+                                                <input type="text" class="form-control" name="cursos[0][seccion]" required placeholder="Ej: A">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <i class="fas fa-users me-1"></i>Vacantes
+                                                </label>
+                                                <input type="number" class="form-control" name="cursos[0][vacantes]" required min="1">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <i class="fas fa-align-left me-1"></i>Descripción
+                                        </label>
+                                        <textarea class="form-control" name="cursos[0][descripcion]" rows="2" placeholder="Descripción del curso"></textarea>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <i class="fas fa-user-tie me-1"></i>Profesor
+                                                </label>
+                                                <select class="profesor-select form-control" name="cursos[0][profesor_id]" required style="width: 100%;">
+                                                    <option value="">-- Selecciona un profesor --</option>
+                                                    @foreach ($profesores as $profesor)
+                                                        <option value="{{ $profesor->id }}">{{ $profesor->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    <i class="fas fa-clock me-1"></i>Turno
+                                                </label>
+                                                <select class="form-select" name="cursos[0][turno]" required>
+                                                    <option value="">-- Selecciona un turno --</option>
+                                                    <option value="mañana">Mañana</option>
+                                                    <option value="tarde">Tarde</option>
+                                                    <option value="noche">Noche</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="text-primary mb-2">
+                                                <i class="fas fa-calendar-check me-1"></i>Fechas de Matrícula
+                                            </h6>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Apertura</label>
+                                                        <input type="date" class="form-control" name="cursos[0][fecha_apertura_matricula]" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Cierre</label>
+                                                        <input type="date" class="form-control" name="cursos[0][fecha_cierre_matricula]" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="text-primary mb-2">
+                                                <i class="fas fa-calendar-alt me-1"></i>Fechas de Clases
+                                            </h6>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Inicio</label>
+                                                        <input type="date" class="form-control" name="cursos[0][fecha_inicio_clases]" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Fin</label>
+                                                        <input type="date" class="form-control" name="cursos[0][fecha_fin_clases]" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h6 class="text-primary mb-2">
+                                        <i class="fas fa-clock me-1"></i>Horarios
+                                    </h6>
+                                    <div class="horarios-container">
+                                        <div class="horario horario-item">
+                                            <select class="form-select" name="cursos[0][horarios][0][dia_semana]">
+                                                <option value="1">Lunes</option>
+                                                <option value="2">Martes</option>
+                                                <option value="3">Miércoles</option>
+                                                <option value="4">Jueves</option>
+                                                <option value="5">Viernes</option>
+                                                <option value="6">Sábado</option>
+                                                <option value="7">Domingo</option>
+                                            </select>
+                                            <input type="time" class="form-control" name="cursos[0][horarios][0][hora_inicio]" required>
+                                            <input type="time" class="form-control" name="cursos[0][horarios][0][hora_fin]" required>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="agregarHorario(this)">
+                                        <i class="fas fa-plus me-1"></i>Agregar horario
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2 mt-3">
+                                <button type="button" class="btn btn-success btn-sm" onclick="agregarCurso()">
+                                    <i class="fas fa-plus me-1"></i>Agregar curso
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>Guardar todo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {{-- Filtros compactos --}}
+            <div class="filters-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0 text-primary">
+                        <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+                    </h6>
+                    <button class="btn btn-outline-primary btn-sm" onclick="limpiarFiltros()">
+                        <i class="fas fa-times me-1"></i>Limpiar
+                    </button>
+                </div>
+                
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Período</label>
+                        <form method="GET" action="{{ route('admin.cursos.create') }}" style="margin: 0;">
+                            <select class="form-select" name="periodo_id" onchange="this.form.submit()">
+                                @foreach($periodos as $periodo)
+                                    <option value="{{ $periodo->id }}"
+                                        {{ $periodo->id == $periodoSeleccionado ? 'selected' : '' }}>
+                                        {{ $periodo->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
+                    <div class="filter-group">
+                        <label>Facultad</label>
+                        <input type="text" class="form-control" id="filtroFacultad" placeholder="Buscar facultad...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Carrera</label>
+                        <input type="text" class="form-control" id="filtroCarrera" placeholder="Buscar carrera...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Curso</label>
+                        <input type="text" class="form-control" id="filtroCurso" placeholder="Buscar curso...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Sección</label>
+                        <input type="text" class="form-control" id="filtroSeccion" placeholder="Ej: A">
+                    </div>
                 </div>
             </div>
 
-            <button type="button" onclick="agregarHorario(this)">+ Agregar horario</button>
+            {{-- Lista de cursos existentes --}}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="section-title mb-0">
+                    <i class="fas fa-list"></i>Cursos Registrados
+                    <span class="badge bg-primary ms-2" id="contadorCursos">{{ $cursos->count() }}</span>
+                </h2>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="expandirTodo()">
+                        <i class="fas fa-expand-alt me-1"></i>Expandir Todo
+                    </button>
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="contraerTodo()">
+                        <i class="fas fa-compress-alt me-1"></i>Contraer Todo
+                    </button>
+                </div>
+            </div>
+
+            <div id="cursosContainer">
+                @if ($cursos->isEmpty())
+                    <div class="no-results">
+                        <i class="fas fa-inbox fa-2x mb-3"></i>
+                        <p>No hay cursos registrados aún.</p>
+                    </div>
+                @else
+                    @php
+                        $agrupadoPorFacultad = $cursos->groupBy(function($curso) {
+                            return $curso->carrera->facultad->nombre;
+                        });
+                    @endphp
+                    
+                    @foreach ($agrupadoPorFacultad as $nombreFacultad => $cursosFacultad)
+                        <div class="facultad-section facultad-group" data-facultad="{{ strtolower($nombreFacultad) }}">
+                            <div class="facultad-header" data-bs-toggle="collapse" data-bs-target="#facultad-{{ $loop->index }}" aria-expanded="true">
+                                <span>
+                                    <i class="fas fa-university me-2"></i>{{ $nombreFacultad }}
+                                </span>
+                                <div class="facultad-badge">
+                                    {{ $cursosFacultad->sum(function($cursos) { return $cursos->cursoPeriodos->count(); }) }} cursos
+                                </div>
+                            </div>
+                            
+                            <div class="collapse" id="facultad-{{ $loop->index }}">
+                                <div class="facultad-content">
+                                    @php
+                                        $agrupadoPorCarrera = $cursosFacultad->groupBy(function($curso) {
+                                            return $curso->carrera->nombre;
+                                        });
+                                    @endphp
+                                    
+                                    @foreach ($agrupadoPorCarrera as $nombreCarrera => $cursosCarrera)
+                                        <div class="carrera-section carrera-group" data-carrera="{{ strtolower($nombreCarrera) }}">
+                                            <div class="carrera-header" data-bs-toggle="collapse" data-bs-target="#carrera-{{ $loop->parent->index }}-{{ $loop->index }}" aria-expanded="true">
+                                                <i class="fas fa-graduation-cap me-2"></i>{{ $nombreCarrera }}
+                                                <span class="badge bg-light text-dark ms-auto">
+                                                    {{ $cursosCarrera->sum(function($curso) { return $curso->cursoPeriodos->count(); }) }}
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="collapse" id="carrera-{{ $loop->parent->index }}-{{ $loop->index }}">
+                                                <div class="carrera-content">
+                                                    @foreach ($cursosCarrera as $curso)
+                                                        @foreach ($curso->cursoPeriodos as $cursoPeriodo)
+                                                            <div class="curso-existente curso-item-filtrable" 
+                                                                 data-curso="{{ strtolower($curso->nombre) }}" 
+                                                                 data-seccion="{{ strtolower($cursoPeriodo->seccion) }}"
+                                                                 data-facultad="{{ strtolower($nombreFacultad) }}"
+                                                                 data-carrera="{{ strtolower($nombreCarrera) }}">
+                                                                <div class="curso-existente-header">
+                                                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                                                        <span>
+                                                                            <i class="fas fa-book me-2"></i>
+                                                                            {{ $curso->nombre }} - Sección {{ $cursoPeriodo->seccion }}
+                                                                        </span>
+                                                                        <form action="{{ route('admin.cursos.destroy', $curso->id) }}" method="POST" style="display:inline;">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este curso?')">
+                                                                                <i class="fas fa-trash"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="curso-existente-body">
+                                                                    <div class="info-compact">
+                                                                        <div class="info-compact-item">
+                                                                            <strong>Turno:</strong> {{ ucfirst($cursoPeriodo->turno) }}
+                                                                        </div>
+                                                                        <div class="info-compact-item">
+                                                                            <strong>Vacantes:</strong> {{ $cursoPeriodo->vacantes }}
+                                                                        </div>
+                                                                        <div class="info-compact-item">
+                                                                            <strong>Matrícula:</strong> {{ $cursoPeriodo->fecha_apertura_matricula }} - {{ $cursoPeriodo->fecha_cierre_matricula }}
+                                                                        </div>
+                                                                        <div class="info-compact-item">
+                                                                            <strong>Clases:</strong> {{ $cursoPeriodo->fecha_inicio_clases }} - {{ $cursoPeriodo->fecha_fin_clases }}
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    @if($curso->descripcion)
+                                                                        <div class="info-compact-item mt-2">
+                                                                            <strong>Descripción:</strong> {{ $curso->descripcion }}
+                                                                        </div>
+                                                                    @endif
+                                                                    
+                                                                    <div class="info-compact-item mt-2">
+                                                                        <strong>Horarios:</strong>
+                                                                        <div class="mt-1">
+                                                                            @forelse ($cursoPeriodo->horarios as $horario)
+                                                                                <span class="badge bg-primary me-1 mb-1">
+                                                                                    {{ ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'][$horario->dia_semana - 1] }}
+                                                                                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $horario->hora_inicio)->format('H:i') }}-{{ \Carbon\Carbon::createFromFormat('H:i:s', $horario->hora_fin)->format('H:i') }}
+                                                                                    ({{ $horario->profesor->name ?? 'Sin profesor' }})
+                                                                                </span>
+                                                                            @empty
+                                                                                <span class="text-muted">Sin horarios</span>
+                                                                            @endforelse
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+
+            <div id="noResultsMessage" class="no-results" style="display: none;">
+                <i class="fas fa-search fa-2x mb-3"></i>
+                <p>No se encontraron cursos que coincidan con los filtros aplicados.</p>
+            </div>
         </div>
     </div>
 
-    <button type="button" onclick="agregarCurso()">+ Agregar curso</button>
-    <br><br>
-    <button type="submit">Guardar todo</button>
-</form>
+    {{-- Scripts originales mantenidos --}}
+    <script>
+        $(document).ready(function () {     
+            $('.curso-select').select2({
+                tags: true,
+                placeholder: 'Escribe o selecciona un curso',
+                allowClear: true
+            });
+            
+            $('.carrera-select').on('change', function () {
+                const carreraNombre = $(this).val();
+                const $cursoSelect = $('#cursos-container .curso').first().find('.curso-select');
+                $cursoSelect.empty().append('<option value="">-- Escribe o selecciona un curso --</option>');
+                if (carreraNombre) {
+                    fetch(`/admin/cursos-por-nombre-carrera/${carreraNombre}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(curso => {
+                                const option = new Option(curso.nombre, curso.nombre, false, false);
+                                $cursoSelect.append(option);
+                            });
+                            $cursoSelect.val(null).trigger('change');
+                        });
+                }
+            });
 
-{{-- Variables JS generadas desde Blade --}}
-<script>
-    const diasSemanaOptions = `
-        <option value="1">Lunes</option>
-        <option value="2">Martes</option>
-        <option value="3">Miércoles</option>
-        <option value="4">Jueves</option>
-        <option value="5">Viernes</option>
-        <option value="6">Sábado</option>
-        <option value="7">Domingo</option>
-    `;
+            $('.facultad-select').select2({
+                tags: true,
+                placeholder: 'Escribe o selecciona una facultad',
+                allowClear: true
+            });
+            $('.carrera-select').select2({
+                tags: true,
+                placeholder: 'Escribe o selecciona una carrera',
+                allowClear: true
+            });
+                    
+            $('.facultad-select').on('change', function () {
+                const facultadNombre = $(this).val();
+                const $carreraSelect = $('.carrera-select');
+                $carreraSelect.empty().append('<option value="">-- Escribe o selecciona una carrera --</option>');
+                if (facultadNombre) {
+                    fetch(`/admin/carreras-por-nombre-facultad/${facultadNombre}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(carrera => {
+                                const option = new Option(carrera.nombre, carrera.nombre, false, false);
+                                $carreraSelect.append(option);
+                            });
+                        });
+                }                
+                $carreraSelect.val(null).trigger('change');
+            });
 
-    const profesoresOptions = `
-        @foreach ($profesores as $profesor)
-            <option value="{{ $profesor->id }}">{{ $profesor->name }}</option>
-        @endforeach
-    `;
-</script>
+            // Filtros en tiempo real
+            $('#filtroFacultad, #filtroCarrera, #filtroCurso, #filtroSeccion').on('input', function() {
+                filtrarCursos();
+            });
+        });
 
-<script>
-let cursoIndex = 1;
+        $('.profesor-select').select2({
+            placeholder: 'Selecciona un profesor',
+            allowClear: true
+        });
 
-function agregarCurso() {
-    const container = document.getElementById('cursos-container');
+        // Función de filtrado mejorada
+        function filtrarCursos() {
+            const filtroFacultad = $('#filtroFacultad').val().toLowerCase().trim();
+            const filtroCarrera = $('#filtroCarrera').val().toLowerCase().trim();
+            const filtroCurso = $('#filtroCurso').val().toLowerCase().trim();
+            const filtroSeccion = $('#filtroSeccion').val().toLowerCase().trim();
+            
+            let cursosVisibles = 0;
+            let facultadesConCursos = new Set();
+            let carrerasConCursos = new Set();
+            
+            // Primero mostrar todos los elementos
+            $('.curso-item-filtrable, .facultad-group, .carrera-group').show();
+            
+            $('.curso-item-filtrable').each(function() {
+                const facultad = $(this).data('facultad') || '';
+                const carrera = $(this).data('carrera') || '';
+                const curso = $(this).data('curso') || '';
+                const seccion = $(this).data('seccion') || '';
+                
+                let mostrar = true;
+                
+                // Aplicar filtros solo si tienen contenido
+                if (filtroFacultad && !facultad.includes(filtroFacultad)) {
+                    mostrar = false;
+                }
+                if (filtroCarrera && !carrera.includes(filtroCarrera)) {
+                    mostrar = false;
+                }
+                if (filtroCurso && !curso.includes(filtroCurso)) {
+                    mostrar = false;
+                }
+                if (filtroSeccion && !seccion.includes(filtroSeccion)) {
+                    mostrar = false;
+                }
+                
+                if (mostrar) {
+                    $(this).show();
+                    cursosVisibles++;
+                    facultadesConCursos.add(facultad);
+                    carrerasConCursos.add(carrera);
+                } else {
+                    $(this).hide();
+                }
+            });
+            
+            // Mostrar/ocultar grupos basado en si tienen cursos visibles
+            $('.facultad-group').each(function() {
+                const facultadNombre = $(this).data('facultad');
+                if (facultadesConCursos.has(facultadNombre) || cursosVisibles === 0) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+            
+            $('.carrera-group').each(function() {
+                const carreraNombre = $(this).data('carrera');
+                if (carrerasConCursos.has(carreraNombre) || cursosVisibles === 0) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+            
+            // Actualizar contador
+            $('#contadorCursos').text(cursosVisibles);
+            
+            // Mostrar mensaje de sin resultados solo si hay filtros activos y no hay resultados
+            const hayFiltrosActivos = filtroFacultad || filtroCarrera || filtroCurso || filtroSeccion;
+            
+            if (cursosVisibles === 0 && hayFiltrosActivos) {
+                $('#noResultsMessage').show();
+                $('#cursosContainer').hide();
+            } else {
+                $('#noResultsMessage').hide();
+                $('#cursosContainer').show();
+            }
+        }
 
-    const cursoHtml = `
-        <div class="curso">
-            <label>Curso:</label>
-            <select class="curso-select" name="cursos[${cursoIndex}][nombre]" required style="width: 100%;">
-    <option value="">-- Escribe o selecciona un curso --</option>
-</select>
+        function limpiarFiltros() {
+            $('#filtroFacultad, #filtroCarrera, #filtroCurso, #filtroSeccion').val('');
+            filtrarCursos();
+        }
 
-            <textarea name="cursos[${cursoIndex}][descripcion]" placeholder="Descripción del curso"></textarea>
+        function expandirTodo() {
+            $('.collapse').collapse('show');
+        }
 
-            <label>Profesor:</label>
-            <select class="profesor-select" name="cursos[${cursoIndex}][profesor_id]" required style="width: 100%;">
-                <option value="">-- Selecciona un profesor --</option>
-                ${profesoresOptions}
-            </select>
+        function contraerTodo() {
+            $('.collapse').collapse('hide');
+        }
+    </script>
 
-            <label>Turno:</label>
-            <select name="cursos[${cursoIndex}][turno]" required>
-                <option value="">-- Selecciona un turno --</option>
-                <option value="mañana">Mañana</option>
-                <option value="tarde">Tarde</option>
-                <option value="noche">Noche</option>
-            </select>
+    {{-- Variables JS generadas desde Blade --}}
+    <script>
+        const diasSemanaOptions = `
+            <option value="1">Lunes</option>
+            <option value="2">Martes</option>
+            <option value="3">Miércoles</option>
+            <option value="4">Jueves</option>
+            <option value="5">Viernes</option>
+            <option value="6">Sábado</option>
+            <option value="7">Domingo</option>
+        `;
+        const profesoresOptions = `
+            @foreach ($profesores as $profesor)
+                <option value="{{ $profesor->id }}">{{ $profesor->name }}</option>
+            @endforeach
+        `;
+    </script>
 
-            <h4>Sección</h4>
-            <input type="text" name="cursos[${cursoIndex}][seccion]" required placeholder="Ej: A">
+    <script>
+        let cursoIndex = 1;
+        function agregarCurso() {
+            const container = document.getElementById('cursos-container');
+            const cursoHtml = `
+                <div class="curso curso-item">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="text-primary mb-0">
+                            <i class="fas fa-book me-1"></i>Curso ${cursoIndex + 1}
+                        </h6>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.curso').remove()">
+                            <i class="fas fa-times me-1"></i>Quitar
+                        </button>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-book-open me-1"></i>Curso
+                                </label>
+                                <select class="curso-select form-control" name="cursos[${cursoIndex}][nombre]" required style="width: 100%;">
+                                    <option value="">-- Escribe o selecciona un curso --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-tag me-1"></i>Sección
+                                </label>
+                                <input type="text" class="form-control" name="cursos[${cursoIndex}][seccion]" required placeholder="Ej: A">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-users me-1"></i>Vacantes
+                                </label>
+                                <input type="number" class="form-control" name="cursos[${cursoIndex}][vacantes]" required min="1">
+                            </div>
+                        </div>
+                    </div>
 
-            <h4>Vacantes</h4>
-            <input type="number" name="cursos[${cursoIndex}][vacantes]" required min="1">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-align-left me-1"></i>Descripción
+                        </label>
+                        <textarea class="form-control" name="cursos[${cursoIndex}][descripcion]" rows="2" placeholder="Descripción del curso"></textarea>
+                    </div>
 
-            <h4>Fechas de matrícula</h4>
-            <input type="date" name="cursos[${cursoIndex}][fecha_apertura_matricula]" required>
-            <input type="date" name="cursos[${cursoIndex}][fecha_cierre_matricula]" required>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-user-tie me-1"></i>Profesor
+                                </label>
+                                <select class="profesor-select form-control" name="cursos[${cursoIndex}][profesor_id]" required style="width: 100%;">
+                                    <option value="">-- Selecciona un profesor --</option>
+                                    ${profesoresOptions}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-clock me-1"></i>Turno
+                                </label>
+                                <select class="form-select" name="cursos[${cursoIndex}][turno]" required>
+                                    <option value="">-- Selecciona un turno --</option>
+                                    <option value="mañana">Mañana</option>
+                                    <option value="tarde">Tarde</option>
+                                    <option value="noche">Noche</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-            <h4>Fechas de clases</h4>
-            <input type="date" name="cursos[${cursoIndex}][fecha_inicio_clases]" required>
-            <input type="date" name="cursos[${cursoIndex}][fecha_fin_clases]" required>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-2">
+                                <i class="fas fa-calendar-check me-1"></i>Fechas de Matrícula
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Apertura</label>
+                                        <input type="date" class="form-control" name="cursos[${cursoIndex}][fecha_apertura_matricula]" required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Cierre</label>
+                                        <input type="date" class="form-control" name="cursos[${cursoIndex}][fecha_cierre_matricula]" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-2">
+                                <i class="fas fa-calendar-alt me-1"></i>Fechas de Clases
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Inicio</label>
+                                        <input type="date" class="form-control" name="cursos[${cursoIndex}][fecha_inicio_clases]" required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Fin</label>
+                                        <input type="date" class="form-control" name="cursos[${cursoIndex}][fecha_fin_clases]" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <h4>Horarios</h4>
-            <div class="horarios-container">
-                <div class="horario">
-                    <select name="cursos[${cursoIndex}][horarios][0][dia_semana]">
+                    <h6 class="text-primary mb-2">
+                        <i class="fas fa-clock me-1"></i>Horarios
+                    </h6>
+                    <div class="horarios-container">
+                        <div class="horario horario-item">
+                            <select class="form-select" name="cursos[${cursoIndex}][horarios][0][dia_semana]">
+                                ${diasSemanaOptions}
+                            </select>
+                            <input type="time" class="form-control" name="cursos[${cursoIndex}][horarios][0][hora_inicio]" required>
+                            <input type="time" class="form-control" name="cursos[${cursoIndex}][horarios][0][hora_fin]" required>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="agregarHorario(this)">
+                        <i class="fas fa-plus me-1"></i>Agregar horario
+                    </button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cursoHtml);
+            
+            const carreraNombre = $('.carrera-select').val();
+            if (carreraNombre) {
+                const $nuevoCursoSelect = $('#cursos-container .curso').last().find('.curso-select');
+                fetch(`/admin/cursos-por-nombre-carrera/${carreraNombre}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        $nuevoCursoSelect.empty().append('<option value="">-- Escribe o selecciona un curso --</option>');
+                        data.forEach(curso => {
+                            const option = new Option(curso.nombre, curso.nombre, false, false);
+                            $nuevoCursoSelect.append(option);
+                        });
+                        $nuevoCursoSelect.val(null).trigger('change');
+                    });
+            }
+            
+            $('.curso-select').last().select2({
+                tags: true,
+                placeholder: 'Escribe o selecciona un curso',
+                allowClear: true
+            });
+            $('.profesor-select').last().select2({
+                placeholder: 'Selecciona un profesor',
+                allowClear: true
+            });
+            
+            cursoIndex++;
+        }
+
+        function agregarHorario(button) {
+            const cursoDiv = button.closest('.curso');
+            const horariosContainer = cursoDiv.querySelector('.horarios-container');
+            const indexCurso = Array.from(document.querySelectorAll('.curso')).indexOf(cursoDiv);
+            const indexHorario = horariosContainer.querySelectorAll('.horario').length;
+            
+            const horarioHtml = `
+                <div class="horario horario-item">
+                    <select class="form-select" name="cursos[${indexCurso}][horarios][${indexHorario}][dia_semana]">
                         ${diasSemanaOptions}
                     </select>
-                    <input type="time" name="cursos[${cursoIndex}][horarios][0][hora_inicio]" required>
-                    <input type="time" name="cursos[${cursoIndex}][horarios][0][hora_fin]" required>
+                    <input type="time" class="form-control" name="cursos[${indexCurso}][horarios][${indexHorario}][hora_inicio]" required>
+                    <input type="time" class="form-control" name="cursos[${indexCurso}][horarios][${indexHorario}][hora_fin]" required>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-            </div>
-
-            <button type="button" onclick="agregarHorario(this)">+ Agregar horario</button>
-        </div>
-    `;
-
-    container.insertAdjacentHTML('beforeend', cursoHtml);
-
-    const carreraNombre = $('.carrera-select').val();
-
-// Llenar cursos solo si hay carrera seleccionada
-if (carreraNombre) {
-    const $nuevoCursoSelect = $('#cursos-container .curso').last().find('.curso-select');
-
-    fetch(`/admin/cursos-por-nombre-carrera/${carreraNombre}`)
-        .then(response => response.json())
-        .then(data => {
-            $nuevoCursoSelect.empty().append('<option value="">-- Escribe o selecciona un curso --</option>');
-            data.forEach(curso => {
-                const option = new Option(curso.nombre, curso.nombre, false, false);
-                $nuevoCursoSelect.append(option);
-            });
-            $nuevoCursoSelect.val(null).trigger('change');
-        });
-}
-
-    // Inicializa Select2 para los nuevos selects añadidos
-    $('.curso-select').last().select2({
-        tags: true,
-        placeholder: 'Escribe o selecciona un curso',
-        allowClear: true
-    });
-
-    $('.profesor-select').last().select2({
-        placeholder: 'Selecciona un profesor',
-        allowClear: true
-    });
-
-    cursoIndex++;
-}
-
-function agregarHorario(button) {
-    const cursoDiv = button.closest('.curso');
-    const horariosContainer = cursoDiv.querySelector('.horarios-container');
-    const indexCurso = Array.from(document.querySelectorAll('.curso')).indexOf(cursoDiv);
-    const indexHorario = horariosContainer.querySelectorAll('.horario').length;
-
-    const horarioHtml = `
-        <div class="horario">
-            <select name="cursos[${indexCurso}][horarios][${indexHorario}][dia_semana]">
-                ${diasSemanaOptions}
-            </select>
-            <input type="time" name="cursos[${indexCurso}][horarios][${indexHorario}][hora_inicio]" required>
-            <input type="time" name="cursos[${indexCurso}][horarios][${indexHorario}][hora_fin]" required>
-        </div>
-    `;
-    horariosContainer.insertAdjacentHTML('beforeend', horarioHtml);
-}
-</script>
-
-<hr>
-
-<form method="GET" action="{{ route('admin.cursos.create') }}">
-    <label><strong>Filtrar por periodo:</strong></label>
-    <select name="periodo_id" onchange="this.form.submit()">
-        @foreach($periodos as $periodo)
-            <option value="{{ $periodo->id }}"
-                {{ $periodo->id == $periodoSeleccionado ? 'selected' : '' }}>
-                {{ $periodo->nombre }} ({{ $periodo->fecha_inicio }} - {{ $periodo->fecha_fin }})
-            </option>
-        @endforeach
-    </select>
-</form>
-
-<h2>📋 Cursos ya creados</h2>
-
-@if ($cursos->isEmpty())
-    <p>No hay cursos registrados aún.</p>
-@else
-    @php
-        $agrupadoPorFacultad = $cursos->groupBy(function($curso) {
-            return $curso->carrera->facultad->nombre;
-        });
-    @endphp
-
-    @foreach ($agrupadoPorFacultad as $nombreFacultad => $cursosFacultad)
-        <h3 style="margin-top: 30px; color: navy;">🎓 Facultad: {{ $nombreFacultad }}</h3>
-
-        @php
-            $agrupadoPorCarrera = $cursosFacultad->groupBy(function($curso) {
-                return $curso->carrera->nombre;
-            });
-        @endphp
-
-        @foreach ($agrupadoPorCarrera as $nombreCarrera => $cursosCarrera)
-            <h4 style="margin-left: 20px; color: teal;">📚 Carrera: {{ $nombreCarrera }}</h4>
-
-            @foreach ($cursosCarrera as $curso)
-                @foreach ($curso->cursoPeriodos as $cursoPeriodo)
-                    <div style="margin: 10px 40px 20px; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
-                        <h5>📘 Curso: {{ $curso->nombre }} - Sección {{ $cursoPeriodo->seccion }}</h5>
-                        <p><strong>Turno:</strong> {{ ucfirst($cursoPeriodo->turno) }}</p>
-                        <form action="{{ route('admin.cursos.destroy', $curso->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este curso?')" class="btn btn-danger btn-sm">
-                                ❌ Eliminar curso
-                            </button>
-                        </form>
-
-                        <p><strong>Descripción:</strong> {{ $curso->descripcion ?? 'Sin descripción' }}</p>
-                        <p><strong>Periodo:</strong> {{ $cursoPeriodo->periodo->nombre }}</p>
-                        <p><strong>Vacantes:</strong> {{ $cursoPeriodo->vacantes }}</p>
-                        <p><strong>Fechas de matrícula:</strong> {{ $cursoPeriodo->fecha_apertura_matricula }} al {{ $cursoPeriodo->fecha_cierre_matricula }}</p>
-                        <p><strong>Fechas de clases:</strong> {{ $cursoPeriodo->fecha_inicio_clases }} al {{ $cursoPeriodo->fecha_fin_clases }}</p>
-
-                        <p><strong>Horarios:</strong></p>
-                        <ul>
-                            @forelse ($cursoPeriodo->horarios as $horario)
-                                <li>
-                                    Profesor: {{ $horario->profesor->name ?? 'No asignado' }} |
-                                    Día: {{ ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'][$horario->dia_semana - 1] }} |
-                                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $horario->hora_inicio)->format('H:i') }}
-                                    -
-                                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $horario->hora_fin)->format('H:i') }}
-                                </li>
-                            @empty
-                                <li>No hay horarios asignados</li>
-                            @endforelse
-                        </ul>
-                    </div>
-                @endforeach
-            @endforeach
-        @endforeach
-    @endforeach
-@endif
+            `;
+            horariosContainer.insertAdjacentHTML('beforeend', horarioHtml);
+        }
+    </script>
 
 
-
+</section>
+            <!-- aqui agrega -->
 </div>
 
 
@@ -1266,5 +2060,6 @@ function agregarHorario(button) {
     </form>
 </body>
 </html>
+
 
 

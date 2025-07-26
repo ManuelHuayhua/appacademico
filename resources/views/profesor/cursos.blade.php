@@ -733,7 +733,7 @@
     }
     
     .curso-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
         color: white;
         padding: 1.5rem;
         border: none;
@@ -811,7 +811,7 @@
     }
     
     .table-asistencia thead {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
         color: white;
     }
     
