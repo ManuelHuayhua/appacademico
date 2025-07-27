@@ -18,7 +18,11 @@ class CalificadoProfesorController extends Controller
     $periodos = Periodo::orderBy('fecha_inicio', 'desc')->get();
     $profesores = User::where('profesor', true)->orderBy('name')->get();
 
-    $periodo_id = $request->get('periodo_id') ?? ($periodos->first()->id ?? null);
+    $periodo_id = $request->get('periodo_id') ?? (
+    $periodos->firstWhere(function ($p) {
+        return \Carbon\Carbon::today()->between($p->fecha_inicio, $p->fecha_fin);
+    })?->id ?? ($periodos->first()->id ?? null)
+);
     $profesor_id = $request->get('profesor_id') ?? ($profesores->first()->id ?? null);
 
     if (!$periodo_id || !$profesor_id) {

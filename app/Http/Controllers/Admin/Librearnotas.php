@@ -44,14 +44,20 @@ class Librearnotas extends Controller
                     ->get();
 
                 foreach ($cursoPeriodos as $cp) {
-                    $profesores = User::where('profesor', true)
-                        ->whereIn('id', Calificacion::where('curso_periodo_id', $cp->id)->pluck('profesor_id')->unique())
-                        ->get();
+    $profesores = User::where('profesor', true)
+        ->whereIn('id', Calificacion::where('curso_periodo_id', $cp->id)->pluck('profesor_id')->unique())
+        ->get();
 
-                    $cursoPeriodosPorCurso[$curso->id][] = [
-                        'curso_periodo' => $cp,
-                        'profesores' => $profesores
-                    ];
+    $permisos = Calificacion::where('curso_periodo_id', $cp->id)
+        ->select('profesor_id', 'permiso')
+        ->get()
+        ->groupBy('profesor_id');
+
+    $cursoPeriodosPorCurso[$curso->id][] = [
+        'curso_periodo' => $cp,
+        'profesores' => $profesores,
+        'permisos' => $permisos, // añadimos aquí
+    ];
                 }
             }
         }
