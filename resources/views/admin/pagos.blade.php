@@ -95,7 +95,47 @@
         </div>
 
         <div class="card-body">
-            <p class="mb-3"><strong>Monto Total del Curso:</strong> S/ {{ number_format($curso->monto_total, 2) }}</p>
+            <p class="mb-3">
+    <strong>Monto Total del Curso:</strong>
+    @if ($curso->monto_total > 0)
+        S/ {{ number_format($curso->monto_total, 2) }}
+        <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalMonto{{ $curso->id }}">
+            Editar
+        </button>
+    @else
+        <span class="text-danger">No establecido</span>
+        <button class="btn btn-sm btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalMonto{{ $curso->id }}">
+            Colocar Monto
+        </button>
+    @endif
+</p>
+
+<!-- Modal para establecer/editar el monto del curso -->
+<div class="modal fade" id="modalMonto{{ $curso->id }}" tabindex="-1" aria-labelledby="modalMontoLabel{{ $curso->id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ route('admin.actualizarMontoCurso') }}">
+        @csrf
+        <input type="hidden" name="curso_periodo_id" value="{{ $curso->id }}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalMontoLabel{{ $curso->id }}">
+                    {{ $curso->monto_total > 0 ? 'Editar' : 'Colocar' }} Monto del Curso
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <label for="monto_total" class="form-label">Monto Total (S/)</label>
+                <input type="number" step="0.01" name="monto_total" class="form-control" value="{{ $curso->monto_total }}" required>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+
 
             <div class="table-responsive">
                 <table class="table table-hover table-bordered align-middle tabla-pagos">

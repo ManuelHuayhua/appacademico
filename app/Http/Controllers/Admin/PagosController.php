@@ -84,4 +84,20 @@ public function registrarPago(Request $request)
     return redirect()->back()->with('success', 'Pago registrado correctamente.');
 }
 
+// Actualizar monto del curso
+public function actualizarMontoCurso(Request $request)
+{
+    $request->validate([
+        'curso_periodo_id' => 'required|exists:curso_periodo,id',
+        'monto_total' => 'required|numeric|min:0.01',
+    ]);
+
+    $curso = CursoPeriodo::findOrFail($request->curso_periodo_id);
+    $curso->monto_total = $request->monto_total;
+    $curso->save();
+
+    return redirect()->back()->with('success', 'Monto del curso actualizado correctamente.');
+}
+
+
 }

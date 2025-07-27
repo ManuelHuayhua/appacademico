@@ -171,6 +171,7 @@ Route::put('/admin/mensajes/{mensaje}', [MensajeController::class, 'update'])
 Route::get('/pagos', [PagosController::class, 'index'])->name('admin.pagos');
 Route::post('/pagos', [PagosController::class, 'filtrarPagos'])->name('admin.pagos.post');
 Route::post('/admin/registrar-pago', [PagosController::class, 'registrarPago'])->name('admin.registrarPago');
+Route::post('/admin/actualizar-monto-curso', [PagosController::class, 'actualizarMontoCurso'])->name('admin.actualizarMontoCurso');
 
 //ingresar URL
 Route::get('/admin/clases-url', [ClasesurlController::class, 'index'])->name('admin.clasesurl.index');
