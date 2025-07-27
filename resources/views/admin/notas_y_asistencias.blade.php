@@ -658,7 +658,7 @@
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('admin.dashboard') }}" data-page="general">
+                        <a class="nav-link " href="{{ route('admin.dashboard') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">Inicio</span>
                             <div class="tooltip-custom">Inicio</div>
@@ -720,7 +720,7 @@
                         </div>
                     </li>
                     <li class="nav-item nav-group">
-                        <a class="nav-link nav-group-toggle" href="#notasSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="notasSubmenu">
+                        <a class="nav-link  active nav-group-toggle" href="#notasSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="notasSubmenu">
                             <i class="fas fa-file-alt"></i>
                             <span class="nav-text">Notas y Evaluaciones</span>
                             <i class="fas fa-chevron-down nav-group-icon"></i>
@@ -728,14 +728,14 @@
                         </a>
                         <div class="collapse" id="notasSubmenu">
                             <ul class="nav flex-column nav-submenu">
+                                        <li class="nav-item">
+                <a class="nav-link " href="{{ route('admin.calificaciones.index') }}">
+                    <i class="fas fa-pencil-alt"></i> <!-- Icono para calificar -->
+                    <span class="nav-text">Reporte Calificaciones</span>
+                </a>
+            </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.calificaciones.index') }}">
-                                        <i class="fas fa-pencil-alt"></i>
-                                        <span class="nav-text">Registrar calificaciones</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.notas_y_asistencias') }}">
+                                    <a class="nav-link active" href="{{ route('admin.notas_y_asistencias') }}">
                                         <i class="fas fa-clipboard-list"></i>
                                         <span class="nav-text">Ver notas y asistencias</span>
                                     </a>

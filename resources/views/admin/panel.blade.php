@@ -728,12 +728,12 @@
                         </a>
                         <div class="collapse" id="notasSubmenu">
                             <ul class="nav flex-column nav-submenu">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.calificaciones.index') }}">
-                                        <i class="fas fa-pencil-alt"></i>
-                                        <span class="nav-text">Registrar calificaciones</span>
-                                    </a>
-                                </li>
+                                        <li class="nav-item">
+                <a class="nav-link " href="{{ route('admin.calificaciones.index') }}">
+                    <i class="fas fa-pencil-alt"></i> <!-- Icono para calificar -->
+                    <span class="nav-text">Reporte Calificaciones</span>
+                </a>
+            </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('admin.notas_y_asistencias') }}">
                                         <i class="fas fa-clipboard-list"></i>
@@ -842,7 +842,7 @@
 
 
 
-            
+
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

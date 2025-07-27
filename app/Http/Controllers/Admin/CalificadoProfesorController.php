@@ -90,7 +90,7 @@ class CalificadoProfesorController extends Controller
     });
 
     $profesoresMalCalificados = $profesoresConPromedio
-        ->filter(fn($p) => $p->promedio_preguntas !== null && $p->promedio_preguntas < 4)
+        ->filter(fn($p) => $p->promedio_preguntas !== null && $p->promedio_preguntas <= 3)
         ->sortBy('promedio_preguntas');
 
     return view('admin.calificado_profesor', compact(
