@@ -23,6 +23,8 @@ use App\Http\Controllers\Admin\CalificadoProfesorController;
 use App\Http\Controllers\Admin\Librearnotas;
 use App\Http\Controllers\CertificadoController;
 use App\Http\Controllers\Admin\EstadisticasController;
+use App\Http\Controllers\Admin\RetiradosController;
+
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -64,7 +66,7 @@ Route::middleware('auth')->group(function () {
           ->middleware('usuarioonly');
 
 //editar perfil
-    Route::put('/perfil/actualizar', [PerfilController::class, 'update'])->name('perfil.update');
+    Route::put('/perfil/actualizar', [PerfilController::class, 'update'])->name('perfil.update')->middleware('usuarioonly');
 
 
 //ruta vista  cursos_alumno
@@ -94,6 +96,8 @@ Route::post('/alumno/calificar-profesor/{id}', [CalificacionalumnoController::cl
 
 
 
+
+
 // ruta para admin
           Route::get('/admin', [EstadisticasController::class, 'index'])
     ->name('admin.dashboard')
@@ -104,21 +108,21 @@ Route::get('/admin/usuarios/crear', [UserController::class, 'create'])->name('ad
     Route::post('/admin/usuarios', [UserController::class, 'store'])->name('admin.usuarios.store')
      ->middleware('adminonly');
 
-Route::get('/admin/usuarios/{id}', [UserController::class, 'show']);
-Route::put('/admin/usuarios/{id}', [UserController::class, 'update']);
-Route::put('/admin/usuarios/{id}/password', [UserController::class, 'updatePassword']);
-Route::delete('/admin/usuarios/{id}', [UserController::class, 'destroy'])->name('admin.usuarios.destroy');
+Route::get('/admin/usuarios/{id}', [UserController::class, 'show'])->middleware('adminonly');
+Route::put('/admin/usuarios/{id}', [UserController::class, 'update'])->middleware('adminonly');
+Route::put('/admin/usuarios/{id}/password', [UserController::class, 'updatePassword'])->middleware('adminonly');
+Route::delete('/admin/usuarios/{id}', [UserController::class, 'destroy'])->name('admin.usuarios.destroy')->middleware('adminonly');
 
 
 
 // ruta para crear cursos y asignar horarios y profesores // condicional de periodo que sea del año actual
 
-Route::get('/admin/cursos/crear', [CursoController::class, 'create'])->name('admin.cursos.create'); // GET
-Route::post('/admin/cursos', [CursoController::class, 'store'])->name('admin.cursos.store'); // POST
+Route::get('/admin/cursos/crear', [CursoController::class, 'create'])->name('admin.cursos.create')->middleware('adminonly'); // GET
+Route::post('/admin/cursos', [CursoController::class, 'store'])->name('admin.cursos.store')->middleware('adminonly'); // POST
 Route::get('/admin/cursos', function () {
     return redirect()->route('admin.cursos.create');
-});
-Route::delete('/admin/cursos/{curso}', [CursoController::class, 'destroy'])->name('admin.cursos.destroy');
+})->middleware('adminonly');
+Route::delete('/admin/cursos/{curso}', [CursoController::class, 'destroy'])->name('admin.cursos.destroy')->middleware('adminonly');
 Route::get('/admin/carreras-por-nombre-facultad/{nombre}', function ($nombre) {
     $facultad = \App\Models\Facultad::where('nombre', $nombre)->first();
 
@@ -128,7 +132,7 @@ Route::get('/admin/carreras-por-nombre-facultad/{nombre}', function ($nombre) {
 
     return response()->json($carreras);
     
-});
+})->middleware('adminonly');
 Route::get('/admin/cursos-por-nombre-carrera/{nombre}', function ($nombre) {
     $carrera = \App\Models\Carrera::where('nombre', $nombre)->first();
 
@@ -137,7 +141,7 @@ Route::get('/admin/cursos-por-nombre-carrera/{nombre}', function ($nombre) {
     $cursos = \App\Models\Curso::where('carrera_id', $carrera->id)->get();
 
     return response()->json($cursos);
-});
+})->middleware('adminonly');
 
 
 
@@ -161,59 +165,59 @@ Route::get('/admin/calificaciones', [CalificacionesController::class, 'index'])-
 
 
 //enviar mensaje
-Route::get('/admin/mensajes/crear', [MensajeController::class, 'crear'])->name('admin.mensajes.crear');
-Route::post('/admin/mensajes/enviar', [MensajeController::class, 'enviar'])->name('admin.mensajes.enviar');
-Route::put('/admin/mensajes/{mensaje}', [MensajeController::class, 'update'])
-    ->name('admin.mensajes.update');
+Route::get('/admin/mensajes/crear', [MensajeController::class, 'crear'])->name('admin.mensajes.crear')->middleware('adminonly');
+Route::post('/admin/mensajes/enviar', [MensajeController::class, 'enviar'])->name('admin.mensajes.enviar')->middleware('adminonly');
+Route::put('/admin/mensajes/{mensaje}', [MensajeController::class, 'update']) 
+    ->name('admin.mensajes.update')->middleware('adminonly');
 
-    
 // Ver pagos
-Route::get('/pagos', [PagosController::class, 'index'])->name('admin.pagos');
-Route::post('/pagos', [PagosController::class, 'filtrarPagos'])->name('admin.pagos.post');
-Route::post('/admin/registrar-pago', [PagosController::class, 'registrarPago'])->name('admin.registrarPago');
-Route::post('/admin/actualizar-monto-curso', [PagosController::class, 'actualizarMontoCurso'])->name('admin.actualizarMontoCurso');
+Route::get('/pagos', [PagosController::class, 'index'])->name('admin.pagos')->middleware('adminonly');
+Route::post('/pagos', [PagosController::class, 'filtrarPagos'])->name('admin.pagos.post')->middleware('adminonly');
+Route::post('/admin/registrar-pago', [PagosController::class, 'registrarPago'])->name('admin.registrarPago')->middleware('adminonly');
+Route::post('/admin/actualizar-monto-curso', [PagosController::class, 'actualizarMontoCurso'])->name('admin.actualizarMontoCurso')->middleware('adminonly');
 
 //ingresar URL
-Route::get('/admin/clases-url', [ClasesurlController::class, 'index'])->name('admin.clasesurl.index');
-Route::post('/admin/clases-url/update', [ClasesurlController::class, 'update'])->name('admin.clasesurl.update');
+Route::get('/admin/clases-url', [ClasesurlController::class, 'index'])->name('admin.clasesurl.index')->middleware('adminonly');
+Route::post('/admin/clases-url/update', [ClasesurlController::class, 'update'])->name('admin.clasesurl.update')->middleware('adminonly');
 
 // ruta para ver notas y asistencias
 Route::get('admin/notas-y-asistencias', [AdminNotasAsistenciasController::class, 'index'])
-    ->name('admin.notas_y_asistencias');
-Route::put('/admin/notas/{calificacion}', [AdminNotasAsistenciasController::class, 'actualizar'])->name('admin.notas.actualizar');
+    ->name('admin.notas_y_asistencias')->middleware('adminonly');
+Route::put('/admin/notas/{calificacion}', [AdminNotasAsistenciasController::class, 'actualizar'])->name('admin.notas.actualizar')->middleware('adminonly');
 // ruta para exportar notas y asistencias a Excel
 Route::get('/admin/notas-asistencias/export', [AdminNotasAsistenciasController::class, 'exportExcel'])
-    ->name('admin.notas.exportar');
+    ->name('admin.notas.exportar')->middleware('adminonly');
 
 
 // ruta para ver silabus de cursos
-Route::get('curso-silabo', [CursoSilaboController::class, 'index'])->name('curso_silabo.index');
+Route::get('curso-silabo', [CursoSilaboController::class, 'index'])->name('curso_silabo.index')->middleware('adminonly');
 
-Route::post('curso-silabo/{id}/update', [CursoSilaboController::class, 'update'])->name('curso_silabo.update');
+Route::post('curso-silabo/{id}/update', [CursoSilaboController::class, 'update'])->name('curso_silabo.update')->middleware('adminonly');
 
 
 // ruta para ver periodos
 
 // Mostrar todos los periodos
-Route::get('admin/periodos', [PeriodoController::class, 'index'])->name('admin.periodos.index');
+Route::get('admin/periodos', [PeriodoController::class, 'index'])->name('admin.periodos.index')->middleware('adminonly');
 
 // Guardar nuevo periodo (desde modal)
-Route::post('admin/periodos', [PeriodoController::class, 'store'])->name('admin.periodos.store');
+Route::post('admin/periodos', [PeriodoController::class, 'store'])->name('admin.periodos.store')->middleware('adminonly');
 
 // Actualizar periodo (desde modal)
-Route::put('admin/periodos/{id}', [PeriodoController::class, 'update'])->name('admin.periodos.update');
+Route::put('admin/periodos/{id}', [PeriodoController::class, 'update'])->name('admin.periodos.update')->middleware('adminonly');
 
 // Eliminar periodo
-Route::delete('admin/periodos/{id}', [PeriodoController::class, 'destroy'])->name('admin.periodos.destroy');
+Route::delete('admin/periodos/{id}', [PeriodoController::class, 'destroy'])->name('admin.periodos.destroy')->middleware('adminonly');
 
 // ruta para ver calificaciones de profesor
-Route::get('/admin/calificado-profesor', [CalificadoProfesorController::class, 'index'])->name('admin.calificado_profesor.index');
+Route::get('/admin/calificado-profesor', [CalificadoProfesorController::class, 'index'])->name('admin.calificado_profesor.index')->middleware('adminonly');
 
 //librear notas
-Route::get('admin/librerarnotas', [Librearnotas::class, 'index'])->name('admin.librerarnotas.index');
-Route::post('admin/librerarnotas/cambiar-permiso-curso', [Librearnotas::class, 'cambiarPermisoCurso'])->name('admin.librerarnotas.cambiarPermisoCurso');
+Route::get('admin/librerarnotas', [Librearnotas::class, 'index'])->name('admin.librerarnotas.index')->middleware('adminonly');
+Route::post('admin/librerarnotas/cambiar-permiso-curso', [Librearnotas::class, 'cambiarPermisoCurso'])->name('admin.librerarnotas.cambiarPermisoCurso')->middleware('adminonly');
 
-
+// ruta para ver retirados
+Route::get('admin/retirados', [RetiradosController::class, 'index'])->name('retirados.index')->middleware('adminonly');
 
 
 
@@ -234,9 +238,9 @@ Route::post('admin/librerarnotas/cambiar-permiso-curso', [Librearnotas::class, '
         Route::post('/asistencia/guardar', [ProfesorCursoController::class, 'guardarAsistencia'])->name('asistencia.guardar');
     });
 
-    Route::get('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'index'])->name('profesor.calificaciones');
-    Route::post('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'guardar'])->name('profesor.calificaciones.guardar');
-    Route::get('/calendario', [App\Http\Controllers\Profesor\CalendarioController::class, 'index'])->name('calendario');
+    Route::get('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'index'])->name('profesor.calificaciones')->middleware('profesoronly');
+    Route::post('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'guardar'])->name('profesor.calificaciones.guardar')->middleware('profesoronly');
+    Route::get('/calendario', [App\Http\Controllers\Profesor\CalendarioController::class, 'index'])->name('calendario')->middleware('profesoronly');
 });
 
 

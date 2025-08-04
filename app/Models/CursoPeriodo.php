@@ -53,4 +53,8 @@ public function calificaciones()
     return $this->hasMany(Calificacion::class);
 }
 
+public function profesor()
+{
+    return $this->belongsTo(User::class, 'profesor_id');
+}
 }

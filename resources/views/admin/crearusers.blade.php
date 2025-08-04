@@ -793,6 +793,14 @@
                             </ul>
                         </div>
                     </li>
+
+                      <li class="nav-item">
+    <a class="nav-link " href="#" data-page="general">
+        <i class="fas fa-folder-open"></i>
+        <span class="nav-text">Tramite Documentario</span>
+        <div class="tooltip-custom">Tramite Documentario</div>
+    </a>
+</li>
                 </ul>
             </nav>
             <div class="expand-indicator">
@@ -1230,7 +1238,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group">
                                 <label class="form-label">Teléfono:</label>
-                                <input type="text" name="telefono" class="form-control">
+                                <input type="text" name="telefono" class="form-control" required>
                             </div>
                         </div>
                     </div>
@@ -1245,7 +1253,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group">
                                 <label class="form-label">Género:</label>
-                                <select name="genero" class="form-select">
+                                <select name="genero" class="form-select" required>
                                     <option value="masculino">Masculino</option>
                                     <option value="femenino">Femenino</option>
                                     <option value="otro">Otro</option>
@@ -1257,7 +1265,7 @@
                                 <label class="form-label">Tipo de usuario:</label>
                                 <div class="radio-group">
                                     <div class="radio-item">
-                                        <input type="radio" name="tipo_usuario" value="admin" id="admin">
+                                        <input type="radio" name="tipo_usuario" value="admin" id="admin" required>
                                         <label for="admin">Admin</label>
                                     </div>
                                     <div class="radio-item">

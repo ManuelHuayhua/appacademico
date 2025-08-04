@@ -51,4 +51,9 @@ class Calificacion extends Model
 {
     return $this->belongsTo(Carrera::class);
 }
+
+public function calificaciones()
+{
+    return $this->hasMany(Calificacion::class, 'profesor_id');
+}
 }

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Panel de Estudiante')</title>
+    <title>Lista de Estudiantes Retirados</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-      <style>
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -658,7 +658,7 @@
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link " href="{{ route('admin.dashboard') }}" data-page="general">
+                        <a class="nav-link active" href="{{ route('admin.dashboard') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">Inicio</span>
                             <div class="tooltip-custom">Inicio</div>
@@ -683,7 +683,7 @@
                     </li>
                     <!-- Nuevo Grupo Colapsable: Administración -->
                     <li class="nav-item nav-group">
-                        <a class="nav-link active nav-group-toggle" href="#academicaSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="academicaSubmenu">
+                        <a class="nav-link nav-group-toggle" href="#academicaSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="academicaSubmenu">
                             <i class="fas fa-chalkboard-teacher"></i>
                             <span class="nav-text">Gestión Académica</span>
                             <i class="fas fa-chevron-down nav-group-icon"></i>
@@ -697,7 +697,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{{ route('admin.matricula.create') }}">
+                                    <a class="nav-link" href="{{ route('admin.matricula.create') }}">
                                         <i class="fas fa-user-graduate"></i> <span class="nav-text">Matricular alumnos</span>
                                     </a>
                                 </li>
@@ -728,7 +728,7 @@
                         </a>
                         <div class="collapse" id="notasSubmenu">
                             <ul class="nav flex-column nav-submenu">
-                                         <li class="nav-item">
+                                        <li class="nav-item">
                 <a class="nav-link " href="{{ route('admin.calificaciones.index') }}">
                     <i class="fas fa-pencil-alt"></i> <!-- Icono para calificar -->
                     <span class="nav-text">Reporte Calificaciones</span>
@@ -793,7 +793,6 @@
                             </ul>
                         </div>
                     </li>
-
                       <li class="nav-item">
     <a class="nav-link " href="#" data-page="general">
         <i class="fas fa-folder-open"></i>
@@ -801,6 +800,34 @@
         <div class="tooltip-custom">Tramite Documentario</div>
     </a>
 </li>
+
+
+<!-- Menú: Control Académico -->
+<li class="nav-item nav-group">
+    <a class="nav-link nav-group-toggle" href="#controlAcademicoSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="controlAcademicoSubmenu">
+        <i class="fas fa-user-check"></i>
+        <span class="nav-text">Control Académico</span>
+        <i class="fas fa-chevron-down nav-group-icon"></i>
+        <div class="tooltip-custom">Control Académico</div>
+    </a>
+    <div class="collapse" id="controlAcademicoSubmenu">
+        <ul class="nav flex-column nav-submenu">
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span class="nav-text">Asistencia del Profesor</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('retirados.index') }}">
+                    <i class="fas fa-user-times"></i>
+                    <span class="nav-text">Alumnos Retirados / Faltas</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
+
                 </ul>
             </nav>
             <div class="expand-indicator">
@@ -846,687 +873,425 @@
         <div class="main-content" id="mainContent">
             <!-- Content -->
             <div class="content-area">
-            <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Select2 CSS y JS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+            <style>
+        :root {
+            --primary-gradient: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            --primary-color: #0249BB;
+            --secondary-color: #003bb1;
+            --light-blue: #f8fbff;
+            --border-color: #e3f2fd;
+        }
 
-<style>
-.matricula-container {
-    background: #ffffff;
-    min-height: 100vh;
-    padding: 1.5rem 4rem;
-}
+     
 
-.card-modern {
-    border: none;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(2, 73, 187, 0.08);
-    background: #ffffff;
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-}
+        .page-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(2, 73, 187, 0.3);
+        }
 
-.card-header-modern {
-    background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
-    color: white;
-    padding: 1.5rem;
-    border: none;
-    position: relative;
-}
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.card-header-modern h2, .card-header-modern h3 {
-    margin: 0;
-    font-weight: 600;
-    font-size: 1.4rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        .filter-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
 
-.form-group-modern {
-    margin-bottom: 1.5rem;
-    position: relative;
-}
+        .filter-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
 
-.form-label-modern {
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.6rem;
-    display: block;
-    font-size: 0.95rem;
-}
+        .filter-body {
+            padding: 1.5rem;
+        }
 
-.form-control-modern {
-    border: 2px solid #e8ecef;
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    background: #ffffff;
-    height: auto;
-}
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
 
-.form-control-modern:focus {
-    border-color: #0249BB;
-    box-shadow: 0 0 0 0.15rem rgba(2, 73, 187, 0.15);
-    outline: none;
-}
+        .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
 
-.btn-modern {
-    background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
-    color: white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(2, 73, 187, 0.25);
+            background-color: white;
+        }
 
-.btn-modern:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(2, 73, 187, 0.3);
-    color: white;
-}
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            border: none;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
 
-.alert-modern {
-    border: none;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
+        .info-header {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+        }
 
-.alert-success-modern {
-    background: rgba(40, 167, 69, 0.1);
-    color: #155724;
-    border-left: 4px solid #28a745;
-}
+        .professor-item {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-.alert-danger-modern {
-    background: rgba(220, 53, 69, 0.1);
-    color: #721c24;
-    border-left: 4px solid #dc3545;
-}
+        .professor-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--primary-gradient);
+        }
 
-.table-modern {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(2, 73, 187, 0.05);
-    border: none;
-    font-size: 0.9rem;
-}
+        .professor-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
 
-.table-modern thead {
-    background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
-    color: white;
-}
+        .professor-name {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
 
-.table-modern thead th {
-    border: none;
-    padding: 1rem 0.8rem;
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
+        .professor-email {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
 
-.table-modern tbody td {
-    padding: 0.8rem;
-    border: none;
-    border-bottom: 1px solid #f8f9fa;
-    vertical-align: middle;
-}
+        .course-item {
+            background: var(--light-blue);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--primary-color);
+        }
 
-.table-modern tbody tr:hover {
-    background: rgba(2, 73, 187, 0.03);
-}
+        .course-name {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
 
-.btn-danger-modern {
-    background: linear-gradient(120deg, #dc3545 0%, #c82333 100%);
-    color: white;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    transition: all 0.3s ease;
-}
+        .career-name {
+            color: #666;
+            font-size: 0.9rem;
+        }
 
-.btn-danger-modern:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-    color: white;
-}
+        .students-table-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            border: none;
+            overflow: hidden;
+        }
 
-.filter-section {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 1.2rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid #e9ecef;
-}
+        .table-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
 
-.search-input {
-    position: relative;
-}
+        .table-responsive {
+            border-radius: 0 0 15px 15px;
+        }
 
-.search-input i {
-    position: absolute;
-    left: 0.8rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
-    z-index: 5;
-    font-size: 0.9rem;
-}
+        .custom-table {
+            margin: 0;
+            border: none;
+        }
 
-.search-input input {
-    padding-left: 2.5rem !important;
-}
+        .custom-table thead th {
+            background: #f8f9fa;
+            color: var(--primary-color);
+            font-weight: 700;
+            border: none;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-.badge-modern {
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-weight: 500;
-    text-transform: capitalize;
-    font-size: 0.75rem;
-}
+        .custom-table tbody tr {
+            transition: all 0.2s ease;
+        }
 
-.badge-activo {
-    background: rgba(40, 167, 69, 0.15);
-    color: #155724;
-    border: 1px solid rgba(40, 167, 69, 0.3);
-}
+        .custom-table tbody tr:hover {
+            background-color: var(--light-blue);
+            transform: scale(1.01);
+        }
 
-.badge-inactivo {
-    background: rgba(220, 53, 69, 0.15);
-    color: #721c24;
-    border: 1px solid rgba(220, 53, 69, 0.3);
-}
+        .custom-table tbody td {
+            padding: 1rem;
+            border: none;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
 
-.stats-card {
-    background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
-    color: white;
-    border-radius: 12px;
-    padding: 1.2rem;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 15px rgba(2, 73, 187, 0.2);
-}
+        .student-name {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
 
-.stats-number {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.3rem;
-}
+        .date-badge {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
 
-.stats-label {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #666;
+        }
 
-.avatar-circle {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-}
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
 
-/* Select2 Customization */
-.select2-container--default .select2-selection--multiple,
-.select2-container--default .select2-selection--single {
-    border: 2px solid #e8ecef !important;
-    border-radius: 10px !important;
-    min-height: 45px !important;
-    padding: 0.3rem !important;
-}
+        .highlight-field {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
 
-.select2-container--default.select2-container--focus .select2-selection--multiple,
-.select2-container--default.select2-container--focus .select2-selection--single {
-    border-color: #0249BB !important;
-    box-shadow: 0 0 0 0.15rem rgba(2, 73, 187, 0.15) !important;
-}
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .filter-body {
+                padding: 1rem;
+            }
+            
+            .professor-item {
+                padding: 1rem;
+            }
+            
+            .custom-table {
+                font-size: 0.9rem;
+            }
+            
+            .custom-table thead th,
+            .custom-table tbody td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
 
-.select2-dropdown {
-    border: 2px solid #0249BB !important;
-    border-radius: 10px !important;
-}
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
 
-.select2-container--default .select2-search--dropdown .select2-search__field {
-    border: 1px solid #e8ecef !important;
-    border-radius: 6px !important;
-    padding: 0.5rem !important;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 
-.select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: #0249BB !important;
-}
 
-/* Responsive */
-@media (max-width: 768px) {
-    .matricula-container {
-        padding: 1rem 0;
-    }
-    
-    .card-header-modern {
-        padding: 1rem;
-    }
-    
-    .card-header-modern h2, .card-header-modern h3 {
-        font-size: 1.2rem;
-    }
-    
-    .table-modern {
-        font-size: 0.8rem;
-    }
-    
-    .table-modern thead th,
-    .table-modern tbody td {
-        padding: 0.6rem 0.4rem;
-    }
-    
-    .stats-number {
-        font-size: 1.5rem;
-    }
-    
-    .btn-modern {
-        padding: 0.7rem 1.5rem;
-        font-size: 0.9rem;
-    }
-    
-    .filter-section {
-        padding: 1rem;
-    }
-    
-    .form-group-modern {
-        margin-bottom: 1rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .avatar-circle {
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
-    }
-    
-    .table-modern {
-        font-size: 0.75rem;
-    }
-    
-    .btn-danger-modern {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.75rem;
-    }
-}
-
-/* Animaciones suaves */
-.card-modern {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.no-results {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: #6c757d;
-}
-
-.no-results i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #dee2e6;
-}
-</style>
-
-<div class="matricula-container">
-    <div class="container-fluid px-3">
-        <!-- Estadísticas compactas -->
-        <div class="row mb-3">
-            <div class="col-12">
-                <div class="stats-card">
-                    <div class="stats-number" id="total-matriculas">{{ count($matriculas) }}</div>
-                    <div class="stats-label">Total de Matrículas Registradas</div>
-                </div>
-            </div>
+ <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">
+                <i class="fas fa-user-graduate me-3"></i>
+                Lista de Estudiantes Retirados
+            </h1>
         </div>
+    </div>
 
-        <!-- Formulario de Matrícula -->
-        <div class="card card-modern">
-            <div class="card-header-modern">
-                <h2><i class="bi bi-person-plus-fill"></i> Registrar Nueva Matrícula</h2>
+    <div class="container">
+        <!-- Filtros -->
+        <div class="card filter-card fade-in">
+            <div class="filter-header">
+                <i class="fas fa-filter me-2"></i>
+                Filtros de Búsqueda
             </div>
-            <div class="card-body p-3">
-                @if(session('success'))
-                    <div class="alert alert-success-modern alert-modern">
-                        <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
-                    </div>
-                @elseif(session('error'))
-                    <div class="alert alert-danger-modern alert-modern">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
-                    </div>
-                @endif
-
-                <form action="{{ route('admin.matricula.store') }}" method="POST">
-                    @csrf
-
-                    <div class="row">
+            <div class="filter-body">
+                <form method="GET" action="{{ route('retirados.index') }}">
+                    <div class="row g-4">
                         <div class="col-md-6">
-                            <div class="form-group-modern">
-                                <label for="user_ids" class="form-label-modern">
-                                    <i class="bi bi-people-fill me-2"></i>Seleccionar Alumnos
-                                </label>
-                                <select name="user_ids[]" class="form-control form-control-modern select-alumnos" multiple required>
-                                    @foreach($alumnos as $alumno)
-                                        <option value="{{ $alumno->id }}">{{ $alumno->name }} {{ $alumno->apellido_p }} {{ $alumno->apellido_m }} - DNI: {{ $alumno->dni }}</option>
-                                    @endforeach
-                                </select>
-                                <small class="form-text text-muted mt-2">
-                                    <i class="bi bi-info-circle me-1"></i>Busca y selecciona múltiples alumnos
-                                </small>
-                            </div>
+                            <label class="form-label">
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                Periodo Académico
+                            </label>
+                            <select name="periodo_id" class="form-select" onchange="this.form.submit()">
+                                @foreach($periodos as $periodo)
+                                    <option value="{{ $periodo->id }}" {{ $periodoId == $periodo->id ? 'selected' : '' }}>
+                                        {{ $periodo->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
-
                         <div class="col-md-6">
-                            <div class="form-group-modern">
-                                <label for="curso_periodo_id" class="form-label-modern">
-                                    <i class="bi bi-book-fill me-2"></i>Seleccionar Curso
-                                </label>
-                                <select name="curso_periodo_id" class="form-control form-control-modern select-curso" required>
-                                    <option value="">Seleccionar curso...</option>
-                                    @foreach($cursos as $curso)
-                                        <option value="{{ $curso->id }}">
-                                            {{ $curso->curso->nombre }} ({{ $curso->periodo->nombre }} - Sección {{ $curso->seccion }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <label class="form-label">
+                                <i class="fas fa-clipboard-check me-2"></i>
+                                Campo de Evaluación
+                            </label>
+                            <select name="nota" class="form-select" onchange="this.form.submit()">
+                                <option value="primer_avance" {{ $campoNota == 'primer_avance' ? 'selected' : '' }}>Primer Avance</option>
+                                <option value="segundo_avance" {{ $campoNota == 'segundo_avance' ? 'selected' : '' }}>Segundo Avance</option>
+                                <option value="presentacion_final" {{ $campoNota == 'presentacion_final' ? 'selected' : '' }}>Presentación Final</option>
+                                <option value="promedio_avance" {{ $campoNota == 'promedio_avance' ? 'selected' : '' }}>Promedio Avance</option>
+                                <option value="oral_1" {{ $campoNota == 'oral_1' ? 'selected' : '' }}>Oral 1</option>
+                                <option value="oral_2" {{ $campoNota == 'oral_2' ? 'selected' : '' }}>Oral 2</option>
+                                <option value="oral_3" {{ $campoNota == 'oral_3' ? 'selected' : '' }}>Oral 3</option>
+                                <option value="oral_4" {{ $campoNota == 'oral_4' ? 'selected' : '' }}>Oral 4</option>
+                                <option value="oral_5" {{ $campoNota == 'oral_5' ? 'selected' : '' }}>Oral 5</option>
+                                <option value="promedio_evaluacion_permanente" {{ $campoNota == 'promedio_evaluacion_permanente' ? 'selected' : '' }}>Prom. Eval. Permanente</option>
+                                <option value="examen_final" {{ $campoNota == 'examen_final' ? 'selected' : '' }}>Examen Final</option>
+                                <option value="promedio_final" {{ $campoNota == 'promedio_final' ? 'selected' : '' }}>Promedio Final</option>
+                            </select>
                         </div>
-                    </div>
-
-                    <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-modern">
-                            <i class="bi bi-check-lg"></i> Registrar Matrícula
-                        </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Filtros -->
-        <div class="card card-modern">
-            <div class="card-header-modern">
-                <h3><i class="bi bi-funnel-fill me-2"></i>Filtros de Búsqueda</h3>
+        <!-- Profesores sin notas -->
+        <div class="card info-card fade-in">
+            <div class="info-header">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Profesores pendientes en: <span class="highlight-field">{{ strtoupper(str_replace('_', ' ', $campoNota)) }}</span>
             </div>
             <div class="card-body p-0">
-                <div class="filter-section">
-                    <div class="row g-3">
-                        <div class="col-lg-4 col-md-6">
-                            <form method="GET" action="{{ route('admin.matricula.create') }}">
-                                <label for="periodo_id" class="form-label-modern">
-                                    <i class="bi bi-calendar3 me-2"></i>Periodo:
-                                </label>
-                                <select name="periodo_id" id="periodo_id" class="form-control form-control-modern" onchange="this.form.submit()">
-                                    @foreach($periodos as $periodo)
-                                        <option value="{{ $periodo->id }}" {{ $periodo->id == $periodoSeleccionado ? 'selected' : '' }}>
-                                            {{ $periodo->nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </form>
+                @forelse($profesoresSinNotas as $item)
+                    <div class="professor-item">
+                        <div class="professor-name">
+                            <i class="fas fa-user-tie me-2"></i>
+                            {{ $item['profesor']->name }}
                         </div>
-                        <div class="col-lg-4 col-md-6">
-                            <label class="form-label-modern">
-                                <i class="bi bi-search me-2"></i>Buscar Alumno:
-                            </label>
-                            <div class="search-input">
-                                <i class="bi bi-search"></i>
-                                <input type="text" id="searchAlumno" class="form-control form-control-modern" placeholder="Nombre o DNI...">
-                            </div>
+                        <div class="professor-email">
+                            <i class="fas fa-envelope me-2"></i>
+                            {{ $item['profesor']->email }}
                         </div>
-                        <div class="col-lg-4 col-md-6">
-                            <label class="form-label-modern">
-                                <i class="bi bi-book me-2"></i>Buscar Curso:
-                            </label>
-                            <div class="search-input">
-                                <i class="bi bi-search"></i>
-                                <input type="text" id="searchCurso" class="form-control form-control-modern" placeholder="Nombre del curso...">
-                            </div>
+                        <div class="courses-list">
+                            @foreach($item['cursos'] as $cursoPeriodo)
+                                <div class="course-item">
+                                    <div class="course-name">
+                                        <i class="fas fa-book me-2"></i>
+                                        {{ $cursoPeriodo->curso->nombre ?? 'Curso no encontrado' }}
+                                    </div>
+                                    @if(isset($cursoPeriodo->curso->carrera->nombre))
+                                        <div class="career-name">
+                                            <i class="fas fa-graduation-cap me-2"></i>
+                                            {{ $cursoPeriodo->curso->carrera->nombre }}
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                </div>
+                @empty
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <h5>¡Excelente!</h5>
+                        <p>Todos los profesores han registrado esta evaluación.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
 
-        <!-- Tabla de Matrículas -->
-        <div class="card card-modern">
-            <div class="card-header-modern">
-                <h3><i class="bi bi-table me-2"></i>Lista de Matrículas</h3>
+        <!-- Tabla de estudiantes retirados -->
+        <div class="card students-table-card fade-in">
+            <div class="table-header">
+                <i class="fas fa-table me-2"></i>
+                Registro de Estudiantes Retirados
             </div>
-            <div class="card-body p-0">
-                @if($matriculas->isEmpty())
-                    <div class="no-results">
-                        <i class="bi bi-inbox"></i>
-                        <p class="mb-0">No hay alumnos matriculados en este periodo.</p>
-                    </div>
-                @else
-                    <div class="table-responsive">
-                        <table class="table table-modern mb-0" id="matriculasTable">
-                            <thead>
-                                <tr>
-                                    <th><i class="bi bi-person me-1"></i>Alumno</th>
-                                    <th><i class="bi bi-book me-1"></i>Curso</th>
-                                    <th class="d-none d-md-table-cell"><i class="bi bi-calendar3 me-1"></i>Periodo</th>
-                                    <th class="d-none d-lg-table-cell"><i class="bi bi-grid-3x3-gap me-1"></i>Sección</th>
-                                    <th class="d-none d-lg-table-cell"><i class="bi bi-calendar-date me-1"></i>Fecha</th>
-                                    <th><i class="bi bi-info-circle me-1"></i>Estado</th>
-                                    <th><i class="bi bi-gear me-1"></i>Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($matriculas as $m)
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-circle me-2">
-                                                    <i class="bi bi-person-fill"></i>
-                                                </div>
-                                                <div>
-                                                    <div class="fw-bold">{{ $m->name }} {{ $m->apellido_p }}</div>
-                                                    <small class="text-muted d-block d-md-none">{{ $m->curso }}</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="d-none d-md-table-cell">
-                                            <strong>{{ $m->curso }}</strong>
-                                        </td>
-                                        <td class="d-none d-md-table-cell">{{ $m->periodo }}</td>
-                                        <td class="d-none d-lg-table-cell">
-                                            <span class="badge bg-primary">{{ $m->seccion }}</span>
-                                        </td>
-                                        <td class="d-none d-lg-table-cell">{{ $m->fecha_matricula }}</td>
-                                        <td>
-                                            <span class="badge-modern {{ $m->estado == 'activo' ? 'badge-activo' : 'badge-inactivo' }}">
-                                                {{ ucfirst($m->estado) }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <form method="POST" action="{{ route('admin.matricula.destroy', $m->id) }}" style="display: inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-danger-modern btn-sm" onclick="return confirm('¿Confirmar retiro de matrícula?')" title="Retirar">
-                                                    <i class="bi bi-trash-fill"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @endif
+            <div class="table-responsive">
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user me-2"></i>Estudiante</th>
+                            <th><i class="fas fa-book me-2"></i>Curso</th>
+                            <th><i class="fas fa-graduation-cap me-2"></i>Carrera</th>
+                            <th><i class="fas fa-university me-2"></i>Facultad</th>
+                            <th><i class="fas fa-calendar-times me-2"></i>Fecha de Retiro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($retiros as $retiro)
+                            <tr>
+                                <td class="student-name">{{ $retiro->user->name }}</td>
+                                <td>{{ $retiro->cursoPeriodo->curso->nombre ?? '-' }}</td>
+                                <td>{{ $retiro->cursoPeriodo->curso->carrera->nombre ?? '-' }}</td>
+                                <td>{{ $retiro->cursoPeriodo->curso->carrera->facultad->nombre ?? '-' }}</td>
+                                <td>
+                                    <span class="date-badge">
+                                        {{ \Carbon\Carbon::parse($retiro->fecha_retiro)->format('d/m/Y') }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <h5>No hay registros</h5>
+                                        <p>No se encontraron estudiantes retirados para los filtros seleccionados.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    $(document).ready(function() {
-        // Inicializar Select2 con búsqueda mejorada
-        $('.select-alumnos').select2({
-            placeholder: "🔍 Buscar alumnos por nombre o DNI...",
-            allowClear: true,
-            width: '100%',
-            theme: 'default',
-            dropdownAutoWidth: true,
-            matcher: function(params, data) {
-                if ($.trim(params.term) === '') {
-                    return data;
-                }
+
                 
-                if (typeof data.text === 'undefined') {
-                    return null;
-                }
-                
-                var searchText = data.text.toLowerCase();
-                var searchTerm = params.term.toLowerCase();
-                
-                if (searchText.indexOf(searchTerm) > -1) {
-                    return data;
-                }
-                
-                return null;
-            }
-        });
-        
-        $('.select-curso').select2({
-            placeholder: "🔍 Seleccionar curso...",
-            allowClear: true,
-            width: '100%',
-            theme: 'default',
-            dropdownAutoWidth: true,
-            matcher: function(params, data) {
-                if ($.trim(params.term) === '') {
-                    return data;
-                }
-                
-                if (typeof data.text === 'undefined') {
-                    return null;
-                }
-                
-                var searchText = data.text.toLowerCase();
-                var searchTerm = params.term.toLowerCase();
-                
-                if (searchText.indexOf(searchTerm) > -1) {
-                    return data;
-                }
-                
-                return null;
-            }
-        });
-
-        // Mejorar la búsqueda del select de cursos - abrir automáticamente
-       $(document).on('select2:open', function(e) {
-    const openedSelect = e.target;
-
-    // Asegura que solo aplique al select-curso
-    if ($(openedSelect).hasClass('select-curso')) {
-        const searchField = document.querySelector('.select2-container--open .select2-search__field');
-        if (searchField) {
-            searchField.focus();
-        }
-    }
-});
-
-        // Filtro de búsqueda por alumno en tiempo real
-        let searchTimeout;
-        $('#searchAlumno').on('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                var value = $(this).val().toLowerCase();
-                $('#matriculasTable tbody tr').each(function() {
-                    var alumnoText = $(this).find('td:first-child').text().toLowerCase();
-                    $(this).toggle(alumnoText.indexOf(value) > -1);
-                });
-                updateStats();
-            }, 300);
-        });
-
-        // Filtro de búsqueda por curso en tiempo real
-        $('#searchCurso').on('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                var value = $(this).val().toLowerCase();
-                $('#matriculasTable tbody tr').each(function() {
-                    var cursoText = $(this).find('td:nth-child(2)').text().toLowerCase();
-                    $(this).toggle(cursoText.indexOf(value) > -1);
-                });
-                updateStats();
-            }, 300);
-        });
-
-        // Función para actualizar estadísticas
-        function updateStats() {
-            var visibleRows = $('#matriculasTable tbody tr:visible').length;
-            $('#total-matriculas').text(visibleRows);
-        }
-
-        // Limpiar filtros al cambiar período
-        $('#periodo_id').on('change', function() {
-            $('#searchAlumno, #searchCurso').val('');
-        });
-
-        // Mejorar responsividad de Select2 en móviles
-        if (window.innerWidth < 768) {
-            $('.select2-container').css('font-size', '14px');
-        }
-
-        // Auto-focus en campo de búsqueda cuando se abre el dropdown
-        
-    });
-
-    // Mejorar Select2 para móviles
-    $(window).on('resize', function() {
-        if (window.innerWidth < 768) {
-            $('.select2-container').css('font-size', '14px');
-        } else {
-            $('.select2-container').css('font-size', '16px');
-        }
-    });
-</script>
 
 
 
-<hr>
 
-
-  </div>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -1634,3 +1399,6 @@
     </form>
 </body>
 </html>
+
+
+

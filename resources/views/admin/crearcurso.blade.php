@@ -798,6 +798,14 @@
                             </ul>
                         </div>
                     </li>
+
+                      <li class="nav-item">
+    <a class="nav-link " href="#" data-page="general">
+        <i class="fas fa-folder-open"></i>
+        <span class="nav-text">Tramite Documentario</span>
+        <div class="tooltip-custom">Tramite Documentario</div>
+    </a>
+</li>
                 </ul>
             </nav>
             <div class="expand-indicator">

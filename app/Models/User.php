@@ -95,5 +95,11 @@ public function asistencias()
     return $this->hasMany(Asistencia::class);
 }
 
+public function cursoPeriodo()
+{
+    return $this->belongsTo(CursoPeriodo::class);
+}
+
+
 
 }
