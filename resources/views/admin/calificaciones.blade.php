@@ -31,10 +31,9 @@
             top: 0;
             left: 0;
             z-index: 1000;
-            /* MODIFICADO: Permite el scroll vertical */
-            height: 100vh; /* Asegura que tenga una altura definida */
-            overflow-y: auto; /* Habilita el scroll vertical */
-            overflow-x: hidden; /* Evita scroll horizontal no deseado */
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
         .sidebar-expanded {
             width: 250px;
@@ -50,7 +49,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.15);
             position: relative;
             background: rgba(255,255,255,0.05);
-            flex-shrink: 0; /* Evita que se encoja si el contenido es muy largo */
+            flex-shrink: 0;
         }
         .sidebar-header h4 {
             color: white;
@@ -106,11 +105,11 @@
         }
         .sidebar-nav {
             padding: 20px 0;
-            flex-grow: 1; /* Permite que la navegación ocupe el espacio restante */
+            flex-grow: 1;
         }
         .nav-item {
             margin-bottom: 5px;
-            --bs-nav-link-hover-color: #ffffffff !important; /* Color blanco fuerte */
+            --bs-nav-link-hover-color: #ffffffff !important;
         }
         .nav-link {
             color: rgba(255,255,255,0.85);
@@ -142,18 +141,17 @@
             margin-right: 15px;
             transition: all 0.3s ease;
         }
-        /* MODIFICADO: Permite que el texto se envuelva */
         .nav-text {
             transition: all 0.3s ease;
-            flex-grow: 1; /* Permite que el texto ocupe el espacio disponible */
-            word-wrap: break-word; /* Rompe palabras largas */
-            overflow-wrap: break-word; /* Alternativa moderna */
+            flex-grow: 1;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .sidebar-collapsed .nav-text {
             opacity: 0;
             width: 0;
             margin: 0;
-            white-space: nowrap; /* Mantiene nowrap cuando está colapsado para la transición */
+            white-space: nowrap;
         }
         .sidebar-collapsed .nav-link {
             justify-content: center;
@@ -164,29 +162,42 @@
             margin-right: 0;
             font-size: 20px;
         }
+
+        /* MODIFICACIONES PARA TOP-NAVBAR FIJA */
+        .top-navbar {
+            position: fixed; /* Hace la barra fija a la ventana */
+            top: 0; /* La ancla a la parte superior */
+            left: 70px; /* Posición inicial para sidebar colapsado */
+            width: calc(100% - 70px); /* Ancho inicial para sidebar colapsado */
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            z-index: 990; /* Asegura que esté por encima del contenido, pero debajo del sidebar */
+            transition: all 0.3s ease; /* Transición suave para cambios de tamaño/posición */
+        }
+
         /* Main Content */
         .main-content {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            margin-left: 70px;
-            width: calc(100% - 70px);
+            margin-left: 70px; /* Margen inicial para sidebar colapsado */
+            padding-top: 65px; /* Espacio para la barra de navegación fija (aprox. altura de top-navbar) */
+            width: calc(100% - 70px); /* Ancho inicial para sidebar colapsado */
             transition: all 0.3s ease;
             overflow-x: hidden;
+        }
+
+        /* Ajustes cuando el sidebar está expandido */
+        .sidebar-expanded ~ .top-navbar {
+            left: 250px;
+            width: calc(100% - 250px);
         }
         .sidebar-expanded ~ .main-content {
             margin-left: 250px;
             width: calc(100% - 250px);
         }
-        .top-navbar {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 15px 20px;
-            flex-shrink: 0;
-            width: 100%;
-            max-width: 100%;
-            overflow-x: hidden;
-        }
+
         .content-area {
             flex: 1;
             padding: 20px;
@@ -228,7 +239,7 @@
             align-items: center;
             margin-left: auto;
             position: relative;
-            z-index: 9999 !important; /* SÚPER ALTO */
+            z-index: 9999 !important;
         }
         .user-avatar {
             width: 35px;
@@ -270,7 +281,7 @@
             border-right-color: rgba(0,0,0,0.85);
         }
         .sidebar-collapsed .nav-link:hover .tooltip-custom,
-        .sidebar-collapsed .nav-group-toggle:hover .tooltip-custom { /* Added for group toggles */
+        .sidebar-collapsed .nav-group-toggle:hover .tooltip-custom {
             opacity: 1;
             visibility: visible;
             left: 80px;
@@ -350,11 +361,11 @@
         /* Mejoras en dropdown - MEJORADO */
         .dropdown {
             position: relative;
-            z-index: 9999 !important; /* SÚPER ALTO */
+            z-index: 9999 !important;
         }
         .dropdown-menu {
-            position: fixed !important; /* FIXED en lugar de absolute */
-            z-index: 99999 !important; /* EL MÁS ALTO POSIBLE */
+            position: fixed !important;
+            z-index: 99999 !important;
             border: none;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             border-radius: 10px;
@@ -365,7 +376,7 @@
             border: 1px solid rgba(0,0,0,0.1);
             top: auto !important;
             left: auto !important;
-            right: 20px !important; /* Posición fija desde la derecha */
+            right: 20px !important;
             transform: none !important;
         }
         .dropdown-menu.show {
@@ -424,44 +435,41 @@
             font-size: 12px;
             opacity: 0;
             transition: opacity 0.3s ease;
-            flex-shrink: 0; /* Evita que se encoja */
+            flex-shrink: 0;
         }
         .sidebar-collapsed .expand-indicator {
             opacity: 1;
         }
-
         /* --- ESTILOS MEJORADOS PARA SUBMENÚS COLAPSABLES --- */
         .nav-group-toggle {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            /* Hereda estilos de .nav-link */
         }
         /* NUEVO: Estilo para el toggle de grupo cuando está expandido */
         .nav-group-toggle[aria-expanded="true"] {
-            background-color: rgba(255,255,255,0.1); /* Un azul más sutil */
+            background-color: rgba(255,255,255,0.1);
             color: white;
-            font-weight: 500; /* Menos negrita que el activo principal */
+            font-weight: 500;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .nav-group-icon {
             transition: transform 0.3s ease;
-            margin-left: auto; /* Empuja el icono a la derecha */
+            margin-left: auto;
         }
         .nav-group-toggle[aria-expanded="true"] .nav-group-icon {
             transform: rotate(180deg);
         }
         .nav-submenu {
-            padding-left: 20px; /* Indentación para el primer nivel de submenú */
+            padding-left: 20px;
         }
         .nav-submenu-level-2 {
-            padding-left: 15px; /* Indentación adicional para submenús anidados */
+            padding-left: 15px;
         }
-
         /* Ajustes para sidebar colapsado (modo icono) */
         .sidebar-collapsed .nav-group-toggle {
-            justify-content: center; /* Centra el icono */
+            justify-content: center;
             padding: 15px 10px;
             margin-right: 5px;
         }
@@ -469,10 +477,10 @@
             opacity: 0;
             width: 0;
             margin: 0;
-            white-space: nowrap; /* Mantiene nowrap cuando está colapsado para la transición */
+            white-space: nowrap;
         }
         .sidebar-collapsed .nav-group-toggle .nav-group-icon {
-            opacity: 0; /* Oculta el chevron cuando el sidebar está en modo icono */
+            opacity: 0;
             width: 0;
             margin: 0;
         }
@@ -482,14 +490,13 @@
             font-size: 20px;
         }
         /* --- FIN ESTILOS MEJORADOS --- */
-
         /* Responsive */
         @media (max-width: 768px) {
             .app-container {
                 position: relative;
             }
             .dropdown-toggle {
-                z-index: 999 !important; /* MENOR que el sidebar (1001) */
+                z-index: 999 !important;
             }
             .sidebar {
                 position: fixed;
@@ -499,15 +506,21 @@
                 flex: none !important;
                 transform: translateX(-100%);
                 z-index: 1001;
-                /* MODIFICADO: Asegura que el scroll funcione en móvil */
                 height: 100vh;
                 overflow-y: auto;
+            }
+            /* MODIFICACIONES PARA TOP-NAVBAR FIJA EN MÓVIL */
+            .top-navbar {
+                left: 0 !important; /* Asegura que esté a la izquierda */
+                width: 100% !important; /* Ocupa todo el ancho */
+                /* position: fixed; y top: 0; ya están definidos arriba */
             }
             .main-content {
                 margin-left: 0 !important;
                 width: 100% !important;
                 max-width: 100% !important;
                 overflow-x: hidden !important;
+                /* padding-top ya está definido arriba */
             }
             .sidebar.mobile-open {
                 transform: translateX(0);
@@ -528,7 +541,7 @@
                 opacity: 1 !important;
                 width: auto !important;
                 margin: 0 !important;
-                white-space: normal !important; /* Asegura que el texto se envuelva en móvil */
+                white-space: normal !important;
             }
             .sidebar .nav-link {
                 justify-content: flex-start !important;
@@ -565,24 +578,24 @@
             /* Dropdown en móvil */
             .dropdown-menu {
                 position: fixed !important;
-                z-index: 999 !important; /* MENOR que el sidebar (1001) */
+                z-index: 999 !important;
                 right: 10px !important;
                 left: auto !important;
-                top: 60px !important; /* Debajo del navbar */
+                top: 60px !important;
                 min-width: 200px;
             }
             .dropdown-menu.show {
-                z-index: 999 !important; /* MENOR que el sidebar (1001) */
+                z-index: 999 !important;
             }
             /* Cuando el sidebar está abierto en móvil, ocultar el dropdown */
             .sidebar.mobile-open ~ .main-content .dropdown-menu.show {
                 display: none !important;
             }
             .user-info {
-                z-index: 999 !important; /* MENOR que el sidebar (1001) */
+                z-index: 999 !important;
             }
             .dropdown {
-                z-index: 999 !important; /* MENOR que el sidebar (1001) */
+                z-index: 999 !important;
             }
             /* Mobile adjustments for group toggles */
             .sidebar .nav-group-toggle {
@@ -596,9 +609,9 @@
                 margin: 0 !important;
             }
             .sidebar .nav-group-toggle .nav-group-icon {
-                opacity: 1 !important; /* Show chevron on mobile */
+                opacity: 1 !important;
                 width: auto !important;
-                margin-left: auto !important; /* Push to the right */
+                margin-left: auto !important;
                 margin-right: 0 !important;
             }
             .sidebar .nav-group-toggle i:first-child {
