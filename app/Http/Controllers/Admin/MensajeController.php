@@ -51,36 +51,60 @@ class MensajeController extends Controller
 
   public function enviar(Request $request)
 {
-    $request->validate([
+     $request->validate([
         'titulo' => 'required',
         'contenido' => 'required',
-        'tipo_envio' => 'required|in:individual,curso',
+        'tipo_envio' => 'required|in:individual,curso,general',
+        'tipo_mensaje' => 'required|in:importante,normal', // Nuevo campo
         'fecha_inicio' => 'required|date',
         'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
         'alumno_id' => $request->tipo_envio === 'individual' ? 'required|exists:users,id' : 'nullable',
         'curso_periodo_id' => $request->tipo_envio === 'curso' ? 'required|exists:curso_periodo,id' : 'nullable',
-
-
     ]);
 
+
+ // Prefijo según tipo de mensaje
+    $prefijo = $request->tipo_mensaje === 'importante' ? 'Importante: ' : 'Normal: ';
+    $tituloFinal = $prefijo . $request->titulo;
+
     if ($request->tipo_envio === 'individual') {
+        // Enviar a un alumno específico
         Mensaje::create([
             'remitente_id' => Auth::id(),
             'destinatario_id' => $request->alumno_id,
-            'titulo' => $request->titulo,
+            'titulo' => $tituloFinal,
             'contenido' => $request->contenido,
+            'tipo_mensaje' => $request->tipo_mensaje,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
         ]);
-    } else {
+
+   } elseif ($request->tipo_envio === 'curso') {
+        // Enviar a todos los alumnos de un curso
         $matriculados = Matricula::where('curso_periodo_id', $request->curso_periodo_id)->pluck('user_id');
         foreach ($matriculados as $alumnoId) {
             Mensaje::create([
                 'remitente_id' => Auth::id(),
                 'destinatario_id' => $alumnoId,
                 'curso_periodo_id' => $request->curso_periodo_id,
-                'titulo' => $request->titulo,
+                'titulo' => $tituloFinal,
                 'contenido' => $request->contenido,
+                'tipo_mensaje' => $request->tipo_mensaje,
+                'fecha_inicio' => $request->fecha_inicio,
+                'fecha_fin' => $request->fecha_fin,
+            ]);
+        }
+
+    } elseif ($request->tipo_envio === 'general') {
+        // Enviar a todos los alumnos del sistema
+        $alumnos = User::where('usuario', true)->pluck('id');
+        foreach ($alumnos as $alumnoId) {
+            Mensaje::create([
+                'remitente_id' => Auth::id(),
+                'destinatario_id' => $alumnoId,
+                'titulo' => $tituloFinal,
+                'contenido' => $request->contenido,
+                'tipo_mensaje' => $request->tipo_mensaje,
                 'fecha_inicio' => $request->fecha_inicio,
                 'fecha_fin' => $request->fecha_fin,
             ]);
@@ -89,7 +113,6 @@ class MensajeController extends Controller
 
     return back()->with('success', 'Mensaje(s) enviado(s) correctamente.');
 }
-
 public function update(Request $request, $id)
 {
     $request->validate([

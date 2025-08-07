@@ -15,6 +15,7 @@ class Mensaje extends Model
         'fecha_inicio',
         'fecha_fin',
         'leido',
+        'tipo_mensaje', // Nuevo campo
     ];
 
     public function remitente() {

@@ -739,38 +739,46 @@
             <!-- Content -->
 
     {{-- Modal de mensajes importantes --}}
-    @if(isset($mensajes) && $mensajes->isNotEmpty())
-        <div class="modal fade" id="mensajesModal" tabindex="-1" aria-labelledby="mensajesModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="mensajesModalLabel"><i class="fas fa-bullhorn me-2"></i> Mensajes Importantes</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        @foreach($mensajes as $mensaje)
-                            <div class="alert alert-info shadow-sm border-start border-4 border-primary mb-3">
-                                <strong>{{ $mensaje->titulo }}</strong><br>
-                                {{ $mensaje->contenido }}
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
+   @if(isset($mensajes) && $mensajes->isNotEmpty())
+    <div class="modal fade" id="mensajesModal" tabindex="-1" aria-labelledby="mensajesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="mensajesModalLabel">
+                        <i class="fas fa-bullhorn me-2"></i> Mensajes
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    @foreach($mensajes as $mensaje)
+                        @php
+                            $clase = $mensaje->tipo_mensaje === 'importante'
+                                ? 'alert-danger border-danger'
+                                : 'alert-info border-primary';
+                        @endphp
+
+                        <div class="alert {{ $clase }} shadow-sm border-start border-4 mb-3">
+                            <strong>{{ $mensaje->titulo }}</strong><br>
+                            {{ $mensaje->contenido }}
+                        </div>
+                    @endforeach
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
-    @endif
+    </div>
+@endif
 
-   @if(isset($mensajes) && $mensajes->isNotEmpty())
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var modal = new bootstrap.Modal(document.getElementById('mensajesModal'));
-            modal.show();
-        });
-    </script>
-    @endif
+@if(isset($mensajes) && $mensajes->isNotEmpty())
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = new bootstrap.Modal(document.getElementById('mensajesModal'));
+        modal.show();
+    });
+</script>
+@endif
 
               <!-- Content -->
 

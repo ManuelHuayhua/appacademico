@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Carbon\CarbonPeriod;
 use Carbon\Carbon;
 use App\Models\Horario;
+use Illuminate\Support\Str;
 class AdminNotasAsistenciasController extends Controller
 {
   public function index(Request $request)
@@ -54,7 +55,7 @@ class AdminNotasAsistenciasController extends Controller
         ));
     }
 
-   public function actualizar(Request $request, $id)
+public function actualizar(Request $request, $id)
 {
     $calificacion = Calificacion::findOrFail($id);
 
@@ -71,6 +72,16 @@ class AdminNotasAsistenciasController extends Controller
     ]);
 
     $calificacion->update($data);
+
+    // ✅ Verificar si se debe generar código de certificado
+    if (
+        is_null($calificacion->codigo_certificado) &&
+        !is_null($calificacion->promedio_final) &&
+        $calificacion->promedio_final >= 10.5
+    ) {
+        $calificacion->codigo_certificado = 'CERT-' . strtoupper(Str::random(10));
+        $calificacion->save(); // 🔁 Guardar con el nuevo código
+    }
 
     return back()->with('success', 'Notas actualizadas correctamente.');
 }

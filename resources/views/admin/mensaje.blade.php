@@ -1188,6 +1188,7 @@
                                 <select class="form-select" name="tipo_envio" id="tipo_envio" onchange="toggleCampos()">
                                     <option value="individual">Individual</option>
                                     <option value="curso">Por Curso</option>
+                                    <option value="general">General</option>
                                 </select>
                             </div>
 
@@ -1238,6 +1239,16 @@
                             </div>
                         </div>
 
+                        <div class="col-md-4 mb-3">
+    <label class="form-label">
+        <i class="fas fa-flag"></i>
+        Prioridad del Mensaje
+    </label>
+    <select name="tipo_mensaje" class="form-select" required>
+        <option value="normal" selected>Normal</option>
+        <option value="importante">Importante</option>
+    </select>
+</div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">
@@ -1572,6 +1583,10 @@
         });
 
         function toggleCampos() {
+
+        const tipoEnvio = document.getElementById('tipo_envio').value;
+   
+
             const tipo = document.getElementById('tipo_envio').value;
             const campoAlumno = document.getElementById('campoAlumno');
             const selectAlumno = campoAlumno.querySelector('select');
@@ -1586,11 +1601,13 @@
             selectCurso.disabled = tipo !== 'curso';
 
             // Limpiar selecciones cuando se cambia el tipo
-            if (tipo === 'individual') {
-                $('.select2-curso').val(null).trigger('change');
-            } else {
-                $('.select2-alumno').val(null).trigger('change');
-            }
+           if (tipo !== 'individual') {
+        $('.select2-alumno').val(null).trigger('change');
+    }
+
+    if (tipo !== 'curso') {
+        $('.select2-curso').val(null).trigger('change');
+    }
         }
 
         // Inicializar el toggle al cargar la página
