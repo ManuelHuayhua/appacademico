@@ -786,6 +786,12 @@
                     <span class="nav-text">Ingresar links de clases virtuales</span>
                 </a>
             </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.materiales') }}">
+                    <i class="fas fa-folder-open"></i>
+                    <span class="nav-text">Materiales y Clases Grabadas</span>
+                </a>
+            </li>
 
         </ul>
     </div>
@@ -822,7 +828,31 @@
         <div class="tooltip-custom">Tramite Documentario</div>
     </a>
 </li>
-
+<!-- Menú: Control Académico -->
+<li class="nav-item nav-group">
+    <a class="nav-link nav-group-toggle" href="#controlAcademicoSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="controlAcademicoSubmenu">
+        <i class="fas fa-user-check"></i>
+        <span class="nav-text">Control Académico</span>
+        <i class="fas fa-chevron-down nav-group-icon"></i>
+        <div class="tooltip-custom">Control Académico</div>
+    </a>
+    <div class="collapse" id="controlAcademicoSubmenu">
+        <ul class="nav flex-column nav-submenu">
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span class="nav-text">Asistencia del Profesor</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('retirados.index') }}">
+                    <i class="fas fa-user-times"></i>
+                    <span class="nav-text">Alumnos Retirados / Faltas</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
 
 
 

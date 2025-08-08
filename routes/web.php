@@ -24,7 +24,7 @@ use App\Http\Controllers\Admin\Librearnotas;
 use App\Http\Controllers\CertificadoController;
 use App\Http\Controllers\Admin\EstadisticasController;
 use App\Http\Controllers\Admin\RetiradosController;
-
+use App\Http\Controllers\Admin\MaterialesController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -218,6 +218,18 @@ Route::post('admin/librerarnotas/cambiar-permiso-curso', [Librearnotas::class, '
 
 // ruta para ver retirados
 Route::get('admin/retirados', [RetiradosController::class, 'index'])->name('retirados.index')->middleware('adminonly');
+
+
+
+//ruta para insertar material y clases grabadas
+Route::get('/admin/materiales', [MaterialesController::class, 'index'])->name('admin.materiales')->middleware('adminonly');
+Route::put('/admin/materiales/{id}', [MaterialesController::class, 'update'])->name('admin.materiales.update')->middleware('adminonly');
+Route::post('admin/materiales/sync', [MaterialesController::class, 'syncLinksFaltantes'])->name('admin.materiales.sync')->middleware('adminonly');
+
+
+
+
+
 
 
 

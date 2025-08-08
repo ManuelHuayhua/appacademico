@@ -1442,6 +1442,12 @@
                                     <th scope="col" class="icon-text">
                                         <i class="fas fa-user-check"></i><span>Estado</span>
                                     </th>
+                                    <th scope="col" class="icon-text text-center">
+            <i class="fas fa-file-alt"></i><span>Material</span>
+        </th>
+        <th scope="col" class="icon-text text-center">
+            <i class="fas fa-video"></i><span>Grabada</span>
+        </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1452,6 +1458,8 @@
                                                 <i class="fas fa-calendar-day text-primary"></i>
                                                 <span>{{ \Carbon\Carbon::parse($asistencia->fecha)->format('d/m/Y') }}</span>
                                             </div>
+                                          
+
                                         </td>
                                         <td>
                                             @php
@@ -1476,7 +1484,29 @@
                                                 <i class="{{ $icon }} me-1"></i>{{ $text }}
                                             </span>
                                         </td>
+
+                                         </td>
+            <td class="text-center">
+                @if($asistencia->url_material)
+                    <a href="{{ $asistencia->url_material }}" target="_blank" title="Ver material">
+                        <i class="fas fa-file-alt fa-lg text-primary"></i>
+                    </a>
+                @else
+                    <i class="fas fa-file-alt fa-lg text-muted"></i>
+                @endif
+            </td>
+            <td class="text-center">
+                @if($asistencia->url_grabada)
+                    <a href="{{ $asistencia->url_grabada }}" target="_blank" title="Ver clase grabada">
+                        <i class="fas fa-video fa-lg text-primary"></i>
+                    </a>
+                @else
+                    <i class="fas fa-video fa-lg text-muted"></i>
+                @endif
+            </td>
+            
                                     </tr>
+
                                 @endforeach
                             </tbody>
                         </table>

@@ -6,6 +6,9 @@
     <title>Panel de Estudiante</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+ 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -720,7 +723,7 @@
                         </div>
                     </li>
                     <li class="nav-item nav-group">
-                        <a class="nav-link  active nav-group-toggle" href="#notasSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="notasSubmenu">
+                        <a class="nav-link nav-group-toggle" href="#notasSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="notasSubmenu">
                             <i class="fas fa-file-alt"></i>
                             <span class="nav-text">Notas y Evaluaciones</span>
                             <i class="fas fa-chevron-down nav-group-icon"></i>
@@ -735,7 +738,7 @@
                 </a>
             </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{{ route('admin.notas_y_asistencias') }}">
+                                    <a class="nav-link" href="{{ route('admin.notas_y_asistencias') }}">
                                         <i class="fas fa-clipboard-list"></i>
                                         <span class="nav-text">Ver notas y asistencias</span>
                                     </a>
@@ -751,7 +754,7 @@
                     </li>
                     <!-- Menú: Comunicación -->
                     <li class="nav-item nav-group">
-                        <a class="nav-link nav-group-toggle" href="#comunicacionSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="comunicacionSubmenu">
+                        <a class="nav-link active nav-group-toggle" href="#comunicacionSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="comunicacionSubmenu">
                             <i class="fas fa-comments"></i>
                             <span class="nav-text">Comunicación</span>
                             <i class="fas fa-chevron-down nav-group-icon"></i>
@@ -771,12 +774,13 @@
                                         <span class="nav-text">Ingresar links de clases virtuales</span>
                                     </a>
                                 </li>
-                                   <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.materiales') }}">
+                                 <li class="nav-item">
+                <a class="nav-link active" href="{{ route('admin.materiales') }}">
                     <i class="fas fa-folder-open"></i>
                     <span class="nav-text">Materiales y Clases Grabadas</span>
                 </a>
             </li>
+
                             </ul>
                         </div>
                     </li>
@@ -876,525 +880,687 @@
         <div class="main-content" id="mainContent">
             <!-- Content -->
             <div class="content-area">
-                <style>
-    :root {
-        --primary-gradient: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
-        --primary-color: #0249BB;
-        --secondary-color: #003bb1;
-    }
 
-   
 
-    .header-section {
-        background: var(--primary-gradient);
-        color: white;
-        padding: 2rem 0;
-        margin-bottom: 2rem;
-        border-radius: 0 0 20px 20px;
-        box-shadow: 0 4px 20px rgba(2, 73, 187, 0.3);
-    }
-
-    .header-section h3 {
-        margin: 0;
-        font-weight: 600;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .filter-card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        border: none;
-        margin-bottom: 2rem;
-        overflow: hidden;
-    }
-
-    .filter-card .card-header {
-        background: var(--primary-gradient);
-        color: white;
-        border: none;
-        padding: 1.25rem;
-    }
-
-    .filter-card .card-body {
-        padding: 2rem;
-    }
-
-    .form-select, .form-control {
-        border: 2px solid #e9ecef;
-        border-radius: 10px;
-        padding: 0.75rem 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .form-select:focus, .form-control:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.2rem rgba(2, 73, 187, 0.25);
-    }
-
-    .btn-export {
-        background: var(--primary-gradient);
-        border: none;
-        border-radius: 10px;
-        padding: 0.75rem 1.5rem;
-        color: white;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(2, 73, 187, 0.3);
-    }
-
-    .btn-export:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(2, 73, 187, 0.4);
-        color: white;
-    }
-
-    .table-container {
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .table {
-        margin: 0;
-    }
-
-    .table thead th {
-        background: var(--primary-gradient);
-        color: white;
-        border: none;
-        padding: 1rem;
-        font-weight: 600;
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .table tbody td {
-        padding: 1rem;
-        vertical-align: middle;
-        border-color: #f8f9fa;
-    }
-
-    .table tbody tr:hover {
-        background-color: rgba(2, 73, 187, 0.05);
-    }
-
-    .btn-edit {
-        background: var(--primary-gradient);
-        border: none;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        color: white;
-        font-size: 0.875rem;
-        transition: all 0.3s ease;
-    }
-
-    .btn-edit:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(2, 73, 187, 0.3);
-        color: white;
-    }
-
-    .modal-content {
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-    }
-
-    .modal-header {
-        background: var(--primary-gradient);
-        color: white;
-        border: none;
-        border-radius: 15px 15px 0 0;
-        padding: 1.5rem;
-    }
-
-    .modal-title {
-        font-weight: 600;
-    }
-
-    .section-title {
-        color: var(--primary-color);
-        font-weight: 600;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid var(--primary-color);
-    }
-
-    .readonly-input {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-        font-weight: 600;
-        color: var(--primary-color);
-    }
-
-    .final-grade {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
-        color: white !important;
-        font-weight: 700;
-        font-size: 1.1rem;
-    }
-
-    .attendance-badge {
-        background: var(--primary-gradient);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 600;
-        display: inline-block;
-    }
-
-    .alert {
-        border: none;
-        border-radius: 10px;
-        padding: 1rem 1.5rem;
-    }
-
-    .alert-success {
-        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-        color: #155724;
-    }
-
-    .alert-danger {
-        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-        color: #721c24;
-    }
-
-    .alert-warning {
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-        color: #856404;
-    }
-
-    @media (max-width: 768px) {
-        .header-section {
-            padding: 1.5rem 0;
+             <style>
+        :root {
+            --primary-gradient: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            --primary-color: #0249BB;
+            --secondary-color: #003bb1;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fc;
+            --white: #ffffff;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
         }
-        
-        .filter-card .card-body {
+
+      
+
+      
+
+        .main-container {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="3" fill="rgba(255,255,255,0.05)"/><circle cx="40" cy="80" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.5;
+        }
+
+        .header-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-section .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content-section {
+            padding: 2rem;
+        }
+
+        .alert {
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .alert-success {
+            background: linear-gradient(120deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-info {
+            background: linear-gradient(120deg, #d1ecf1 0%, #bee5eb 100%);
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .filters-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .filters-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(2, 73, 187, 0.15);
+            outline: none;
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(120deg, var(--warning-color) 0%, #e0a800 100%);
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: #212529;
+        }
+
+        .btn-success {
+            background: linear-gradient(120deg, var(--success-color) 0%, #218838 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .table-container {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-top: 1.5rem;
+        }
+
+        .table {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .table thead th {
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table tbody tr {
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(2, 73, 187, 0.05);
+            transform: scale(1.01);
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border: none;
+        }
+
+        .table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .link-material, .link-grabada {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .link-material:hover, .link-grabada:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .text-muted {
+            color: #9ca3af !important;
+            font-style: italic;
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
             padding: 1.5rem;
         }
-        
-        .table-responsive {
-            border-radius: 15px;
-        }
-        
-        .table thead th {
-            font-size: 0.875rem;
-            padding: 0.75rem 0.5rem;
-        }
-        
-        .table tbody td {
-            font-size: 0.875rem;
-            padding: 0.75rem 0.5rem;
-        }
-    }
 
-    @media (max-width: 576px) {
-        .modal-dialog {
-            margin: 0.5rem;
+        .modal-title {
+            font-weight: 600;
         }
-        
+
+        .btn-close {
+            filter: invert(1);
+        }
+
         .modal-body {
-            padding: 1rem;
+            padding: 2rem;
         }
-    }
-</style>
 
-<div class="header-section">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col">
-                <h3><i class="fas fa-graduation-cap me-3"></i>Notas y Asistencias de Alumnos</h3>
+        .modal-footer {
+            border: none;
+            padding: 1.5rem 2rem;
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-unavailable {
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                padding: 1.5rem 1rem;
+            }
+            
+            .header-section h2 {
+                font-size: 1.8rem;
+            }
+            
+            .content-section {
+                padding: 1rem;
+            }
+            
+            .filters-card {
+                padding: 1rem;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            .table {
+                min-width: 800px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .modal-dialog {
+                margin: 1rem;
+            }
+            
+            .modal-body, .modal-footer {
+                padding: 1rem;
+            }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+      
+    </style>
+                
+ <div class="container">
+        <div class="main-container fade-in">
+            <div class="header-section">
+                <h2><i class="fas fa-graduation-cap me-3"></i>Gestión de Materiales y Clases Grabadas</h2>
+                <p class="subtitle">Sistema de administración académica</p>
+            </div>
+
+            <div class="content-section">
+                @if(session('success'))
+                    <div class="alert alert-success fade-in">
+                        <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                    </div>
+                @endif
+
+                <div class="filters-card">
+                    <h5 class="filters-title">
+                        <i class="fas fa-filter"></i>
+                        Filtros de Búsqueda
+                    </h5>
+                    
+                    <form method="GET" class="row g-3">
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-calendar-alt"></i>
+                                Periodo
+                            </label>
+                            <select name="periodo_id" class="form-select" onchange="this.form.submit()">
+                                <option value="">Todos los periodos</option>
+                                @foreach($periodos as $periodo)
+                                    <option value="{{ $periodo->id }}" {{ request('periodo_id') == $periodo->id ? 'selected' : '' }}>
+                                        {{ $periodo->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-university"></i>
+                                Facultad
+                            </label>
+                            <select name="facultad_id" class="form-select" onchange="this.form.submit()">
+                                <option value="">Todas las facultades</option>
+                                @foreach($facultades as $facultad)
+                                    <option value="{{ $facultad->id }}" {{ request('facultad_id') == $facultad->id ? 'selected' : '' }}>
+                                        {{ $facultad->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-user-graduate"></i>
+                                Carrera
+                            </label>
+                            <select name="carrera_id" class="form-select" onchange="this.form.submit()">
+                                <option value="">Todas las carreras</option>
+                                @foreach($carreras as $carrera)
+                                    <option value="{{ $carrera->id }}" {{ request('carrera_id') == $carrera->id ? 'selected' : '' }}>
+                                        {{ $carrera->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-book"></i>
+                                Curso + Sección
+                            </label>
+                            <select name="curso_id" class="form-select" onchange="this.form.submit()">
+                                <option value="">Todos los cursos</option>
+                                @foreach($cursos as $curso)
+                                    <option value="{{ $curso->id }}" {{ request('curso_id') == $curso->id ? 'selected' : '' }}>
+                                        {{ $curso->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="action-buttons">
+                                <a href="{{ route('admin.materiales') }}" class="btn btn-secondary">
+                                    <i class="fas fa-undo"></i>
+                                    Limpiar Filtros
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="action-buttons mb-4">
+                    <form method="POST" action="{{ route('admin.materiales.sync') }}" class="d-inline">
+                        @csrf
+                        <input type="hidden" name="curso_periodo_id" value="{{ request('curso_id') }}">
+                        <button type="submit" class="btn btn-warning" @if(!request('curso_id')) disabled @endif>
+                            <i class="fas fa-sync-alt"></i>
+                            Actualizar enlaces faltantes del curso seleccionado
+                        </button>
+                    </form>
+                </div>
+
+                @if(!$hayFiltro)
+                    <div class="alert alert-info text-center fade-in">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Información:</strong> Por favor, seleccione al menos un filtro para mostrar los registros.
+                    </div>
+                @else
+                    <div class="table-container fade-in">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-calendar me-2"></i>Fecha</th>
+                                    <th><i class="fas fa-book me-2"></i>Curso</th>
+                                    <th><i class="fas fa-university me-2"></i>Facultad</th>
+                                    <th><i class="fas fa-user-graduate me-2"></i>Carrera</th>
+                                    <th><i class="fas fa-users me-2"></i>Sección</th>
+                                    <th><i class="fas fa-file-alt me-2"></i>Material</th>
+                                    <th><i class="fas fa-video me-2"></i>Clase Grabada</th>
+                                    <th><i class="fas fa-cog me-2"></i>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($asistencias as $asistencia)
+                                    <tr>
+                                        <td>
+                                            <strong>{{ $asistencia->fecha }}</strong>
+                                        </td>
+                                        <td>{{ $asistencia->cursoPeriodo->curso->nombre ?? 'Sin curso' }}</td>
+                                        <td>{{ $asistencia->cursoPeriodo->curso->carrera->facultad->nombre ?? '-' }}</td>
+                                        <td>{{ $asistencia->cursoPeriodo->curso->carrera->nombre ?? '-' }}</td>
+                                        <td>
+                                            <span class="status-badge status-available">
+                                                {{ $asistencia->cursoPeriodo->seccion ?? '-' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if($asistencia->url_material)
+                                                <a href="{{ $asistencia->url_material }}" target="_blank" class="link-material">
+                                                    <i class="fas fa-external-link-alt"></i>
+                                                    Ver Material
+                                                </a>
+                                            @else
+                                                <span class="text-muted">
+                                                    <i class="fas fa-times-circle me-1"></i>
+                                                    No disponible
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($asistencia->url_grabada)
+                                                <a href="{{ $asistencia->url_grabada }}" target="_blank" class="link-grabada">
+                                                    <i class="fas fa-play-circle"></i>
+                                                    Ver Grabación
+                                                </a>
+                                            @else
+                                                <span class="text-muted">
+                                                    <i class="fas fa-times-circle me-1"></i>
+                                                    No disponible
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#editModal"
+                                                    data-id="{{ $asistencia->id }}"
+                                                    data-url_material="{{ $asistencia->url_material }}"
+                                                    data-url_grabada="{{ $asistencia->url_grabada }}">
+                                                <i class="fas fa-edit"></i>
+                                                Editar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center py-5">
+                                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                            <br>
+                                            <strong>No se encontraron registros</strong>
+                                            <br>
+                                            <small class="text-muted">Intente ajustar los filtros de búsqueda</small>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-</div>
 
-<div class="container">
-    @if(session('success'))
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger">
-            <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
-        </div>
-    @endif
-
-    <!-- Filtros -->
-    <div class="card filter-card">
-        <div class="card-header">
-            <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filtros de Búsqueda</h5>
-        </div>
-        <div class="card-body">
-            <form method="GET" class="row g-3">
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label fw-semibold">
-                        <i class="fas fa-university me-1"></i>Facultad
-                    </label>
-                    <select name="facultad_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Seleccionar Facultad --</option>
-                        @foreach($facultades as $fac)
-                            <option value="{{ $fac->id }}" {{ request('facultad_id') == $fac->id ? 'selected' : '' }}>
-                                {{ $fac->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label fw-semibold">
-                        <i class="fas fa-book me-1"></i>Carrera
-                    </label>
-                    <select name="carrera_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Seleccionar Carrera --</option>
-                        @foreach(\App\Models\Carrera::where('facultad_id', request('facultad_id'))->get() as $car)
-                            <option value="{{ $car->id }}" {{ request('carrera_id') == $car->id ? 'selected' : '' }}>
-                                {{ $car->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label fw-semibold">
-                        <i class="fas fa-chalkboard-teacher me-1"></i>Curso
-                    </label>
-                    <select name="curso_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Seleccionar Curso --</option>
-                        @foreach(\App\Models\Curso::where('carrera_id', request('carrera_id'))->get() as $cur)
-                            <option value="{{ $cur->id }}" {{ request('curso_id') == $cur->id ? 'selected' : '' }}>
-                                {{ $cur->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label fw-semibold">
-                        <i class="fas fa-calendar-alt me-1"></i>Periodo
-                    </label>
-                    <select name="periodo_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Seleccionar Periodo --</option>
-                        @foreach($periodos as $per)
-                            <option value="{{ $per->id }}" {{ request('periodo_id') == $per->id ? 'selected' : '' }}>
-                                {{ $per->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" id="editForm">
+                @csrf
+                @method('PUT')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">
+                            <i class="fas fa-edit me-2"></i>
+                            Editar Material y Clase Grabada
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-4">
+                            <label for="url_material" class="form-label">
+                                <i class="fas fa-file-alt"></i>
+                                URL del Material
+                            </label>
+                            <input type="url" name="url_material" id="url_material" class="form-control" 
+                                   placeholder="https://ejemplo.com/material">
+                        </div>
+                        <div class="mb-4">
+                            <label for="url_grabada" class="form-label">
+                                <i class="fas fa-video"></i>
+                                URL de la Clase Grabada
+                            </label>
+                            <input type="url" name="url_grabada" id="url_grabada" class="form-control" 
+                                   placeholder="https://ejemplo.com/video">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i>
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i>
+                            Guardar Cambios
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 
-    @if($matriculas->count())
-        <div class="mb-4">
-            <a href="{{ route('admin.notas.exportar', request()->query()) }}" class="btn btn-export">
-                <i class="fas fa-file-excel me-2"></i>Exportar a Excel
-            </a>
-        </div>
 
-        <div class="table-container">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th><i class="fas fa-user me-1"></i>Alumno</th>
-                            <th><i class="fas fa-id-card me-1"></i>DNI</th>
-                            <th>1er Avance</th>
-                            <th>2do Avance</th>
-                            <th>Final</th>
-                            <th><i class="fas fa-trophy me-1"></i>Promedio</th>
-                            <th><i class="fas fa-calendar-check me-1"></i>Asistencias</th>
-                            <th><i class="fas fa-cogs me-1"></i>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($matriculas as $matricula)
-                            @php
-                                $calificacion = $matricula->user->calificaciones->first();
-                                $asistencias = $matricula->user->asistencias;
-                                $asistenciasCount = $asistencias->count();
-                                $asistenciasAsistio = $asistencias->where('asistio', true)->count();
-                                $porcentajeAsistencia = $asistenciasCount > 0 ? round(($asistenciasAsistio / $asistenciasCount) * 100, 1) : 0;
-                            @endphp
-                            <tr>
-                                <td class="fw-semibold">{{ $matricula->user->name }}</td>
-                                <td>{{ $matricula->user->dni }}</td>
-                                <td class="text-center">
-                                    <span class="badge bg-secondary">{{ $calificacion->primer_avance ?? '-' }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-secondary">{{ $calificacion->segundo_avance ?? '-' }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-secondary">{{ $calificacion->presentacion_final ?? '-' }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-success fs-6">{{ $calificacion->promedio_final ?? '-' }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="attendance-badge">
-                                        {{ $asistenciasAsistio }}/{{ $asistenciasCount }} ({{ $porcentajeAsistencia }}%)
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <button class="btn btn-edit btn-sm" data-bs-toggle="modal" data-bs-target="#modalNotas{{ $matricula->id }}">
-                                        <i class="fas fa-edit me-1"></i>Editar
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var editModal = document.getElementById('editModal');
+            var baseUrl = @json(url('admin/materiales'));
 
-        <!-- Modales -->
-        @foreach($matriculas as $matricula)
-            @php
-                $calificacion = $matricula->user->calificaciones->first();
-            @endphp
-            <div class="modal fade" id="modalNotas{{ $matricula->id }}" tabindex="-1" aria-labelledby="modalNotasLabel{{ $matricula->id }}" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalNotasLabel{{ $matricula->id }}">
-                                <i class="fas fa-user-graduate me-2"></i>
-                                Editar Calificaciones - {{ $matricula->user->name }}
-                            </h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form method="POST" action="{{ route('admin.notas.actualizar', $calificacion->id) }}">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-body">
-                                <div class="container-fluid">
-                                    <!-- Avances Académicos -->
-                                    <div class="row mb-4">
-                                        <div class="col-12">
-                                            <h5 class="section-title">
-                                                <i class="fas fa-chart-line me-2"></i>Avances Académicos
-                                            </h5>
-                                        </div>
-                                        <div class="col-lg-3 col-md-6 mb-3">
-                                            <label class="form-label fw-semibold">Primer Avance</label>
-                                            <input type="number" step="0.01" name="primer_avance" class="form-control calc" value="{{ $calificacion->primer_avance }}">
-                                        </div>
-                                        <div class="col-lg-3 col-md-6 mb-3">
-                                            <label class="form-label fw-semibold">Segundo Avance</label>
-                                            <input type="number" step="0.01" name="segundo_avance" class="form-control calc" value="{{ $calificacion->segundo_avance }}">
-                                        </div>
-                                        <div class="col-lg-3 col-md-6 mb-3">
-                                            <label class="form-label fw-semibold">Presentación Final</label>
-                                            <input type="number" step="0.01" name="presentacion_final" class="form-control calc" value="{{ $calificacion->presentacion_final }}">
-                                        </div>
-                                        <div class="col-lg-3 col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Promedio Avance</label>
-                                            <input type="number" step="0.01" name="promedio_avance" class="form-control readonly-input" id="promedio_avance{{ $matricula->id }}" readonly>
-                                        </div>
-                                    </div>
+            editModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var id = button.getAttribute('data-id');
+                var urlMaterial = button.getAttribute('data-url_material');
+                var urlGrabada = button.getAttribute('data-url_grabada');
 
-                                    <!-- Evaluaciones Orales -->
-                                    <div class="row mb-4">
-                                        <div class="col-12">
-                                            <h5 class="section-title">
-                                                <i class="fas fa-microphone me-2"></i>Evaluaciones Orales
-                                            </h5>
-                                        </div>
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                                                <label class="form-label fw-semibold">Oral {{ $i }}</label>
-                                                <input type="number" step="0.01" name="oral_{{ $i }}" class="form-control calc" value="{{ $calificacion->{'oral_'.$i} }}">
-                                            </div>
-                                        @endfor
-                                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                                            <label class="form-label fw-bold">Promedio Orales</label>
-                                            <input type="number" step="0.01" name="promedio" class="form-control readonly-input" id="promedio_orales{{ $matricula->id }}" readonly>
-                                        </div>
-                                    </div>
+                var form = document.getElementById('editForm');
+                form.action = baseUrl + '/' + id;
 
-                                    <!-- Evaluación Final -->
-                                    <div class="row mb-4">
-                                        <div class="col-12">
-                                            <h5 class="section-title">
-                                                <i class="fas fa-clipboard-check me-2"></i>Evaluación Final
-                                            </h5>
-                                        </div>
-                                        <div class="col-lg-4 col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Promedio Evaluación Permanente</label>
-                                            <input type="number" step="0.01" name="promedio_evaluacion_permanente" class="form-control readonly-input" id="promedio_evaluacion_permanente{{ $matricula->id }}" readonly>
-                                        </div>
-                                        <div class="col-lg-4 col-md-6 mb-3">
-                                            <label class="form-label fw-semibold">Examen Final</label>
-                                            <input type="number" step="0.01" name="examen_final" class="form-control calc" value="{{ $calificacion->examen_final }}">
-                                        </div>
-                                        <div class="col-lg-4 col-md-12 mb-3">
-                                            <label class="form-label fw-bold text-success">
-                                                <i class="fas fa-trophy me-1"></i>Promedio Final
-                                            </label>
-                                            <input type="number" step="0.01" name="promedio_final" class="form-control final-grade" id="promedio_final{{ $matricula->id }}" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-save me-2"></i>Guardar Cambios
-                                </button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    <i class="fas fa-times me-2"></i>Cancelar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @endforeach
+                document.getElementById('url_material').value = urlMaterial || '';
+                document.getElementById('url_grabada').value = urlGrabada || '';
+            });
 
-    @elseif(request()->filled(['facultad_id', 'carrera_id', 'curso_id', 'periodo_id']))
-        <div class="alert alert-warning text-center">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            No hay alumnos matriculados en este curso y periodo.
-        </div>
-    @endif
-</div>
-<script>
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('input', function () {
-            const id = this.id.replace('modalNotas', '');
-            const getValue = (name) => {
-                const input = modal.querySelector(`[name="${name}"]`);
-                return input ? parseFloat(input.value) || 0 : 0;
-            };
+            // Añadir efecto de loading a los botones de submit
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        const originalHtml = submitBtn.innerHTML;
+                        submitBtn.innerHTML = '<span class="loading-spinner me-2"></span>Procesando...';
+                        submitBtn.disabled = true;
+                        
+                        setTimeout(() => {
+                            submitBtn.innerHTML = originalHtml;
+                            submitBtn.disabled = false;
+                        }, 3000);
+                    }
+                });
+            });
 
-            // Calcular promedio de avances
-            const promAvance = (
-                getValue('primer_avance') + getValue('segundo_avance') + getValue('presentacion_final')
-            ) / 3;
-
-            // Calcular promedio de orales
-            const orales = ['oral_1', 'oral_2', 'oral_3', 'oral_4', 'oral_5'];
-            const promOrales = orales.reduce((sum, n) => sum + getValue(n), 0) / orales.length;
-
-            // Calcular promedio de evaluación permanente
-            const promEvalPermanente = (promAvance + promOrales) / 2;
-
-            // Calcular promedio final
-            const promFinal = (promEvalPermanente + getValue('examen_final')) / 2;
-
-            // Actualizar campos
-            modal.querySelector(`#promedio_avance${id}`).value = promAvance.toFixed(2);
-            modal.querySelector(`#promedio_orales${id}`).value = promOrales.toFixed(2);
-            modal.querySelector(`#promedio_evaluacion_permanente${id}`).value = promEvalPermanente.toFixed(2);
-            modal.querySelector(`#promedio_final${id}`).value = promFinal.toFixed(2);
+            // Añadir animaciones a las filas de la tabla
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach((row, index) => {
+                row.style.animationDelay = `${index * 0.05}s`;
+                row.classList.add('fade-in');
+            });
         });
+    </script>
 
-        // Calcular al abrir el modal
-        modal.addEventListener('shown.bs.modal', () => {
-            modal.dispatchEvent(new Event('input'));
-        });
-    });
-</script>
 
 
         </div>
@@ -1505,5 +1671,8 @@
     </form>
 </body>
 </html>
+
+
+
 
 

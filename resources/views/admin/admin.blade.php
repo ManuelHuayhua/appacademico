@@ -770,6 +770,12 @@
                                         <span class="nav-text">Ingresar links de clases virtuales</span>
                                     </a>
                                 </li>
+                                 <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.materiales') }}">
+                    <i class="fas fa-folder-open"></i>
+                    <span class="nav-text">Materiales y Clases Grabadas</span>
+                </a>
+            </li>
                             </ul>
                         </div>
                     </li>

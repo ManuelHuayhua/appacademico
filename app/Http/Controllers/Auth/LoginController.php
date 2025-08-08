@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request; 
+use App\Models\LoginLog;
 class LoginController extends Controller
 {
     /*
@@ -52,19 +53,29 @@ class LoginController extends Controller
     }
 
     /* ---------- Redirige según el rol real ---------- */
-    protected function authenticated(Request $request, $user)
-    {
-        if ($user->admin) {
-            return redirect('/admin');           // resources/views/admin/admin.blade.php
-        }
-
-        if ($user->profesor) {
-            return redirect('/profesor');        // resources/views/profesor/profesor.blade.php
-        }
-
-        // Alumno / usuario normal
-        return redirect('/home');                // resources/views/home.blade.php
+   protected function authenticated(Request $request, $user)
+{
+    // Guardar log de login para todos o solo admin (ejemplo admin)
+    if ($user->admin) {
+        LoginLog::create([
+            'user_id' => $user->id,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'logged_in_at' => now(),
+        ]);
     }
+
+    // Redirigir según rol
+    if ($user->admin) {
+        return redirect('/admin');
+    }
+
+    if ($user->profesor) {
+        return redirect('/profesor');
+    }
+
+    return redirect('/home');
+}
 
     /**
      * Create a new controller instance.

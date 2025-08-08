@@ -13,6 +13,8 @@ class Asistencia extends Model
         'curso_periodo_id',
         'fecha',
         'asistio',
+        'url_material', // Nuevo campo para la URL del material
+        'url_grabada'
     ];
 
     // Relaciones
