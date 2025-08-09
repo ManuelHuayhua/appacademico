@@ -149,6 +149,8 @@ $clasesSemana = DB::table('horarios')
     ->join('cursos', 'curso_periodo.curso_id', '=', 'cursos.id')
     ->where('horarios.profesor_id', $profesorId)
     ->where('curso_periodo.periodo_id', $periodo_id)
+     ->where('curso_periodo.fecha_inicio_clases', '<=', $hoy->toDateString()) // 👈 filtro extra
+    ->where('curso_periodo.fecha_fin_clases', '>=', $hoy->toDateString())     // 👈 filtro extra
     ->whereIn('horarios.dia_semana', $diasSemanaActual)
     ->select('cursos.nombre', 'curso_periodo.seccion', 'horarios.hora_inicio', 'horarios.hora_fin', 'horarios.dia_semana')
     ->orderBy('horarios.dia_semana')

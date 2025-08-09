@@ -823,7 +823,7 @@
     <div class="collapse" id="controlAcademicoSubmenu">
         <ul class="nav flex-column nav-submenu">
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('admin.verprofesor') }}">
                     <i class="fas fa-chalkboard-teacher"></i>
                     <span class="nav-text">Asistencia del Profesor</span>
                 </a>

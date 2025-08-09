@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,7 +7,10 @@
     <title>Panel de Estudiante</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-     <style>
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -683,7 +687,7 @@
                     </li>
                     <!-- Nuevo Grupo Colapsable: Administración -->
                     <li class="nav-item nav-group">
-                        <a class="nav-link active nav-group-toggle" href="#academicaSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="academicaSubmenu">
+                        <a class="nav-link nav-group-toggle" href="#academicaSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="academicaSubmenu">
                             <i class="fas fa-chalkboard-teacher"></i>
                             <span class="nav-text">Gestión Académica</span>
                             <i class="fas fa-chevron-down nav-group-icon"></i>
@@ -707,7 +711,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{{ route('admin.periodos.index') }}">
+                                    <a class="nav-link" href="{{ route('admin.periodos.index') }}">
                                         <i class="fas fa-calendar-alt"></i> <span class="nav-text">Periodo académico</span>
                                     </a>
                                 </li>
@@ -808,7 +812,7 @@
 </li>
 <!-- Menú: Control Académico -->
 <li class="nav-item nav-group">
-    <a class="nav-link nav-group-toggle" href="#controlAcademicoSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="controlAcademicoSubmenu">
+    <a class="nav-link active nav-group-toggle" href="#controlAcademicoSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="controlAcademicoSubmenu">
         <i class="fas fa-user-check"></i>
         <span class="nav-text">Control Académico</span>
         <i class="fas fa-chevron-down nav-group-icon"></i>
@@ -817,7 +821,7 @@
     <div class="collapse" id="controlAcademicoSubmenu">
         <ul class="nav flex-column nav-submenu">
             <li class="nav-item">
-                 <a class="nav-link" href="{{ route('admin.verprofesor') }}">
+                <a class="nav-link active" href="{{ route('admin.verprofesor') }}">
                     <i class="fas fa-chalkboard-teacher"></i>
                     <span class="nav-text">Asistencia del Profesor</span>
                 </a>
@@ -876,423 +880,775 @@
         <div class="main-content" id="mainContent">
             <!-- Content -->
             <div class="content-area">
-                
-
-
-
-            <style>
-        /* Estilos generales del cuerpo */
-       
-        /* Contenedor principal centrado */
-        .min-vh-100 {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 0; /* Padding vertical para evitar que se pegue a los bordes */
+                <style>
+        :root {
+            --primary-gradient: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            --primary-color: #0249BB;
+            --primary-dark: #003bb1;
+            --shadow-light: rgba(2, 73, 187, 0.08);
+            --shadow-medium: rgba(2, 73, 187, 0.15);
+            --shadow-strong: rgba(2, 73, 187, 0.25);
         }
 
-        /* Estilos para el botón principal con gradiente */
-        .btn-gradient-primary {
-            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
-            border: none;
+    
+        .main-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .header-section {
+            background: var(--primary-gradient);
             color: white;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Curva de transición más suave */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Sombra más definida */
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            border-radius: 0.6rem; /* Bordes ligeramente más redondeados */
-            padding: 0.8rem 1.8rem; /* Padding ajustado */
-            font-size: 1.05rem; /* Tamaño de fuente ligeramente mayor */
-            display: inline-flex; /* Para alinear icono y texto */
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .btn-gradient-primary:hover {
-            background: linear-gradient(120deg, #003bb1 0%, #0249BB 100%);
-            transform: translateY(-3px); /* Mayor elevación al pasar el ratón */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
-        }
-        .btn-gradient-primary:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Estilos para la tarjeta principal del contenedor */
-        .main-card {
-            border-radius: 1.25rem; /* Bordes redondeados pronunciados */
-            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.1); /* Sombra suave y extendida */
-            background-color: #ffffff;
-            border: 1px solid #e0e0e0; /* Borde sutil */
-            max-width: 900px; /* Ancho máximo para el contenedor */
-            width: 100%; /* Asegura que ocupe el ancho disponible */
-        }
-
-        /* Estilos para el título principal */
-        .main-title {
-            font-size: 2.2rem; /* Título más grande */
-            font-weight: 700;
-            color: #212529; /* Color de texto más oscuro */
+            padding: 1.5rem 2rem;
             position: relative;
-            padding-bottom: 1rem;
-            margin-bottom: 3rem; /* Espacio inferior generoso */
+            overflow: hidden;
         }
-        .main-title::after {
+
+        .header-section::before {
             content: '';
             position: absolute;
-            left: 50%;
+            top: 0;
+            left: 0;
+            right: 0;
             bottom: 0;
-            transform: translateX(-50%);
-            width: 70px; /* Línea decorativa */
-            height: 4px;
-            background: linear-gradient(90deg, #0249BB 0%, #003bb1 100%);
-            border-radius: 2px;
+            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='20' cy='20' r='1.5'/%3E%3C/g%3E%3C/svg%3E") repeat;
         }
 
-        /* Estilos para la tabla */
-        .table-responsive-custom {
-            border-radius: 1rem; /* Bordes redondeados para el contenedor de la tabla */
-            overflow-x: auto; /* Permite el scroll horizontal */
-            border: 1px solid #e9ecef;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        .header-section h2 {
+            font-weight: 700;
+            font-size: 1.75rem;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-        .table-custom {
-            min-width: 700px; /* Asegura que la tabla tenga un ancho mínimo para activar el scroll */
-        }
-        .table-custom thead th {
-            background-color: #eef2f7;
-            color: #495057;
-            font-weight: 600;
-            border-bottom: 2px solid #dcdcdc;
-            padding: 1rem 1.5rem; /* Padding ajustado */
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
-        .table-custom tbody tr {
-            transition: background-color 0.2s ease-in-out;
-        }
-        .table-custom tbody tr:hover {
-            background-color: #f5f5f5;
-        }
-        .table-custom td {
-            padding: 0.9rem 1.5rem;
-            border-top: 1px solid #f0f0f0;
-            color: #555;
+
+        .header-section .subtitle {
             font-size: 0.95rem;
-        }
-        .table-custom tbody tr:first-child td {
-            border-top: none;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Estilos para los botones de acción en la tabla */
-        .btn-action-table {
-            border-radius: 0.5rem;
-            font-size: 0.8rem;
-            padding: 0.5rem 1rem;
-            transition: all 0.2s ease-in-out;
-            display: inline-flex;
+        .evaluation-form {
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9ff 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem;
+            box-shadow: 0 4px 16px var(--shadow-light);
+            border: 1px solid rgba(2, 73, 187, 0.06);
+            position: relative;
+        }
+
+        .evaluation-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .filters-section {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            display: flex;
             align-items: center;
             gap: 0.4rem;
         }
-        .btn-action-table.btn-warning {
-            background-color: #ffc107;
-            border-color: #ffc107;
-            color: #343a40;
-        }
-        .btn-action-table.btn-warning:hover {
-            background-color: #e0a800;
-            border-color: #e0a800;
-            transform: translateY(-1px);
-        }
-        .btn-action-table.btn-danger {
-            background-color: #dc3545;
-            border-color: #dc3545;
-        }
-        .btn-action-table.btn-danger:hover {
-            background-color: #c82333;
-            border-color: #bd2130;
-            transform: translateY(-1px);
-        }
-        .btn-action-table.btn-success { /* Estilo para el botón de actualizar en modal */
-            background-color: #28a745;
-            border-color: #28a745;
-            color: white;
-        }
-        .btn-action-table.btn-success:hover {
-            background-color: #218838;
-            border-color: #1e7e34;
-            transform: translateY(-1px);
+
+        .form-control, .form-select {
+            border: 1px solid #e0e6ed;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            height: auto;
         }
 
-        /* Estilos para los modales */
-        .modal-content {
-            border-radius: 1.25rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.15rem var(--shadow-light);
+            background: white;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow-medium);
+            height: fit-content;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--shadow-strong);
+        }
+
+        .btn-outline-secondary {
+            border: 1px solid #6c757d;
+            color: #6c757d;
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 0 0 16px 16px;
+            overflow: hidden;
+        }
+
+        .table {
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .table thead th {
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 0.8rem 0.6rem;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .table tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(2, 73, 187, 0.06);
+        }
+
+        .table tbody tr:hover {
+            background: linear-gradient(90deg, rgba(2, 73, 187, 0.02) 0%, rgba(2, 73, 187, 0.04) 50%, rgba(2, 73, 187, 0.02) 100%);
+        }
+
+        .table tbody td {
+            padding: 0.7rem 0.6rem;
+            vertical-align: middle;
             border: none;
         }
-        .modal-header {
-            background: linear-gradient(90deg, #0249BB 0%, #003bb1 100%);
+
+        .virtual-link {
+            background: var(--primary-gradient);
             color: white;
-            border-bottom: none;
-            padding: 1.5rem 2rem;
-            border-top-left-radius: 1.25rem;
-            border-top-right-radius: 1.25rem;
-            position: relative; /* Para la línea decorativa */
+            text-decoration: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
         }
-        .modal-header::after { /* Línea decorativa en el encabezado del modal */
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0.5rem; /* Ajusta la posición de la línea */
-            transform: translateX(-50%);
-            width: 40px;
-            height: 3px;
-            background-color: rgba(255, 255, 255, 0.7); /* Línea blanca semitransparente */
-            border-radius: 1.5px;
-        }
-        .modal-header .modal-title {
+
+        .virtual-link:hover {
             color: white;
-            font-weight: 700;
-            font-size: 1.6rem;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px var(--shadow-medium);
         }
-        .modal-header .btn-close {
-            filter: invert(1);
-            opacity: 0.9;
-            transition: opacity 0.2s ease;
+
+        .no-assigned {
+            color: #6c757d;
+            font-style: italic;
+            font-size: 0.75rem;
         }
-        .modal-header .btn-close:hover {
+
+        .day-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .time-display {
+            font-family: 'Monaco', 'Menlo', monospace;
+            background: rgba(2, 73, 187, 0.08);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--primary-dark);
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .section-badge {
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .filter-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            margin-right: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .filter-badge .remove-filter {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .filter-badge .remove-filter:hover {
             opacity: 1;
         }
-        .modal-body {
-            padding: 1.8rem 2rem;
-        }
-        .modal-footer {
-            background-color: #f8f9fa;
-            border-top: 1px solid #e9ecef;
-            padding: 1.2rem 2rem;
-            border-bottom-left-radius: 1.25rem;
-            border-bottom-right-radius: 1.25rem;
+
+        /* Select2 Customization */
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #e0e6ed;
+            border-radius: 8px;
+            height: auto;
+            padding: 0.1rem;
+            background: rgba(255, 255, 255, 0.9);
         }
 
-        /* Estilos para los campos de formulario */
-        .form-label {
-            font-weight: 500;
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            padding: 0.4rem 0.6rem;
             color: #495057;
-            margin-bottom: 0.4rem;
-            font-size: 0.9rem;
-        }
-        .form-control {
-            border-radius: 0.6rem;
-            padding: 0.75rem 1.1rem;
-            border: 1px solid #ced4da;
-            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            font-size: 0.95rem;
-        }
-        .form-control:focus {
-            border-color: #003bb1;
-            box-shadow: 0 0 0 0.25rem rgba(2, 73, 187, 0.2);
+            font-size: 0.85rem;
         }
 
-        /* Estilos para alertas de éxito y error */
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-            border-radius: 0.75rem;
-            padding: 1.2rem 1.5rem;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        .text-danger {
-            font-weight: 500;
-            font-size: 0.88rem;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-            color: #dc3545;
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.15rem var(--shadow-light);
         }
 
-        /* Ajustes responsivos */
-        @media (max-width: 767.98px) { /* Para pantallas pequeñas (móviles) */
-            .min-vh-100 {
-                padding: 1rem 0;
-                align-items: flex-start; /* Alinea al inicio en móviles */
+        .select2-dropdown {
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px var(--shadow-medium);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-section {
+                padding: 1rem;
             }
-            .main-card {
-                margin: 0.75rem; /* Margen en móviles */
-                padding: 1.5rem !important;
-                border-radius: 1rem;
-            }
-            .main-title {
-                font-size: 1.8rem;
-                margin-bottom: 2rem;
-                padding-bottom: 0.75rem;
-            }
-            .main-title::after {
-                width: 50px;
-                height: 3px;
-            }
-            .btn-gradient-primary {
-                padding: 0.7rem 1.4rem;
-                font-size: 0.95rem;
-                gap: 0.5rem;
-            }
-            .table-custom thead th, .table-custom tbody td {
-                padding: 0.8rem 1rem;
-                font-size: 0.85rem;
-            }
-            .btn-action-table {
-                padding: 0.4rem 0.7rem;
-                font-size: 0.7rem;
-                gap: 0.3rem;
-            }
-            .modal-header, .modal-body, .modal-footer {
-                padding: 1.2rem 1.5rem;
-            }
-            .modal-header .modal-title {
+
+            .header-section h2 {
                 font-size: 1.4rem;
             }
-            .modal-header::after {
-                bottom: 0.3rem;
-                width: 30px;
+
+            .evaluation-form {
+                margin: 1rem;
+                padding: 1rem;
             }
+
+            .filters-section {
+                padding: 0.8rem 1rem;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .table {
+                min-width: 800px;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 0.5rem 0.4rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .evaluation-form .row,
+            .filters-section .row {
+                row-gap: 0.8rem;
+            }
+
+            .btn-primary {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+        }
+
+        /* Animation */
+        .main-container {
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden-row {
+            display: none !important;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 0.8rem;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .stats-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .stats-label {
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
     </style>
 
-        <div class="container">
-        <div class="main-card p-5 mx-auto"> {{-- mx-auto para centrar la tarjeta --}}
-            <h2 class="text-center main-title">Gestión de Periodos Académicos</h2>
+     <div class="container-fluid py-3">
+        <div class="main-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h2><i class="fas fa-chalkboard-teacher me-2"></i>Profesores dictando clases</h2>
+                <div class="subtitle">Periodo {{ $periodoActual->nombre ?? 'Actual' }}</div>
+            </div>
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+            <!-- Formulario para evaluar profesor -->
+            <div class="evaluation-form">
+                <form action="{{ route('admin.verprofesor.evaluar') }}" method="POST" id="evaluationForm">
+                    @csrf
+                    <div class="row align-items-end g-3">
+                        <!-- Profesor con Select2 -->
+                        <div class="col-md-5">
+                            <label for="profesor_id" class="form-label">
+                                <i class="fas fa-user-tie"></i>
+                                Profesor
+                            </label>
+                            <select id="profesor_id" name="profesor_id" class="form-control" required>
+                                <option value="">Seleccione profesor</option>
+                                @foreach($profesores->unique('profesor_id') as $prof)
+                                    <option value="{{ $prof->profesor_id }}">{{ $prof->profesor }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <!-- Estado -->
+                        <div class="col-md-4">
+                            <label for="estado_dictado" class="form-label">
+                                <i class="fas fa-clipboard-check"></i>
+                                Estado de Evaluación
+                            </label>
+                            <select id="estado_dictado" name="estado_dictado" class="form-select" required>
+                                <option value="">Seleccione estado</option>
+                                <option value="bien">✓ Bien</option>
+                                <option value="mal">✗ Mal</option>
+                            </select>
+                        </div>
+
+                        <!-- Botón -->
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100" id="submitBtn">
+                                <i class="fas fa-save me-1"></i>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Mensajes -->
+            @if(!empty($mensaje))
+                <div class="alert alert-info alert-dismissible fade show mx-3" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {{ $mensaje }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @else
+                <!-- Filtros y Estadísticas -->
+                <div class="filters-section">
+                    <div class="row g-3 align-items-end">
+                        <!-- Filtros -->
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                <i class="fas fa-calendar-day"></i>
+                                Filtrar por Día
+                            </label>
+                            <select id="filterDay" class="form-select">
+                                <option value="">Todos los días</option>
+                                <option value="1">Lunes</option>
+                                <option value="2">Martes</option>
+                                <option value="3">Miércoles</option>
+                                <option value="4">Jueves</option>
+                                <option value="5">Viernes</option>
+                                <option value="6">Sábado</option>
+                                <option value="7">Domingo</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                <i class="fas fa-graduation-cap"></i>
+                                Filtrar por Carrera
+                            </label>
+                            <select id="filterCarrera" class="form-select">
+                                <option value="">Todas las carreras</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                <i class="fas fa-search"></i>
+                                Buscar Profesor
+                            </label>
+                            <input type="text" id="searchProfesor" class="form-control" placeholder="Nombre del profesor...">
+                        </div>
+
+                        <div class="col-md-3">
+                            <button type="button" id="clearFilters" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>
+                                Limpiar Filtros
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filtros Activos -->
+                    <div id="activeFilters" class="mt-2"></div>
+
+                    <!-- Estadísticas -->
+                    <div class="row g-2 mt-2">
+                        <div class="col-6 col-md-3">
+                            <div class="stats-card">
+                                <p class="stats-number" id="totalClases">0</p>
+                                <p class="stats-label">Total Clases</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stats-card">
+                                <p class="stats-number" id="clasesVisibles">0</p>
+                                <p class="stats-label">Mostrando</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stats-card">
+                                <p class="stats-number" id="profesoresUnicos">0</p>
+                                <p class="stats-label">Profesores</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stats-card">
+                                <p class="stats-number" id="carrerasUnicas">0</p>
+                                <p class="stats-label">Carreras</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de profesores -->
+                <div class="table-container">
+                    <table class="table table-hover mb-0" id="profesoresTable">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user-tie me-1"></i>Profesor</th>
+                                <th><i class="fas fa-book me-1"></i>Curso</th>
+                                <th><i class="fas fa-users me-1"></i>Sección</th>
+                                <th><i class="fas fa-graduation-cap me-1"></i>Carrera</th>
+                                <th><i class="fas fa-calendar-alt me-1"></i>Día</th>
+                                <th><i class="fas fa-clock me-1"></i>Inicio</th>
+                                <th><i class="fas fa-clock me-1"></i>Fin</th>
+                                <th><i class="fas fa-video me-1"></i>Aula Virtual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $dias = [
+                                    1 => 'Lunes', 
+                                    2 => 'Martes', 
+                                    3 => 'Miércoles', 
+                                    4 => 'Jueves', 
+                                    5 => 'Viernes', 
+                                    6 => 'Sábado', 
+                                    7 => 'Domingo'
+                                ];
+                            @endphp
+                            @foreach($profesores as $p)
+                                <tr data-dia="{{ $p->dia_semana }}" data-carrera="{{ $p->carrera }}" data-profesor="{{ strtolower($p->profesor) }}">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-circle me-2">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <strong>{{ $p->profesor }}</strong>
+                                        </div>
+                                    </td>
+                                    <td>{{ $p->curso }}</td>
+                                    <td><span class="section-badge">{{ $p->seccion }}</span></td>
+                                    <td>{{ $p->carrera }}</td>
+                                    <td>
+                                        <span class="day-badge">
+                                            {{ $dias[$p->dia_semana] ?? '' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="time-display">
+                                            {{ \Carbon\Carbon::parse($p->hora_inicio)->format('H:i') }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="time-display">
+                                            {{ \Carbon\Carbon::parse($p->hora_fin)->format('H:i') }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if($p->url_clase_virtual)
+                                            <a href="{{ $p->url_clase_virtual }}" target="_blank" class="virtual-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                Ingresar
+                                            </a>
+                                        @else
+                                            <span class="no-assigned">
+                                                <i class="fas fa-times-circle me-1"></i>
+                                                No asignado
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             @endif
-
-            <!-- Botón para abrir modal de nuevo periodo -->
-            <div class="d-grid gap-2 mb-5">
-                <button class="btn btn-gradient-primary" data-bs-toggle="modal" data-bs-target="#modalCrearPeriodo">
-                    <i class="fas fa-plus-circle"></i> Nuevo Periodo
-                </button>
-            </div>
-
-            @error('fecha_inicio')
-                <div class="text-danger small mb-4">
-                    <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
-                </div>
-            @enderror
-
-            <!-- Tabla de periodos -->
-            <div class="table-responsive-custom">
-                <table class="table table-hover table-custom align-middle">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Fecha Inicio</th>
-                            <th>Fecha Fin</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($periodos as $periodo)
-                            <tr>
-                                <td>{{ $periodo->nombre }}</td>
-                                <td>{{ $periodo->fecha_inicio }}</td>
-                                <td>{{ $periodo->fecha_fin }}</td>
-                                <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-2 flex-wrap">
-                                        <!-- Botón para editar -->
-                                        <button class="btn btn-sm btn-warning btn-action-table" data-bs-toggle="modal" data-bs-target="#modalEditarPeriodo{{ $periodo->id }}">
-                                            <i class="fas fa-edit"></i> Editar
-                                        </button>
-                                        <!-- Formulario de eliminar -->
-                                        <form action="{{ route('admin.periodos.destroy', $periodo->id) }}" method="POST" class="d-inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger btn-action-table" onclick="return confirm('¿Estás seguro de que quieres eliminar este periodo?')">
-                                                <i class="fas fa-trash-alt"></i> Eliminar
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Modal para editar periodo -->
-                            <div class="modal fade" id="modalEditarPeriodo{{ $periodo->id }}" tabindex="-1" aria-labelledby="modalEditarLabel{{ $periodo->id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <form method="POST" action="{{ route('admin.periodos.update', $periodo->id) }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="modalEditarLabel{{ $periodo->id }}">Editar Periodo</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="mb-3">
-                                                    <label for="nombre" class="form-label">Nombre</label>
-                                                    <input type="text" name="nombre" value="{{ $periodo->nombre }}" class="form-control" required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
-                                                    <input type="date" name="fecha_inicio" value="{{ $periodo->fecha_inicio }}" class="form-control" required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="fecha_fin" class="form-label">Fecha Fin</label>
-                                                    <input type="date" name="fecha_fin" value="{{ $periodo->fecha_fin }}" class="form-control" required>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-success btn-action-table">
-                                                    <i class="fas fa-save"></i> Actualizar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 
-    <!-- Modal para crear nuevo periodo -->
-    <div class="modal fade" id="modalCrearPeriodo" tabindex="-1" aria-labelledby="modalCrearLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form method="POST" action="{{ route('admin.periodos.store') }}">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalCrearLabel">Nuevo Periodo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" name="nombre" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
-                            <input type="date" name="fecha_inicio" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="fecha_fin" class="form-label">Fecha Fin</label>
-                            <input type="date" name="fecha_fin" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-gradient-primary">
-                            <i class="fas fa-plus"></i> Guardar
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                <!-- aquí agrega tu contenido principal -->
-               
-          
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2
+            $('#profesor_id').select2({
+                placeholder: 'Buscar y seleccionar profesor...',
+                allowClear: true,
+                width: '100%',
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando...";
+                    }
+                }
+            });
+
+            // Populate filter options
+            const carreras = new Set();
+            $('#profesoresTable tbody tr').each(function() {
+                carreras.add($(this).data('carrera'));
+            });
+
+            carreras.forEach(carrera => {
+                $('#filterCarrera').append(`<option value="${carrera}">${carrera}</option>`);
+            });
+
+            // Filter functionality
+            function applyFilters() {
+                const dayFilter = $('#filterDay').val();
+                const carreraFilter = $('#filterCarrera').val();
+                const searchFilter = $('#searchProfesor').val().toLowerCase();
+
+                let visibleCount = 0;
+                const profesoresVisibles = new Set();
+
+                $('#profesoresTable tbody tr').each(function() {
+                    const row = $(this);
+                    const dia = row.data('dia').toString();
+                    const carrera = row.data('carrera');
+                    const profesor = row.data('profesor');
+
+                    let show = true;
+
+                    if (dayFilter && dia !== dayFilter) show = false;
+                    if (carreraFilter && carrera !== carreraFilter) show = false;
+                    if (searchFilter && !profesor.includes(searchFilter)) show = false;
+
+                    if (show) {
+                        row.removeClass('hidden-row');
+                        visibleCount++;
+                        profesoresVisibles.add(profesor);
+                    } else {
+                        row.addClass('hidden-row');
+                    }
+                });
+
+                updateStats(visibleCount, profesoresVisibles.size);
+                updateActiveFilters();
+            }
+
+            function updateStats(visible, profesores) {
+                const total = $('#profesoresTable tbody tr').length;
+                const totalProfesores = new Set();
+                const totalCarreras = new Set();
+
+                $('#profesoresTable tbody tr').each(function() {
+                    totalProfesores.add($(this).data('profesor'));
+                    totalCarreras.add($(this).data('carrera'));
+                });
+
+                $('#totalClases').text(total);
+                $('#clasesVisibles').text(visible);
+                $('#profesoresUnicos').text(profesores || totalProfesores.size);
+                $('#carrerasUnicas').text(totalCarreras.size);
+            }
+
+            function updateActiveFilters() {
+                const activeFilters = $('#activeFilters');
+                activeFilters.empty();
+
+                const dayFilter = $('#filterDay').val();
+                const carreraFilter = $('#filterCarrera').val();
+                const searchFilter = $('#searchProfesor').val();
+
+                if (dayFilter) {
+                    const dayText = $('#filterDay option:selected').text();
+                    activeFilters.append(`
+                        <span class="filter-badge">
+                            Día: ${dayText}
+                            <i class="fas fa-times remove-filter" data-filter="day"></i>
+                        </span>
+                    `);
+                }
+
+                if (carreraFilter) {
+                    activeFilters.append(`
+                        <span class="filter-badge">
+                            Carrera: ${carreraFilter}
+                            <i class="fas fa-times remove-filter" data-filter="carrera"></i>
+                        </span>
+                    `);
+                }
+
+                if (searchFilter) {
+                    activeFilters.append(`
+                        <span class="filter-badge">
+                            Búsqueda: ${searchFilter}
+                            <i class="fas fa-times remove-filter" data-filter="search"></i>
+                        </span>
+                    `);
+                }
+            }
+
+            // Event listeners
+            $('#filterDay, #filterCarrera').change(applyFilters);
+            $('#searchProfesor').on('input', applyFilters);
+
+            $('#clearFilters').click(function() {
+                $('#filterDay, #filterCarrera').val('');
+                $('#searchProfesor').val('');
+                applyFilters();
+            });
+
+            $(document).on('click', '.remove-filter', function() {
+                const filterType = $(this).data('filter');
+                switch(filterType) {
+                    case 'day':
+                        $('#filterDay').val('');
+                        break;
+                    case 'carrera':
+                        $('#filterCarrera').val('');
+                        break;
+                    case 'search':
+                        $('#searchProfesor').val('');
+                        break;
+                }
+                applyFilters();
+            });
+
+            // Form submission
+            $('#evaluationForm').on('submit', function() {
+                const submitBtn = $('#submitBtn');
+                submitBtn.prop('disabled', true);
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-1"></i>Guardando...');
+            });
+
+            // Initialize stats
+            updateStats($('#profesoresTable tbody tr').length, 0);
+
+            // Auto-dismiss alerts
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+        });
+    </script>
+
+    <style>
+        .avatar-circle {
+            width: 28px;
+            height: 28px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+        }
+    </style>
+
+
+
+
+
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -1402,3 +1758,12 @@
 </body>
 </html>
 
+
+
+
+    
+
+
+
+
+    

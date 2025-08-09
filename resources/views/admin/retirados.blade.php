@@ -658,7 +658,7 @@
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('admin.dashboard') }}" data-page="general">
+                        <a class="nav-link " href="{{ route('admin.dashboard') }}" data-page="general">
                             <i class="fas fa-home"></i>
                             <span class="nav-text">Inicio</span>
                             <div class="tooltip-custom">Inicio</div>
@@ -810,7 +810,7 @@
 
 <!-- Menú: Control Académico -->
 <li class="nav-item nav-group">
-    <a class="nav-link nav-group-toggle" href="#controlAcademicoSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="controlAcademicoSubmenu">
+    <a class="nav-link  active nav-group-toggle" href="#controlAcademicoSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="controlAcademicoSubmenu">
         <i class="fas fa-user-check"></i>
         <span class="nav-text">Control Académico</span>
         <i class="fas fa-chevron-down nav-group-icon"></i>
@@ -819,13 +819,13 @@
     <div class="collapse" id="controlAcademicoSubmenu">
         <ul class="nav flex-column nav-submenu">
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                 <a class="nav-link" href="{{ route('admin.verprofesor') }}">
                     <i class="fas fa-chalkboard-teacher"></i>
                     <span class="nav-text">Asistencia del Profesor</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('retirados.index') }}">
+                <a class="nav-link active href="{{ route('retirados.index') }}">
                     <i class="fas fa-user-times"></i>
                     <span class="nav-text">Alumnos Retirados / Faltas</span>
                 </a>

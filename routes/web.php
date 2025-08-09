@@ -25,6 +25,7 @@ use App\Http\Controllers\CertificadoController;
 use App\Http\Controllers\Admin\EstadisticasController;
 use App\Http\Controllers\Admin\RetiradosController;
 use App\Http\Controllers\Admin\MaterialesController;
+use App\Http\Controllers\Admin\VerprofesorController;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -226,6 +227,13 @@ Route::get('/admin/materiales', [MaterialesController::class, 'index'])->name('a
 Route::put('/admin/materiales/{id}', [MaterialesController::class, 'update'])->name('admin.materiales.update')->middleware('adminonly');
 Route::post('admin/materiales/sync', [MaterialesController::class, 'syncLinksFaltantes'])->name('admin.materiales.sync')->middleware('adminonly');
 
+
+
+//ver que hora dicta el profesor:
+Route::get('/admin/verprofesor', [VerprofesorController::class, 'index'])
+    ->name('admin.verprofesor')->middleware('adminonly');
+Route::post('/admin/verprofesor/evaluar', [VerprofesorController::class, 'storeEvaluacion'])
+    ->name('admin.verprofesor.evaluar')->middleware('adminonly');
 
 
 
