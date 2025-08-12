@@ -903,6 +903,9 @@
                 </p>
             </div>
             
+    
+
+
             <!-- Sección inferior -->
 
             <style>
@@ -914,6 +917,7 @@
             </style>
             <div class="bottom-section">
                 <div class="signature-block">
+                    
         <div>
             <!-- Imagen de la firma -->
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Firma_Burgos_MAzo_sin_fondo.png" alt="Firma" class="signature-image">
@@ -922,7 +926,43 @@
             <p class="signature-title"><strong style="color:black">Directora: Julia Ordóñez</strong></p>
         </div>
     </div>
-                
+
+
+
+    <style>
+        .qr-corner {
+    position: absolute;
+    bottom: 80px;
+    right: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px solid var(--gold-primary);
+    z-index: 8;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.qr-corner svg {
+    width: 60px;
+    height: 60px;
+    display: block;
+}
+
+.qr-corner p {
+    font-size: 9px;
+    color: var(--text-medium);
+    margin: 4px 0 0 0;
+    font-weight: 500;
+}
+    </style>
+    <!-- QR en esquina -->
+<div class="qr-corner">
+    {!! $qrCode !!}
+    <p>Verificar</p>
+</div>
+
+
                 <div class="medal-section">
                     <div class="gold-medal">
                         <i class="fas fa-award medal-icon"></i>
@@ -932,10 +972,12 @@
                         <p class="course-subtitle">{{ optional($calificacion->cursoPeriodo->curso)->nombre }}</p>
                     </div>
                 </div>
-                
                 <div class="signature-block">
-                    
-                </div>
+    <!-- vacío -->
+</div>
+        
+
+            
             </div>
         </div>
     </div>
