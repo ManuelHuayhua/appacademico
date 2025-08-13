@@ -725,9 +725,7 @@
                                 <a class="dropdown-item" href="">
                                     <i class="fas fa-user me-2"></i>Mi Perfil
                                 </a>
-                                <a class="dropdown-item" href="">
-                                    <i class="fas fa-cog me-2"></i>Configuración
-                                </a>
+                               
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

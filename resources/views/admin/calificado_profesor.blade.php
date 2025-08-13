@@ -853,12 +853,8 @@
                             Bienvenido, {{ Auth::user()->name }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-user me-2"></i>Mi Perfil
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-cog me-2"></i>Configuración
-                            </a>
+                            
+                           
                             <div class="dropdown-divider"></div>
                             <a href="javascript:void(0);" class="dropdown-item"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

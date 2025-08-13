@@ -739,10 +739,10 @@ body {
 
                         {{-- Enlace olvidé contraseña --}}
                         <div class="forgot-password">
-                            <a href="#" onclick="alert('Funcionalidad de recuperación de contraseña')">
-                                Olvidé mi contraseña
-                            </a>
-                        </div>
+    <a href="tel:999999999">
+        Si olvidó contraseña comuníquese con este número: 999-999-999
+    </a>
+</div>
                     </form>
                 </div>
             </div>
