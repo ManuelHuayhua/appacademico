@@ -698,9 +698,7 @@
                                 Bienvenido, {{ Auth::user()->name }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="">
-                                    <i class="fas fa-user me-2"></i>Mi Perfil
-                                </a>
+                               
                               
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
