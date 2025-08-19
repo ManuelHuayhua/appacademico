@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\EstadisticasController;
 use App\Http\Controllers\Admin\RetiradosController;
 use App\Http\Controllers\Admin\MaterialesController;
 use App\Http\Controllers\Admin\VerprofesorController;
+use App\Http\Controllers\Admin\SeguridadLogin;
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -236,6 +237,8 @@ Route::post('/admin/verprofesor/evaluar', [VerprofesorController::class, 'storeE
     ->name('admin.verprofesor.evaluar')->middleware('adminonly');
 
 
+    //ver el logeo de los admin
+    Route::get('/admin/seguridad-login', [SeguridadLogin::class, 'index'])->name('admin.seguridad.login')->middleware('adminonly');
 
 
 

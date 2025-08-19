@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Panel de Estudiante')</title>
+    <title>Panel de Estudiante</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
- <style>
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -665,7 +665,7 @@
                         </a>
                     </li>
                     <li class="nav-item nav-group">
-                        <a class="nav-link active nav-group-toggle" href="#usuariosSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="usuariosSubmenu">
+                        <a class="nav-link nav-group-toggle" href="#usuariosSubmenu" data-bs-toggle="collapse" aria-expanded="false" aria-controls="usuariosSubmenu">
                             <i class="fas fa-users-cog"></i>
                             <span class="nav-text">Gestión de Usuarios</span>
                             <i class="fas fa-chevron-down nav-group-icon"></i>
@@ -674,7 +674,7 @@
                         <div class="collapse" id="usuariosSubmenu">
                             <ul class="nav flex-column nav-submenu">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{{ route('admin.usuarios.create') }}">
+                                    <a class="nav-link" href="{{ route('admin.usuarios.create') }}">
                                         <i class="fas fa-user"></i> <span class="nav-text">Usuarios y Roles</span>
                                     </a>
                                 </li>
@@ -728,7 +728,7 @@
                         </a>
                         <div class="collapse" id="notasSubmenu">
                             <ul class="nav flex-column nav-submenu">
-                                <li class="nav-item">
+                                        <li class="nav-item">
                 <a class="nav-link " href="{{ route('admin.calificaciones.index') }}">
                     <i class="fas fa-pencil-alt"></i> <!-- Icono para calificar -->
                     <span class="nav-text">Reporte Calificaciones</span>
@@ -771,7 +771,7 @@
                                         <span class="nav-text">Ingresar links de clases virtuales</span>
                                     </a>
                                 </li>
-                                  <li class="nav-item">
+                                   <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.materiales') }}">
                     <i class="fas fa-folder-open"></i>
                     <span class="nav-text">Materiales y Clases Grabadas</span>
@@ -799,7 +799,6 @@
                             </ul>
                         </div>
                     </li>
-
                       <li class="nav-item">
     <a class="nav-link " href="#" data-page="general">
         <i class="fas fa-folder-open"></i>
@@ -872,774 +871,310 @@
         <div class="main-content" id="mainContent">
             <!-- Content -->
             <div class="content-area">
+                
+<style>
+        :root {
+            --primary-gradient: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+        }
 
-        <style>
-        .user-conteiner {
-            background: #ffffff;
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-        }
         
-        .container-fluid {
-            padding: 1rem;
+        .container {
             max-width: 1400px;
-            margin: 0 auto;
+            padding: 1.5rem;
         }
-        
+
         .card {
-            border: 1px solid #e2e6ea;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(2, 73, 187, 0.08);
-            background: #ffffff;
-            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+            background: white;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
         .card-header {
-            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+            background: var(--primary-gradient);
             color: white;
-            border-radius: 12px 12px 0 0 !important;
-            padding: 1rem 1.25rem;
-            border: none;
-        }
-        
-        .card-header h3 {
-            margin: 0;
+            padding: 1.75rem;
+            border-radius: 16px 16px 0 0;
+            font-size: 1.6rem;
             font-weight: 600;
-            font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.75rem;
         }
-        
-        .form-group {
-            margin-bottom: 1rem;
+
+        .alert-info {
+            background: #e8f0ff;
+            border: none;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: background 0.3s ease;
         }
-        
-        .form-label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.4rem;
-            font-size: 0.9rem;
+
+        .alert-info:hover {
+            background: #d9e6ff;
         }
-        
-        .form-control, .form-select {
-            border-radius: 8px;
+
+        .form-control {
+            border-radius: 10px;
             border: 1px solid #d1d5db;
-            padding: 0.5rem 0.75rem;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            height: auto;
+            padding: 0.75rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        
-        .form-control:focus, .form-select:focus {
+
+        .form-control:focus {
             border-color: #0249BB;
-            box-shadow: 0 0 0 0.15rem rgba(2, 73, 187, 0.2);
+            box-shadow: 0 0 0 3px rgba(2, 73, 187, 0.2);
         }
-        
-        .btn-primary {
-            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
+
+        .input-group-text {
+            background: #f1f3f5;
+            border-radius: 10px 0 0 10px;
             border: none;
-            border-radius: 8px;
-            padding: 0.6rem 1.5rem;
-            font-weight: 600;
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 500;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
-            transform: translateY(-1px);
+            filter: brightness(1.15);
+            transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(2, 73, 187, 0.3);
-            background: linear-gradient(120deg, #003bb1 0%, #002a8a 100%);
         }
-        
-        .btn-success {
-            background: linear-gradient(120deg, #28a745 0%, #20923a 100%);
-            border: none;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-        }
-        
-        .btn-warning {
-            background: linear-gradient(120deg, #ffc107 0%, #e0a800 100%);
-            border: none;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-            color: #333;
-        }
-        
-        .btn-danger {
-            background: linear-gradient(120deg, #dc3545 0%, #c82333 100%);
-            border: none;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(120deg, #6c757d 0%, #5a6268 100%);
-            border: none;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-        }
-        
+
+        .table-responsive {
+    border-radius: 12px;
+    overflow-x: auto;   /* 🔹 habilita scroll horizontal */
+    overflow-y: hidden; /* 🔹 evita scroll vertical innecesario */
+}
+
         .table {
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            font-size: 0.9rem;
-        }
-        
-        .table thead th {
-            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
-            color: white;
-            border: none;
-            font-weight: 600;
-            padding: 0.75rem;
-            font-size: 0.85rem;
-        }
-        
-        .table tbody tr {
-            transition: all 0.2s ease;
-        }
-        
-        .table tbody tr:hover {
-            background-color: rgba(2, 73, 187, 0.03);
-        }
-        
-        .table tbody td {
-            padding: 0.75rem;
-            vertical-align: middle;
-            border-color: #e9ecef;
-        }
-        
-        .radio-group {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 0.3rem;
-        }
-        
-        .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        
-        .radio-item input[type="radio"] {
-            transform: scale(1.1);
-        }
-        
-        .radio-item label {
-            font-size: 0.9rem;
             margin-bottom: 0;
+            background: white;
+            font-size: 0.95rem;
         }
-        
-        .badge {
-            padding: 0.35rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            margin-right: 0.2rem;
-            font-weight: 500;
-        }
-        
-        .badge-admin {
-            background: linear-gradient(120deg, #dc3545 0%, #c82333 100%);
+
+        .table thead {
+            background: var(--primary-gradient);
             color: white;
         }
-        
-        .badge-profesor {
-            background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%);
-            color: white;
+
+        .table th {
+            font-weight: 600;
+            padding: 1.25rem;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
         }
-        
-        .badge-alumno {
-            background: linear-gradient(120deg, #28a745 0%, #20923a 100%);
-            color: white;
+
+        .table td {
+            padding: 1.25rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
         }
-        
-        .filter-section {
-            background: #f8f9fa;
-            padding: 1rem;
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f8fafc;
+        }
+
+        .table-danger {
+            background-color: #fff1f1 !important;
+            transition: background 0.3s ease;
+        }
+
+        .table tr:hover {
+            background-color: #f1f3f5;
+        }
+
+        .pagination {
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 0.5rem;
+        }
+
+        .page-link {
             border-radius: 8px;
-            margin-bottom: 1rem;
-            border: 1px solid #e9ecef;
+            color: #0249BB;
+            border: 1px solid #d1d5db;
+            transition: all 0.3s ease;
         }
-        
-        .search-box {
-            position: relative;
+
+        .page-link:hover {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
         }
-        
-        .search-box i {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-            font-size: 0.9rem;
+
+        .active > .page-link {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
         }
-        
-        .search-box input {
-            padding-left: 35px;
+
+        @media (max-width: 992px) {
+            .card-header {
+                font-size: 1.4rem;
+            }
+
+            .form-control, .btn-primary {
+                font-size: 0.9rem;
+            }
+
+            .table th, .table td {
+                padding: 1rem;
+            }
         }
-        
-        .alert {
-            border-radius: 8px;
-            border: none;
-            margin-bottom: 1rem;
-            padding: 0.75rem 1rem;
-        }
-        
-        .alert-success {
-            background: linear-gradient(120deg, #d4edda 0%, #c3e6cb 100%);
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-        
-        .alert-danger {
-            background: linear-gradient(120deg, #f8d7da 0%, #f5c6cb 100%);
-            color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-        
-        .btn-group .btn {
-            margin-right: 0.25rem;
-            margin-bottom: 0.25rem;
-        }
-        
-        .modal-header {
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        .modal-footer {
-            border-top: 1px solid #dee2e6;
-        }
-        
+
         @media (max-width: 768px) {
-            .container-fluid {
+            .container {
+                padding: 1rem;
+            }
+
+            .form-label {
+                font-size: 0.85rem;
+            }
+
+            .btn-primary {
+                padding: 0.6rem 1.5rem;
+            }
+
+            .table {
+                font-size: 0.85rem;
+            }
+
+            .table th, .table td {
+                padding: 0.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card-header {
+                font-size: 1.2rem;
+                padding: 1.25rem;
+            }
+
+            .alert-info {
+                font-size: 0.9rem;
+                padding: 1rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.25rem;
+            }
+
+            .input-group-text {
                 padding: 0.5rem;
             }
-            
-            .radio-group {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .btn-group {
-                display: flex;
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .btn-group .btn {
-                margin-right: 0;
-                margin-bottom: 0.25rem;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                gap: 0.5rem;
-                text-align: center;
-            }
-            
-            .card-header .btn {
-                align-self: center;
-            }
-            
-            .filter-section .row {
-                gap: 0.5rem;
-            }
-            
-            .filter-section .col-md-3,
-            .filter-section .col-md-4,
-            .filter-section .col-md-2 {
-                margin-bottom: 0.5rem;
-            }
-            
-            .table-responsive {
-                font-size: 0.8rem;
-            }
-            
-            .badge {
-                font-size: 0.7rem;
-                padding: 0.25rem 0.5rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .d-flex.justify-content-between {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .d-flex.justify-content-between .btn {
-                width: 100%;
-            }
-        }
-        
-        .btn-light {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(2, 73, 187, 0.2);
-            color: #0249BB;
-            font-weight: 600;
-        }
-        
-        .btn-light:hover {
-            background: rgba(2, 73, 187, 0.1);
-            border-color: #0249BB;
-            color: #003bb1;
         }
     </style>
 
-<section class="user-conteiner">
-    <div class="container-fluid">
-        <!-- Mostrar mensaje de éxito -->
-        @if (session('success'))
-            <div class="alert alert-success d-flex align-items-center">
-                <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <!-- Mostrar errores de validación -->
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <strong>Por favor corrige los siguientes errores:</strong>
-                <ul class="mb-0 mt-2">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <!-- Formulario de creación de usuario -->
+     <div class="container">
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h3><i class="fas fa-user-plus"></i> Crear nuevo usuario</h3>
-              
-                <button type="button" class="btn btn-light btn-sm" onclick="toggleCreateForm()" id="toggleBtn">
-                    <i class="fas fa-plus me-1"></i>Crear
-                </button>
+            <div class="card-header">
+                <i class="fas fa-history"></i> Historial de Inicios de Sesión
             </div>
-            <div class="card-body" id="createForm" style="display: none;">
-                <form action="{{ route('admin.usuarios.store') }}" method="POST">
-                    @csrf
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Nombre:</label>
-                                <input type="text" name="name" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Apellido paterno:</label>
-                                <input type="text" name="apellido_p" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Apellido materno:</label>
-                                <input type="text" name="apellido_m" class="form-control" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">DNI:</label>
-                                <input type="text" name="dni" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Email:</label>
-                                <input type="email" name="email" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Teléfono:</label>
-                                <input type="text" name="telefono" class="form-control" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Fecha de nacimiento:</label>
-                                <input type="date" name="fecha_nacimiento" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Género:</label>
-                                <select name="genero" class="form-select" required>
-                                    <option value="masculino">Masculino</option>
-                                    <option value="femenino">Femenino</option>
-                                    <option value="otro">Otro</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-12">
-                            <div class="form-group">
-                                <label class="form-label">Tipo de usuario:</label>
-                                <div class="radio-group">
-                                    <div class="radio-item">
-                                        <input type="radio" name="tipo_usuario" value="admin" id="admin" required>
-                                        <label for="admin">Admin</label>
-                                    </div>
-                                    <div class="radio-item">
-                                        <input type="radio" name="tipo_usuario" value="profesor" id="profesor">
-                                        <label for="profesor">Profesor</label>
-                                    </div>
-                                    <div class="radio-item">
-                                        <input type="radio" name="tipo_usuario" value="usuario" id="usuario">
-                                        <label for="usuario">Alumno</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between align-items-center">
-                        <button type="button" class="btn btn-secondary" onclick="toggleCreateForm()">
-                            <i class="fas fa-times me-2"></i>Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>Crear usuario
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Sección de filtros -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-    <h3 class="mb-0">
-        <i class="fas fa-users"></i> Lista de usuarios registrados
-    </h3>
-    <a href="{{ route('admin.seguridad.login') }}" class="btn btn-light btn-sm">
-        <i class="fas fa-plus me-1"></i> Historial de Login
-    </a>
-</div>
-
-
-           
-            
-            <div class="card-body">
-                <div class="filter-section">
-                    <div class="row align-items-end">
-                        <div class="col-md-3">
-                            <label class="form-label">Filtrar por rol:</label>
-                            <form method="GET" action="{{ route('admin.usuarios.create') }}">
-                                <select name="filtro" class="form-select" onchange="this.form.submit()">
-                                    <option value="">Todos</option>
-                                    <option value="admin" {{ request('filtro') == 'admin' ? 'selected' : '' }}>Admin</option>
-                                    <option value="profesor" {{ request('filtro') == 'profesor' ? 'selected' : '' }}>Profesor</option>
-                                    <option value="usuario" {{ request('filtro') == 'usuario' ? 'selected' : '' }}>Alumno</option>
-                                </select>
-                            </form>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Buscar por nombre:</label>
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="searchName" class="form-control" placeholder="Buscar por nombre completo...">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Buscar por DNI:</label>
-                            <div class="search-box">
-                                <i class="fas fa-id-card"></i>
-                                <input type="text" id="searchDNI" class="form-control" placeholder="Buscar por DNI...">
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-secondary w-100" onclick="clearFilters()">
-                                <i class="fas fa-times me-1"></i>Limpiar
-                            </button>
-                        </div>
+            <div class="card-body p-4">
+                {{-- RESUMEN --}}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Total de accesos en el rango:</strong> {{ $totalLogs }}
+                        <br>
+                        <small class="text-muted">
+                            Desde <b>{{ \Carbon\Carbon::parse($fechaInicio)->format('d/m/Y H:i') }}</b> 
+                            hasta <b>{{ \Carbon\Carbon::parse($fechaFin)->format('d/m/Y H:i') }}</b>
+                        </small>
                     </div>
                 </div>
 
-                @if($usuarios->isNotEmpty())
+                {{-- FILTROS POR FECHA --}}
+                <form method="GET" action="{{ route('admin.seguridad.login') }}" class="mb-4 row g-3 align-items-end">
+                    <div class="col-md-4 col-sm-12">
+                        <label for="fecha_inicio" class="form-label fw-medium">Desde</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control"
+                                   value="{{ \Carbon\Carbon::parse($fechaInicio)->toDateString() }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <label for="fecha_fin" class="form-label fw-medium">Hasta</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="date" name="fecha_fin" id="fecha_fin" class="form-control"
+                                   value="{{ \Carbon\Carbon::parse($fechaFin)->toDateString() }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter me-2"></i> Filtrar
+                        </button>
+                    </div>
+                </form>
+
+                {{-- TABLA DE LOGINS --}}
                 <div class="table-responsive">
-                    <table class="table table-hover" id="usersTable">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Nombre completo</th>
-                                <th>DNI</th>
-                                <th>Email</th>
-                                <th>Tipo(s)</th>
-                                <th>Acciones</th>
+                          
+                                <th>Usuario</th>
+                                <th>IP</th>
+                                <th>Dispositivo / Navegador</th>
+                                <th>Fecha y Hora</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($usuarios as $user)
-                            <tr>
-                                <td><strong>{{ $user->name }} {{ $user->apellido_p }} {{ $user->apellido_m }}</strong></td>
-                                <td>{{ $user->dni }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>
-                                    @if($user->admin) <span class="badge badge-admin"><i class="fas fa-cog me-1"></i>Admin</span> @endif
-                                    @if($user->profesor) <span class="badge badge-profesor"><i class="fas fa-chalkboard-teacher me-1"></i>Profesor</span> @endif
-                                    @if($user->usuario) <span class="badge badge-alumno"><i class="fas fa-graduation-cap me-1"></i>Alumno</span> @endif
-                                </td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-success btn-sm" onclick="abrirEditar({{ $user->id }})">
-                                            <i class="fas fa-edit"></i> Editar
-                                        </button>
-                                        <button type="button" class="btn btn-warning btn-sm" onclick="abrirPassword({{ $user->id }})">
-                                            <i class="fas fa-key"></i> Contraseña
-                                        </button>
-                                        <form method="POST" action="{{ route('admin.usuarios.destroy', $user->id) }}" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar al usuario?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i> Eliminar
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
+                            @forelse ($logs as $log)
+                                <tr class="{{ $log->ip_address !== request()->ip() ? 'table-danger' : '' }}">
+                                 
+                                    <td>{{ $log->user->name ?? 'Usuario eliminado' }}</td>
+                                    <td>{{ $log->ip_address }}</td>
+                                    <td>{{ $log->user_agent }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($log->logged_in_at)->format('d/m/Y H:i:s') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">No hay registros en este rango</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
-                @else
-                <div class="text-center py-5">
-                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">No hay usuarios que coincidan con el filtro seleccionado.</p>
+
+                {{-- PAGINACIÓN --}}
+                <div class="pagination">
+                    {{ $logs->links() }}
                 </div>
-                @endif
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Editar Usuario -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form id="formEditar" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="modal-header" style="background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%); color: white; border-radius: 0;">
-                        <h5 class="modal-title" id="modalEditarLabel"><i class="fas fa-edit me-2"></i>Editar usuario</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" style="filter: invert(1);"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="id" id="editar_id">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">Nombre:</label>
-                                    <input type="text" name="name" id="editar_name" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">Apellido paterno:</label>
-                                    <input type="text" name="apellido_p" id="editar_apellido_p" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">Apellido materno:</label>
-                                    <input type="text" name="apellido_m" id="editar_apellido_m" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">DNI:</label>
-                                    <input type="text" name="dni" id="editar_dni" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">Email:</label>
-                                    <input type="email" name="email" id="editar_email" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">Fecha de nacimiento:</label>
-                                    <input type="date" name="fecha_nacimiento" id="editar_fecha_nacimiento" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">Género:</label>
-                                    <select name="genero" id="editar_genero" class="form-select">
-                                        <option value="masculino">Masculino</option>
-                                        <option value="femenino">Femenino</option>
-                                        <option value="otro">Otro</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">Teléfono:</label>
-                                    <input type="text" name="telefono" id="editar_telefono" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tipo de usuario:</label>
-                            <div class="radio-group">
-                                <div class="radio-item">
-                                    <input type="radio" name="tipo_usuario" value="admin" id="editar_admin_radio">
-                                    <label for="editar_admin_radio">Admin</label>
-                                </div>
-                                <div class="radio-item">
-                                    <input type="radio" name="tipo_usuario" value="profesor" id="editar_profesor_radio">
-                                    <label for="editar_profesor_radio">Profesor</label>
-                                </div>
-                                <div class="radio-item">
-                                    <input type="radio" name="tipo_usuario" value="usuario" id="editar_usuario_radio">
-                                    <label for="editar_usuario_radio">Alumno</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Guardar cambios</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Cambiar Contraseña -->
-    <div class="modal fade" id="modalPassword" tabindex="-1" aria-labelledby="modalPasswordLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="formPassword" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="modal-header" style="background: linear-gradient(120deg, #0249BB 0%, #003bb1 100%); color: white; border-radius: 0;">
-                        <h5 class="modal-title" id="modalPasswordLabel"><i class="fas fa-key me-2"></i>Cambiar contraseña</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" style="filter: invert(1);"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="form-label">Nueva contraseña:</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-sync-alt me-2"></i>Actualizar</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cancelar</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
 
 
-    <script>
-        // Función para mostrar/ocultar formulario de creación
-        function toggleCreateForm() {
-            const form = document.getElementById('createForm');
-            const btn = document.getElementById('toggleBtn');
-            
-            if (form.style.display === 'none' || form.style.display === '') {
-                form.style.display = 'block';
-                btn.innerHTML = '<i class="fas fa-minus me-1"></i>Ocultar';
-                btn.classList.remove('btn-light');
-                btn.classList.add('btn-secondary');
-            } else {
-                form.style.display = 'none';
-                btn.innerHTML = '<i class="fas fa-plus me-1"></i>Crear';
-                btn.classList.remove('btn-secondary');
-                btn.classList.add('btn-light');
-            }
-        }
 
-        function abrirEditar(id) {
-            fetch(`/admin/usuarios/${id}`)
-                .then(response => response.json())
-                .then(user => {
-                    document.getElementById('formEditar').action = `/admin/usuarios/${id}`;
-                    document.getElementById('editar_id').value = user.id;
-                    document.getElementById('editar_name').value = user.name;
-                    document.getElementById('editar_apellido_p').value = user.apellido_p;
-                    document.getElementById('editar_apellido_m').value = user.apellido_m;
-                    document.getElementById('editar_dni').value = user.dni;
-                    document.getElementById('editar_email').value = user.email;
-                    document.getElementById('editar_fecha_nacimiento').value = user.fecha_nacimiento;
-                    document.getElementById('editar_genero').value = user.genero;
-                    document.getElementById('editar_telefono').value = user.telefono;
-                    
-                    if (user.admin) {
-                        document.getElementById('editar_admin_radio').checked = true;
-                    } else if (user.profesor) {
-                        document.getElementById('editar_profesor_radio').checked = true;
-                    } else if (user.usuario) {
-                        document.getElementById('editar_usuario_radio').checked = true;
-                    }
-
-                    const modal = new bootstrap.Modal(document.getElementById('modalEditar'));
-                    modal.show();
-                });
-        }
-
-        function abrirPassword(id) {
-            document.getElementById('formPassword').action = `/admin/usuarios/${id}/password`;
-            const modal = new bootstrap.Modal(document.getElementById('modalPassword'));
-            modal.show();
-        }
-
-        // Funcionalidad de filtrado
-        function filterTable() {
-            const nameFilter = document.getElementById('searchName').value.toLowerCase();
-            const dniFilter = document.getElementById('searchDNI').value.toLowerCase();
-            const rows = document.querySelectorAll('#usersTable tbody tr');
-
-            rows.forEach(row => {
-                const name = row.cells[0].textContent.toLowerCase();
-                const dni = row.cells[1].textContent.toLowerCase();
-                
-                const nameMatch = name.includes(nameFilter);
-                const dniMatch = dni.includes(dniFilter);
-                
-                if (nameMatch && dniMatch) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        function clearFilters() {
-            document.getElementById('searchName').value = '';
-            document.getElementById('searchDNI').value = '';
-            filterTable();
-        }
-
-        // Event listeners para los filtros
-        document.getElementById('searchName').addEventListener('input', filterTable);
-        document.getElementById('searchDNI').addEventListener('input', filterTable);
-    </script>
-
-</section>
-</div>
-
-</div>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
@@ -1745,3 +1280,10 @@
     </form>
 </body>
 </html>
+
+
+
+
+
+
+
