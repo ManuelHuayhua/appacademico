@@ -1433,6 +1433,10 @@
                             </div>
                         </div>
                         <div class="course-actions">
+                            <a href="{{ route('admin.pagos.exportCurso', $curso->id) }}" 
+   class="btn btn-success btn-sm">
+    <i class="fas fa-file-excel me-1"></i> Exportar alumnos
+</a>
                             <button class="btn btn-toggle" onclick="event.stopPropagation(); toggleFilters({{ $curso->id }})">
                                 <i class="fas fa-filter me-1"></i>
                                 <span id="filter-text-{{ $curso->id }}">Mostrar Filtros</span>
@@ -1481,6 +1485,7 @@
                                     <th><i class="fas fa-user me-1"></i>Alumno</th>
                                     <th><i class="fas fa-id-card me-1"></i>DNI</th>
                                     <th class="d-none d-md-table-cell"><i class="fas fa-envelope me-1"></i>Email</th>
+                                    <th class="d-none d-md-table-cell"><i class="fas fa-phone me-1"></i>Telefono</th>
                                     <th class="text-end"><i class="fas fa-coins me-1"></i>Pagado</th>
                                     <th class="text-end"><i class="fas fa-exclamation-triangle me-1"></i>Deuda</th>
                                     <th class="text-center">Estado</th>
@@ -1499,6 +1504,7 @@
                                             <td class="alumno-nombre">{{ $cal->alumno->name }} {{ $cal->alumno->apellido_p }} {{ $cal->alumno->apellido_m }}</td>
                                             <td class="alumno-dni">{{ $cal->alumno->dni }}</td>
                                             <td class="d-none d-md-table-cell">{{ $cal->alumno->email }}</td>
+                                            <td class="d-none d-md-table-cell">{{ $cal->alumno->telefono }}</td>
                                             <td class="text-end">S/ {{ number_format($pagado, 2) }}</td>
                                             <td class="text-end">S/ {{ number_format($deuda, 2) }}</td>
                                             <td class="text-center alumno-estado">
@@ -1609,7 +1615,8 @@
                                         <i class="fas fa-user me-2"></i>
                                         <strong>Estudiante:</strong> {{ $cal->alumno->name }} {{ $cal->alumno->apellido_p }} {{ $cal->alumno->apellido_m }}<br>
                                         <strong>DNI:</strong> {{ $cal->alumno->dni }}<br>
-                                        <strong>Email:</strong> {{ $cal->alumno->email }}
+                                        <strong>Email:</strong> {{ $cal->alumno->email }}<br>
+                                        
                                     </div>
                                     <div class="alert alert-info">
                                         <i class="fas fa-info-circle me-2"></i>

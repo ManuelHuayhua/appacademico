@@ -639,7 +639,7 @@ body {
                 <div class="form-content">
                     <div class="welcome-header">
                         <div class="welcome-text">¡Hola somos</div>
-                        <div class="brand-name">UNAT!</div>
+                        <div class="brand-name">UNAX!</div>
                         <div class="subtitle">¡Que tu día sea excelente!</div>
                     </div>
 
@@ -670,7 +670,7 @@ body {
                             <input id="dni" type="text"
                                    class="form-control @error('dni') is-invalid @enderror"
                                    name="dni" value="{{ old('dni') }}"
-                                   placeholder="Por favor, ingresa tu número de DNI" required autofocus>
+                                   placeholder="Por favor, ingresa tu código de usuario" required autofocus>
                             <label for="dni">{{ __('Número de DNI') }}</label>
                             @error('dni')
                                 <div class="invalid-feedback">
@@ -737,9 +737,9 @@ body {
                             Comencemos
                         </button>
 
-                        {{-- Enlace olvidé contraseña --}}
-                        <div class="forgot-password">
-    <a href="tel:999999999">
+                        {{-- Enlace olvidé contraseña --}} 
+                       <div class="forgot-password">
+    <a href="https://wa.me/51999999999" target="_blank">
         Si olvidó contraseña comuníquese con este número: 999-999-999
     </a>
 </div>

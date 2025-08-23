@@ -648,6 +648,15 @@
                             <div class="tooltip-custom">Inicio</div>
                         </a>
                     </li>
+                      <!-- Nuevo: Perfil -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('profesor.perfil') }}" data-page="perfil">
+                <i class="fas fa-user"></i>
+                <span class="nav-text">Perfil</span>
+                <div class="tooltip-custom">Perfil</div>
+            </a>
+        </li>
+        <!-- Fin Perfil -->
                   
                     <li class="nav-item">
                         <a class="nav-link " href="{{ route('profesor.cursos') }}" data-page="Cursos">

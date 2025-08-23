@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\Matricula;
 use App\Models\Periodo;
 use Carbon\Carbon;
+use App\Exports\CursoCalificacionesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PagosController extends Controller
 {
@@ -99,5 +101,19 @@ public function actualizarMontoCurso(Request $request)
     return redirect()->back()->with('success', 'Monto del curso actualizado correctamente.');
 }
 
+
+
+public function exportCurso($cursoPeriodoId)
+{
+    $curso = CursoPeriodo::with('curso','periodo')->findOrFail($cursoPeriodoId);
+
+    $nombreCurso = $curso->curso->nombre ?? 'curso';
+    $nombrePeriodo = $curso->periodo->nombre ?? 'periodo';
+    $nombreSeccion = $curso->seccion ?? 'seccion'; // 👈 campo directo
+
+    $filename = $nombreCurso . '_' . $nombreSeccion . '_' . $nombrePeriodo . '.xlsx';
+
+    return Excel::download(new CursoCalificacionesExport($cursoPeriodoId), $filename);
+}
 
 }

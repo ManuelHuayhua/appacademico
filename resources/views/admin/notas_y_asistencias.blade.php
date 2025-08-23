@@ -1151,32 +1151,37 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label fw-semibold">
-                        <i class="fas fa-chalkboard-teacher me-1"></i>Curso
-                    </label>
-                    <select name="curso_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Seleccionar Curso --</option>
-                        @foreach(\App\Models\Curso::where('carrera_id', request('carrera_id'))->get() as $cur)
-                            <option value="{{ $cur->id }}" {{ request('curso_id') == $cur->id ? 'selected' : '' }}>
-                                {{ $cur->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label fw-semibold">
-                        <i class="fas fa-calendar-alt me-1"></i>Periodo
-                    </label>
-                    <select name="periodo_id" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Seleccionar Periodo --</option>
-                        @foreach($periodos as $per)
-                            <option value="{{ $per->id }}" {{ request('periodo_id') == $per->id ? 'selected' : '' }}>
-                                {{ $per->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                 <div class="col-lg-3 col-md-6">
+        <label class="form-label fw-semibold">
+            <i class="fas fa-calendar-alt me-1"></i>Periodo
+        </label>
+        <select name="periodo_id" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Seleccionar Periodo --</option>
+            @foreach($periodos as $per)
+                <option value="{{ $per->id }}" {{ request('periodo_id') == $per->id ? 'selected' : '' }}>
+                    {{ $per->nombre }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <label class="form-label fw-semibold">
+            <i class="fas fa-chalkboard-teacher me-1"></i>Curso / Sección
+        </label>
+        <select name="curso_periodo_id" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Seleccionar Curso/Sección --</option>
+            @if(request('carrera_id') && request('periodo_id'))
+                @foreach(\App\Models\CursoPeriodo::whereHas('curso', function ($q) {
+                    $q->where('carrera_id', request('carrera_id'));
+                })->where('periodo_id', request('periodo_id'))->get() as $cp)
+                    <option value="{{ $cp->id }}" {{ request('curso_periodo_id') == $cp->id ? 'selected' : '' }}>
+                        {{ $cp->curso->nombre }} - Sección {{ $cp->seccion }}
+                    </option>
+                @endforeach
+            @endif
+        </select>
+    </div>
             </form>
         </div>
     </div>

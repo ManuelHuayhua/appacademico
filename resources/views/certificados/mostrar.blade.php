@@ -535,9 +535,12 @@
                 margin: 0.3in;
             }
 
-            .signature-image {
-        height: 40px !important;
+             .signature-image {
+        visibility: hidden !important;
+    
     }
+
+          
             
             body {
                 background: white !important;

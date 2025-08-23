@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -111,6 +113,12 @@ public function destroy($id)
     $user->delete();
 
     return redirect()->back()->with('success', 'Usuario eliminado.');
+}
+
+
+public function export()
+{
+    return Excel::download(new UsersExport, 'usuarios.xlsx');
 }
 
 }

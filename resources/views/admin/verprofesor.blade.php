@@ -1352,6 +1352,12 @@
                                 <i class="fas fa-times me-1"></i>
                                 Limpiar Filtros
                             </button>
+
+                             <a href="{{ route('admin.dictadoprofe.index') }}" class="btn btn-primary ms-2">
+        <i class="fas fa-eye me-1"></i>
+        Ver dictado
+    </a>
+
                         </div>
                     </div>
 

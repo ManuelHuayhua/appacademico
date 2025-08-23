@@ -32,23 +32,20 @@ class AdminNotasAsistenciasController extends Controller
         ];
 
         $matriculas = collect();
+ if ($request->filled('curso_periodo_id')) {
+        $cursoPeriodo = CursoPeriodo::with('curso')->find($request->curso_periodo_id);
 
-        if ($request->filled(['facultad_id', 'carrera_id', 'curso_id', 'periodo_id'])) {
-            $cursoPeriodo = CursoPeriodo::where('curso_id', $request->curso_id)
-                ->where('periodo_id', $request->periodo_id)
-                ->first();
-
-            if ($cursoPeriodo) {
-                $matriculas = Matricula::with(['user', 'user.calificaciones' => function ($q) use ($cursoPeriodo) {
-                        $q->where('curso_periodo_id', $cursoPeriodo->id);
-                    }, 'user.asistencias' => function ($q) use ($cursoPeriodo) {
-                        $q->where('curso_periodo_id', $cursoPeriodo->id);
-                    }])
-                    ->whereHas('user', fn($q) => $q->where('usuario', true))
-                    ->where('curso_periodo_id', $cursoPeriodo->id)
-                    ->get();
-            }
+        if ($cursoPeriodo) {
+            $matriculas = Matricula::with([
+                    'user',
+                    'user.calificaciones' => fn($q) => $q->where('curso_periodo_id', $cursoPeriodo->id),
+                    'user.asistencias'    => fn($q) => $q->where('curso_periodo_id', $cursoPeriodo->id),
+                ])
+                ->whereHas('user', fn($q) => $q->where('usuario', true))
+                ->where('curso_periodo_id', $cursoPeriodo->id)
+                ->get();
         }
+    }
 
         return view('admin.notas_y_asistencias', compact(
             'facultades', 'periodos', 'filtro', 'matriculas'
@@ -88,12 +85,10 @@ public function actualizar(Request $request, $id)
 
 public function exportExcel(Request $request)
 {
-    $cursoPeriodo = CursoPeriodo::where('curso_id', $request->curso_id)
-        ->where('periodo_id', $request->periodo_id)
-        ->first();
+    $cursoPeriodo = CursoPeriodo::find($request->curso_periodo_id);
 
     if (!$cursoPeriodo) {
-        return back()->with('error', 'Curso periodo no encontrado');
+        return back()->with('error', 'Curso/Sección no encontrado');
     }
 
     // Obtener los días de semana que tienen clases (1=Lunes,...,7=Domingo)
@@ -103,7 +98,10 @@ public function exportExcel(Request $request)
         ->toArray();
 
     // Crear rango de fechas desde inicio a fin de clases
-    $periodoFechas = CarbonPeriod::create($cursoPeriodo->fecha_inicio_clases, $cursoPeriodo->fecha_fin_clases);
+    $periodoFechas = CarbonPeriod::create(
+        $cursoPeriodo->fecha_inicio_clases,
+        $cursoPeriodo->fecha_fin_clases
+    );
 
     // Filtrar solo fechas que son días de clase
     $fechasClases = [];
@@ -113,16 +111,20 @@ public function exportExcel(Request $request)
         }
     }
 
-    $matriculas = Matricula::with(['user', 'user.calificaciones' => function ($q) use ($cursoPeriodo) {
-            $q->where('curso_periodo_id', $cursoPeriodo->id);
-        }, 'user.asistencias' => function ($q) use ($cursoPeriodo) {
-            $q->where('curso_periodo_id', $cursoPeriodo->id);
-        }])
+    $matriculas = Matricula::with([
+            'user',
+            'user.calificaciones' => fn($q) => $q->where('curso_periodo_id', $cursoPeriodo->id),
+            'user.asistencias'    => fn($q) => $q->where('curso_periodo_id', $cursoPeriodo->id),
+        ])
         ->whereHas('user', fn($q) => $q->where('usuario', true))
         ->where('curso_periodo_id', $cursoPeriodo->id)
         ->get();
 
-    return Excel::download(new NotasAsistenciasExport($matriculas, $fechasClases), 'notas_asistencias.xlsx');
+    return Excel::download(
+        new NotasAsistenciasExport($matriculas, $fechasClases),
+        'notas_asistencias.xlsx'
+    );
 }
+
 
 }

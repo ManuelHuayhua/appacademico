@@ -1326,10 +1326,15 @@
     <h3 class="mb-0">
         <i class="fas fa-users"></i> Lista de usuarios registrados
     </h3>
+     <a href="{{ route('admin.usuarios.export') }}" class="btn btn-success btn-sm">
+    <i class="fas fa-file-excel"></i> Exportar usuarios
+</a>
     <a href="{{ route('admin.seguridad.login') }}" class="btn btn-light btn-sm">
         <i class="fas fa-plus me-1"></i> Historial de Login
     </a>
+   
 </div>
+
 
 
            

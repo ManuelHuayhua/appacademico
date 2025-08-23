@@ -722,7 +722,7 @@
                                 Bienvenido, {{ Auth::user()->name }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="">
+                               <a class="dropdown-item" href="{{ route('alumno.perfil') }}">
                                     <i class="fas fa-user me-2"></i>Mi Perfil
                                 </a>
                                

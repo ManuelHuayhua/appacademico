@@ -27,6 +27,10 @@ use App\Http\Controllers\Admin\RetiradosController;
 use App\Http\Controllers\Admin\MaterialesController;
 use App\Http\Controllers\Admin\VerprofesorController;
 use App\Http\Controllers\Admin\SeguridadLogin;
+use App\Http\Controllers\Profesor\PerfilProfesor;
+
+use App\Http\Controllers\Admin\DictadoProfeController;
+
 
 Route::get('/', function () {
     // Invitado ⇒ login
@@ -114,6 +118,8 @@ Route::get('/admin/usuarios/{id}', [UserController::class, 'show'])->middleware(
 Route::put('/admin/usuarios/{id}', [UserController::class, 'update'])->middleware('adminonly');
 Route::put('/admin/usuarios/{id}/password', [UserController::class, 'updatePassword'])->middleware('adminonly');
 Route::delete('/admin/usuarios/{id}', [UserController::class, 'destroy'])->name('admin.usuarios.destroy')->middleware('adminonly');
+//exportar users:
+Route::get('/usuarios/export', [UserController::class, 'export'])->name('admin.usuarios.export')->middleware('adminonly');
 
 
 
@@ -177,6 +183,11 @@ Route::get('/pagos', [PagosController::class, 'index'])->name('admin.pagos')->mi
 Route::post('/pagos', [PagosController::class, 'filtrarPagos'])->name('admin.pagos.post')->middleware('adminonly');
 Route::post('/admin/registrar-pago', [PagosController::class, 'registrarPago'])->name('admin.registrarPago')->middleware('adminonly');
 Route::post('/admin/actualizar-monto-curso', [PagosController::class, 'actualizarMontoCurso'])->name('admin.actualizarMontoCurso')->middleware('adminonly');
+//exportar excel:
+Route::get('/admin/pagos/curso/{id}/export', [PagosController::class, 'exportCurso'])
+    ->name('admin.pagos.exportCurso');
+
+
 
 //ingresar URL
 Route::get('/admin/clases-url', [ClasesurlController::class, 'index'])->name('admin.clasesurl.index')->middleware('adminonly');
@@ -236,6 +247,11 @@ Route::get('/admin/verprofesor', [VerprofesorController::class, 'index'])
 Route::post('/admin/verprofesor/evaluar', [VerprofesorController::class, 'storeEvaluacion'])
     ->name('admin.verprofesor.evaluar')->middleware('adminonly');
 
+//ver dictado del profesor
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('dictadoprofe', DictadoProfeController::class)->middleware('adminonly');
+});
+
 
     //ver el logeo de los admin
     Route::get('/admin/seguridad-login', [SeguridadLogin::class, 'index'])->name('admin.seguridad.login')->middleware('adminonly');
@@ -264,7 +280,14 @@ Route::post('/admin/verprofesor/evaluar', [VerprofesorController::class, 'storeE
     Route::get('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'index'])->name('profesor.calificaciones')->middleware('profesoronly');
     Route::post('/profesor/calificaciones', [App\Http\Controllers\Profesor\Calificacionesprofesor::class, 'guardar'])->name('profesor.calificaciones.guardar')->middleware('profesoronly');
     Route::get('/calendario', [App\Http\Controllers\Profesor\CalendarioController::class, 'index'])->name('calendario')->middleware('profesoronly');
+
+    //ruta de perfil profesor:
+     Route::get('/profesor/perfil', [PerfilProfesor::class, 'index'])->name('profesor.perfil')->middleware('profesoronly');
+    Route::post('/profesor/perfil/update', [PerfilProfesor::class, 'update'])->name('profesor.perfil.update')->middleware('profesoronly');
 });
+
+
+
 
 
 
